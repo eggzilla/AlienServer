@@ -2,8 +2,11 @@
 module Handler.Home where
 
 import Import
-import Yesod.Request
 import Data.ByteString.Lazy
+import Yesod.Core.Handler
+import Data.Maybe
+import Data.Tuple
+import qualified Data.Text as DT    
 import Yesod.Form.Bootstrap3
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
@@ -34,10 +37,10 @@ postHomeR = do
 
     defaultLayout $ do
         aDomId <- newIdent
-        let resultInsert = unpack (fileContent result)
+        let resultInsert = DT.unpack (fileName (fst (fromJust submission)))
         setTitle "Welcome To RNAlien!"
         $(widgetFile "result")
-
+ 
 sampleForm :: Form (FileInfo, Text)
 sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
     <$> fileAFormReq "Upload a fasta sequence file"

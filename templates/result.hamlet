@@ -4,7 +4,7 @@
 
   <li ##{aDomId}>If you had javascript enabled then you wouldn't be seeing this.
 
-  #{result}
+  #{resultInsert}
   <li #form>
     Submission Form:
     $maybe (info,con) <- submission
