@@ -9,8 +9,8 @@ $newline never
         <meta charset="UTF-8">
 
         <title>#{pageTitle pc}
-        <meta name="description" content="">
-        <meta name="author" content="">
+        <meta name="description" content="RNAlien Server">
+        <meta name="author" content="Florian Eggenhofer">
 
         <meta name="viewport" content="width=device-width,initial-scale=1">
 
@@ -25,6 +25,7 @@ $newline never
     <body>
         <div class="container">
             <header>
+             <img src=@{StaticR images_RNAlien_svg} style="float:center;" alt="RNlien" height="100" width="400">
             <div id="main" role="main">
               ^{pageBody pc}
             <footer>

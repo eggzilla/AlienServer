@@ -2,12 +2,13 @@
 module Handler.Home where
 
 import Import
-import Data.ByteString.Lazy
+import Data.ByteString.Lazy (unpack)
 import Yesod.Core.Handler
-import Data.Maybe
-import Data.Tuple
-import qualified Data.Text as DT    
-import Yesod.Form.Bootstrap3
+import Data.Maybe (fromJust)
+import Data.Tuple (fst, snd)
+import qualified Data.Text as DT
+import Settings.StaticFiles
+import Yesod.Form.Bootstrap3    
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
 -- This is a handler function for the GET request method on the HomeR

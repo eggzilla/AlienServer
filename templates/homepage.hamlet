@@ -1,16 +1,14 @@
-<h1>_{MsgHello}
-
-<ol>
-
-  <li ##{aDomId}>If you had javascript enabled then you wouldn't be seeing this.
-
-  <li #form>
-    Submission Form:
-    $maybe (info,con) <- submission
-      <div .message .alert .alert-success>
-        Your file's type was <em>#{fileContentType info}</em>. You say it has: <em>#{con}</em>
-    <form method=post action=@{HomeR}#form enctype=#{formEnctype}>
+<div class="spacer">
+<span ##{aDomId} style="color:red;float:left;">
+    Please enable javascript.
+<h2 style="float:left;">
+    Welcome Earthling
+<br>    
+<br>
+<p>
+   <form method=post action=@{HomeR}#form enctype=#{formEnctype}>
       ^{formWidget}
       <button .btn .btn-primary type="submit">
          Send it! <span class="glyphicon glyphicon-upload">
-
+         
+<div class="spacer">
