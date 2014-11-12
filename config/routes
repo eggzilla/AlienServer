@@ -4,3 +4,4 @@
 /robots.txt RobotsR GET
 
 / HomeR GET POST
+/result ResultR GET
