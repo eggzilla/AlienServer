@@ -3,5 +3,6 @@
 <h2> Results:
 <br>
   #{resultInsert}
-<br>  
+<br>
+  
 <div class="spacer">

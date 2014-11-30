@@ -9,7 +9,10 @@ import Data.Tuple (fst, snd)
 import qualified Data.Text as DT
 import Settings.StaticFiles
 import System.Process
-import Yesod.Form.Bootstrap3    
+import System.Random
+import System.Directory    
+import Data.Int (Int16)    
+import Yesod.Form.Bootstrap3
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
 -- This is a handler function for the GET request method on the HomeR
@@ -36,13 +39,21 @@ postHomeR = do
         submission = case result of
             FormSuccess (fasta,taxid) -> Just (fasta,taxid)
             _ -> Nothing
-    --Write input fasta to file
+    --Create tempdir and session-Id
+    sessionId <- liftIO createSessionId
+    let outputPath = "/home/egg/temp/"
+    let temporaryDirectoryPath = outputPath ++ sessionId ++ "/"                     
+    liftIO (createDirectory temporaryDirectoryPath)
+           
+    --Write input fasta file
+    
     
                  
     --Start RNA Job and retrieve sessionid             
     --system                                
     defaultLayout $ do
         aDomId <- newIdent
+        let pathInsert =  outputPath          
         let resultInsert = DT.unpack (fileName (fst (fromJust submission)))
         setTitle "Welcome To RNAlien!"
         $(widgetFile "result")
@@ -51,3 +62,14 @@ inputForm :: Form (FileInfo, Text)
 inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
     <$> fileAFormReq "Upload a fasta sequence file"
     <*> areq textField (withSmallInput "Enter Taxonomy Id:") Nothing
+
+-- Auxiliary functions:
+-- | Adds cm prefix to pseudo random number
+randomid :: Int16 -> String
+randomid number = "cm" ++ (show number)
+
+createSessionId :: IO String                  
+createSessionId = do
+  randomNumber <- randomIO :: IO Int16
+  let sessionId = randomid randomNumber
+  return sessionId
