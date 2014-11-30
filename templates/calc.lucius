@@ -1,0 +1,10 @@
+h1 {
+    text-align: center
+}
+
+div.spacer
+{
+    font-size: 0; 
+    height: 40px;
+    line-height: 0;
+}

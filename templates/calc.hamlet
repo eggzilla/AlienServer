@@ -1,0 +1,7 @@
+<div class="spacer">
+<span ##{aDomId} style="color:red;float:left;">Please enable javascript.
+<h2> Calculation:
+<br>
+  Your Job with the id #{sessionIdInsert} has been submitted.
+  You will be redirected to the result-page upon completion.
+<div class="spacer">

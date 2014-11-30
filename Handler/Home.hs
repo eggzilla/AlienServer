@@ -11,7 +11,7 @@ import Settings.StaticFiles
 import System.Process
 import System.Random
 import System.Directory    
-import Data.Int (Int16)    
+import Data.Int (Int16)
 import Yesod.Form.Bootstrap3
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
@@ -46,17 +46,16 @@ postHomeR = do
     liftIO (createDirectory temporaryDirectoryPath)
            
     --Write input fasta file
-    
-    
-                 
-    --Start RNA Job and retrieve sessionid             
-    --system                                
+    liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
+                  
+    --Start RNAlien Job
+                         
     defaultLayout $ do
         aDomId <- newIdent
-        let pathInsert =  outputPath          
-        let resultInsert = DT.unpack (fileName (fst (fromJust submission)))
+        let sessionIdInsert =  DT.pack sessionId          
+        --let resultInsert = DT.unpack (fileName (fst (fromJust submission)))
         setTitle "Welcome To RNAlien!"
-        $(widgetFile "result")
+        $(widgetFile "calc")
          
 inputForm :: Form (FileInfo, Text)
 inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
