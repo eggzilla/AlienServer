@@ -49,7 +49,9 @@ postHomeR = do
     liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
                   
     --Start RNAlien Job
-                         
+    _ <- liftIO (runCommand ("RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 3 -d "++ sessionId ++ " -o " ++ temporaryDirectoryPath ++  " > " ++ temporaryDirectoryPath ++ "alienserverLog"))
+           
+    --Render page
     defaultLayout $ do
         aDomId <- newIdent
         let sessionIdInsert =  DT.pack sessionId          
