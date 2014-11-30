@@ -8,6 +8,7 @@ import Data.Maybe (fromJust)
 import Data.Tuple (fst, snd)
 import qualified Data.Text as DT
 import Settings.StaticFiles
+import System.Process
 import Yesod.Form.Bootstrap3    
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
@@ -20,7 +21,7 @@ import Yesod.Form.Bootstrap3
 -- inclined, or create a single monolithic file.
 getHomeR :: Handler Html
 getHomeR = do
-    (formWidget, formEnctype) <- generateFormPost sampleForm
+    (formWidget, formEnctype) <- generateFormPost inputForm
     let submission = Nothing :: Maybe (FileInfo, Text)
         handlerName = "getHomeR" :: Text
     defaultLayout $ do
@@ -30,19 +31,23 @@ getHomeR = do
 
 postHomeR :: Handler Html
 postHomeR = do
-    ((result, formWidget), formEnctype) <- runFormPost sampleForm
+    ((result, formWidget), formEnctype) <- runFormPost inputForm
     let handlerName = "postHomeR" :: Text
         submission = case result of
-            FormSuccess res -> Just res
+            FormSuccess (fasta,taxid) -> Just (fasta,taxid)
             _ -> Nothing
-
+    --Write input fasta to file
+    
+                 
+    --Start RNA Job and retrieve sessionid             
+    --system                                
     defaultLayout $ do
         aDomId <- newIdent
         let resultInsert = DT.unpack (fileName (fst (fromJust submission)))
         setTitle "Welcome To RNAlien!"
         $(widgetFile "result")
- 
-sampleForm :: Form (FileInfo, Text)
-sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
+         
+inputForm :: Form (FileInfo, Text)
+inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
     <$> fileAFormReq "Upload a fasta sequence file"
     <*> areq textField (withSmallInput "Enter Taxonomy Id:") Nothing
