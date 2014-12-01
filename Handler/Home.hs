@@ -54,7 +54,8 @@ postHomeR = do
     --Render page
     defaultLayout $ do
         aDomId <- newIdent
-        let sessionIdInsert =  DT.pack sessionId          
+        let sessionIdInsert =  DT.pack sessionId
+        let sessionIdjs = sessionId                       
         --let resultInsert = DT.unpack (fileName (fst (fromJust submission)))
         setTitle "Welcome To RNAlien!"
         $(widgetFile "calc")
