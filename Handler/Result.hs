@@ -7,27 +7,22 @@ import Yesod.Core.Handler
 import Data.Maybe (fromJust)
 import Data.Tuple (fst, snd)
 import qualified Data.Text as DT
+import qualified Data.List as DL (head)
+    
 import Settings.StaticFiles
 import Yesod.Form.Bootstrap3    
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
 getResultR :: Handler Html
 getResultR = do
-    ((result, formWidget), formEnctype) <- runFormPost inputForm
-    let handlerName = "getResultR" :: Text
-        submission = case result of
-            FormSuccess res -> Just res
-            _ -> Nothing
-
-    --check if finished             
+    result <- getRequest
+    let params = reqGetParams result
+    let resultInsert = DT.unpack (snd (DL.head params))
+ 
+            
     defaultLayout $ do
         aDomId <- newIdent
-        let resultInsert = DT.unpack (fileName (fst (fromJust submission)))
         setTitle "Welcome To RNAlien!"
         $(widgetFile "result")
 
-         
-inputForm :: Form (FileInfo, Text)
-inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
-    <$> fileAFormReq "Upload a fasta sequence file"
-    <*> areq textField (withSmallInput "Enter Taxonomy Id:") Nothing
+        
