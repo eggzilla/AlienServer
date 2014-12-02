@@ -18,7 +18,8 @@ getResultR :: Handler Html
 getResultR = do
     result <- getRequest
     let params = reqGetParams result
-    let sessionId = DT.unpack (snd (DL.head params))
+    let sessionIdjs = snd (DL.head params)
+    let sessionId = DT.unpack sessionIdjs
     let outputPath = "/home/egg/temp/"
     let tempDirPath = outputPath ++ sessionId ++ "/"
     --check if tempdir exists otherwise short circuit
@@ -26,6 +27,7 @@ getResultR = do
     --checkSessionId tempDirPresent             
     --retrieve alienoutput and check if done
     done <- liftIO (doesFileExist (tempDirPath ++ "done"))
+    let unfinished = not done        
     alienLog <- liftIO (readFile (tempDirPath ++ "alienserverLog"))
     let resultInsert = DT.pack alienLog        
     defaultLayout $ do
