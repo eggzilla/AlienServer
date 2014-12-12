@@ -10,7 +10,8 @@ import qualified Data.Text as DT
 import Settings.StaticFiles
 import System.Process
 import System.Random
-import System.Directory    
+import System.Directory
+import System.IO (writeFile)
 import Data.Int (Int16)
 import Yesod.Form.Bootstrap3
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
@@ -41,7 +42,7 @@ postHomeR = do
             _ -> Nothing
     --Create tempdir and session-Id
     sessionId <- liftIO createSessionId
-    let outputPath = "/home/egg/temp/"
+    let outputPath = "/scratch/egg/temp/"
     let temporaryDirectoryPath = outputPath ++ sessionId ++ "/"                     
     liftIO (createDirectory temporaryDirectoryPath)
            
@@ -49,7 +50,9 @@ postHomeR = do
     liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
                   
     --Start RNAlien Job
-    _ <- liftIO (runCommand ("RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 3 -d "++ sessionId ++ " -o " ++ temporaryDirectoryPath ++  " > " ++ temporaryDirectoryPath ++ "alienserverLog"))
+    let aliencommand = "nohup RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 3 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ temporaryDirectoryPath ++  " > " ++ temporaryDirectoryPath ++ "alienserverLog"
+    liftIO (writeFile (temporaryDirectoryPath ++ "alienserverCommand") aliencommand)
+    _ <- liftIO (runCommand (aliencommand))
            
     --Render page
     defaultLayout $ do
