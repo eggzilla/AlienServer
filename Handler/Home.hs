@@ -42,8 +42,8 @@ postHomeR = do
             _ -> Nothing
     --Create tempdir and session-Id
     sessionId <- liftIO createSessionId
-    let outputPath = "/scratch/egg/temp/"
-    let temporaryDirectoryPath = outputPath ++ sessionId ++ "/"                     
+    outputPath <- fmap extraTempdir getExtra
+    let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"                     
     liftIO (createDirectory temporaryDirectoryPath)
            
     --Write input fasta file

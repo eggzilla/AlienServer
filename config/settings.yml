@@ -2,6 +2,7 @@ Default: &defaults
   host: "*4" # any IPv4 host
   port: 3000
   approot: "http://localhost:3000"
+  tempdir: "/home/egg/temp/"
   copyright: TBI - 2014
   #analytics: UA-YOURCODE
 
@@ -9,7 +10,11 @@ Development:
   <<: *defaults
 
 Testing:
-  <<: *defaults
+  host: "*4" # any IPv4 host
+  port: 3000
+  approot: "http://kronos.tbi.univie.ac.at:3000"
+  tempdir: "/scratch/egg/temp/"
+  copyright: TBI - 2014
 
 Staging:
   <<: *defaults

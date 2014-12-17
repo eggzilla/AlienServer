@@ -20,8 +20,8 @@ getResultR = do
     let params = reqGetParams result
     let sessionIdjs = snd (DL.head params)
     let sessionId = DT.unpack sessionIdjs
-    let outputPath = "/home/egg/temp/"
-    let tempDirPath = outputPath ++ sessionId ++ "/"
+    outputPath <- fmap extraTempdir getExtra
+    let tempDirPath = DT.unpack (outputPath) ++ sessionId ++ "/"
     --check if tempdir exists otherwise short circuit
     tempDirPresent <- liftIO (doesDirectoryExist tempDirPath)
     --checkSessionId tempDirPresent             
