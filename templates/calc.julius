@@ -1,2 +1,2 @@
 document.getElementById(#{toJSON aDomId}).innerHTML = "";
-window.setTimeout (window.location = "localhost:3000/result?sessionId=#{toJSON sessionIdjs}", 5000);
+window.setTimeout (window.location = "#{toJSON aDomId}:3000/result?sessionId=#{toJSON sessionIdjs}", 5000);
