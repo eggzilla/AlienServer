@@ -24,5 +24,8 @@ Staging:
   copyright: TBI - 2014
 
 Production:
-  #approot: "http://www.example.com"
-  <<: *defaults
+  host: "*4" # any IPv4 host
+  port: 9000
+  approot: "http://nibiru.tbi.univie.ac.at:9000"
+  tempdir: "/mnt/storage/temp/AlienServer"
+  copyright: TBI - 2014
