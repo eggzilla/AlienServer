@@ -18,14 +18,14 @@ Testing:
 
 Staging:
   host: "*4" # any IPv4 host
-  port: 9000
-  approot: "http://ventax.tbi.univie.ac.at:9000"
-  tempdir: "/mnt/storage/temp/AlienServer"
+  port: 6000
+  approot: "http://ventax.tbi.univie.ac.at:6000"
+  tempdir: "/mnt/storage/tmp/rnalien/"
   copyright: TBI - 2014
 
 Production:
   host: "*4" # any IPv4 host
-  port: 9000
-  approot: "http://nibiru.tbi.univie.ac.at:9000"
-  tempdir: "/mnt/storage/temp/AlienServer"
+  port: 6000
+  approot: "http://nibiru.tbi.univie.ac.at:6000"
+  tempdir: "/mnt/storage/tmp/rnalien/"
   copyright: TBI - 2014
