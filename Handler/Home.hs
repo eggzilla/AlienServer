@@ -63,7 +63,7 @@ postHomeR = do
     let bashcontent = bashheader ++ aliencommand
     let qsubcommand = qsub_location ++ " -N " ++ sessionId  ++ "-q " ++ sge_queue_name ++ "-e " ++ sge_error_dir ++ " " ++ "-o " ++ sge_error_dir ++ " " ++ bashscriptpath ++ ">" ++ temporaryDirectoryPath ++ "SGEJobid"
     liftIO (writeFile (bashscriptpath) bashcontent)
-    _ <- liftIO (runCommand (aliencommand))
+    _ <- liftIO (runCommand (qsubcommand))
            
     --Render page
     defaultLayout $ do
