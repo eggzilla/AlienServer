@@ -49,9 +49,20 @@ postHomeR = do
     --Write input fasta file
     liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
                   
-    --Start RNAlien Job
-    let aliencommand = "nohup RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 3 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ temporaryDirectoryPath ++  " > " ++ temporaryDirectoryPath ++ "alienserverLog"
-    liftIO (writeFile (temporaryDirectoryPath ++ "alienserverCommand") aliencommand)
+    --Submit RNAlien Job to SGE
+    let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ temporaryDirectoryPath ++  " > " ++ temporaryDirectoryPath ++ "alienserverLog"
+    --sun grid engine settings
+    let qsub_location = "/usr/bin/qsub"
+    let sge_queue_name = "web_short_q"
+    let sge_error_dir = temporaryDirectoryPath ++ "/error"
+    let accounting_dir = "base_dir"
+    let sge_log_output_dir = "source_dir/error"
+    let sge_root_directory = "/usr/share/gridengine"
+    let bashscriptpath = temporaryDirectoryPath ++ "qsub.sh"
+    let bashheader = "#!/bin/bash\n"
+    let bashcontent = bashheader ++ aliencommand
+    let qsubcommand = qsub_location ++ " -N " ++ sessionId  ++ "-q " ++ sge_queue_name ++ "-e " ++ sge_error_dir ++ " " ++ "-o " ++ sge_error_dir ++ " " ++ bashscriptpath ++ ">" ++ temporaryDirectoryPath ++ "SGEJobid"
+    liftIO (writeFile (bashscriptpath) bashcontent)
     _ <- liftIO (runCommand (aliencommand))
            
     --Render page
