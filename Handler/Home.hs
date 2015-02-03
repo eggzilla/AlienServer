@@ -42,7 +42,8 @@ postHomeR = do
             _ -> Nothing
     --Create tempdir and session-Id
     sessionId <- liftIO createSessionId
-    outputPath <- fmap extraTempdir getExtra
+    approot  <- fmap extraApproot getExtra
+    outputPath <- fmap extraTempdir getExtra              
     let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"                     
     liftIO (createDirectory temporaryDirectoryPath)
            
@@ -54,9 +55,8 @@ postHomeR = do
     --sun grid engine settings
     let qsub_location = "/usr/bin/qsub"
     let sge_queue_name = "web_short_q"
-    let sge_error_dir = temporaryDirectoryPath ++ "/error"
-    let accounting_dir = "base_dir"
-    let sge_log_output_dir = "source_dir/error"
+    let sge_error_dir = temporaryDirectoryPath ++ "error"
+    let sge_log_output_dir = temporaryDirectoryPath ++ "error"
     let sge_root_directory = "/usr/share/gridengine"
     let bashscriptpath = temporaryDirectoryPath ++ "qsub.sh"
     let bashheader = "#!/bin/bash\n"
@@ -68,6 +68,7 @@ postHomeR = do
     --Render page
     defaultLayout $ do
         aDomId <- newIdent
+        let approotjs = approot
         let sessionIdInsert =  DT.pack sessionId
         let sessionIdjs = sessionId                       
         --let resultInsert = DT.unpack (fileName (fst (fromJust submission)))
