@@ -43,6 +43,7 @@ postHomeR = do
     --Create tempdir and session-Id
     sessionId <- liftIO createSessionId
     approot  <- fmap extraApproot getExtra
+    revprox  <- fmap extraRevprox getExtra
     outputPath <- fmap extraTempdir getExtra              
     let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"                     
     liftIO (createDirectory temporaryDirectoryPath)
@@ -61,14 +62,14 @@ postHomeR = do
     let bashscriptpath = temporaryDirectoryPath ++ "qsub.sh"
     let bashheader = "#!/bin/bash\n"
     let bashcontent = bashheader ++ aliencommand
-    let qsubcommand = qsub_location ++ " -N " ++ sessionId  ++ "-q " ++ sge_queue_name ++ "-e " ++ sge_error_dir ++ " " ++ "-o " ++ sge_error_dir ++ " " ++ bashscriptpath ++ ">" ++ temporaryDirectoryPath ++ "SGEJobid"
+    let qsubcommand = qsub_location ++ " -N " ++ sessionId  ++ " -q " ++ sge_queue_name ++ " -e " ++ sge_error_dir ++ " -o " ++ sge_root_directory ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "SGEJobid"
     liftIO (writeFile (bashscriptpath) bashcontent)
     _ <- liftIO (runCommand (qsubcommand))
            
     --Render page
     defaultLayout $ do
         aDomId <- newIdent
-        let approotjs = approot
+        let approotjs = revprox
         let sessionIdInsert =  DT.pack sessionId
         let sessionIdjs = sessionId                       
         --let resultInsert = DT.unpack (fileName (fst (fromJust submission)))

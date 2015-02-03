@@ -2,6 +2,7 @@ Default: &defaults
   host: "*4" # any IPv4 host
   port: 3000
   approot: "http://localhost:3000"
+  revprox: "http://localhost:3000"
   tempdir: "/home/egg/temp/"
   copyright: TBI - 2014
   #analytics: UA-YOURCODE
@@ -13,6 +14,7 @@ Testing:
   host: "*4" # any IPv4 host
   port: 3000
   approot: "http://kronos.tbi.univie.ac.at:3000"
+  revprox: "http://kronos.tbi.univie.ac.at:3000"
   tempdir: "/scratch/egg/temp/"
   copyright: TBI - 2014
 
@@ -20,6 +22,7 @@ Staging:
   host: "*4" # any IPv4 host
   port: 6000
   approot: "http://ventax.tbi.univie.ac.at:6000"
+  revprox: "http://ventax.tbi.univie.ac.at:6000"
   tempdir: "/mnt/storage/tmp/rnalien/"
   copyright: TBI - 2014
 
@@ -27,5 +30,6 @@ Production:
   host: "*4" # any IPv4 host
   port: 6000
   approot: "http://nibiru.tbi.univie.ac.at:6000"
+  revprox: "http://nibiru.tbi.univie.ac.at/rnalien"
   tempdir: "/mnt/storage/tmp/rnalien/"
   copyright: TBI - 2014

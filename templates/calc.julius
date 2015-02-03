@@ -1,2 +1,5 @@
 document.getElementById(#{toJSON aDomId}).innerHTML = "";
-window.setTimeout (window.location = "#{toJSON approotjs}/result?sessionId=#{toJSON sessionIdjs}", 5000);
+approot=#{toJSON approotjs};
+sessionId = #{toJSON sessionIdjs};
+calcWindowlocation= approot + "/result?sessionId=" + sessionId;
+window.setTimeout (window.location = calcWindowlocation, 5000);
