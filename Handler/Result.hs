@@ -21,14 +21,14 @@ getResultR = do
     let sessionIdjs = snd (DL.head params)
     let sessionId = DT.unpack sessionIdjs
     outputPath <- fmap extraTempdir getExtra
-    let tempDirPath = DT.unpack (outputPath) ++ sessionId ++ "/"
+    let temporaryDirectoryPath = DT.unpack (outputPath) ++ sessionId ++ "/"
     --check if tempdir exists otherwise short circuit
-    tempDirPresent <- liftIO (doesDirectoryExist tempDirPath)
+    tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)
     --checkSessionId tempDirPresent             
     --retrieve alienoutput and check if done
-    done <- liftIO (doesFileExist (tempDirPath ++ "done"))
+    done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))
     let unfinished = not done        
-    alienLog <- liftIO (readFile (tempDirPath ++ "alienserverLog"))
+    alienLog <- liftIO (readFile (temporaryDirectoryPath ++ "Log"))
     let resultInsert = DT.pack alienLog        
     defaultLayout $ do
         aDomId <- newIdent

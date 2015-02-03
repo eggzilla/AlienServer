@@ -66,6 +66,7 @@ data Extra = Extra
     , extraApproot :: Text
     , extraRevprox :: Text              
     , extraTempdir :: Text
+    , extraGEqueuename :: Text
     , extraAnalytics :: Maybe Text -- ^ Google Analytics
     } deriving Show
 
@@ -75,4 +76,5 @@ parseExtra _ o = Extra
     <*> o .:  "approot"
     <*> o .:  "revprox"
     <*> o .:  "tempdir"
+    <*> o .:  "gequeuename"    
     <*> o .:? "analytics"

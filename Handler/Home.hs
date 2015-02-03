@@ -44,26 +44,29 @@ postHomeR = do
     sessionId <- liftIO createSessionId
     approot  <- fmap extraApproot getExtra
     revprox  <- fmap extraRevprox getExtra
-    outputPath <- fmap extraTempdir getExtra              
-    let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"                     
+    outputPath <- fmap extraTempdir getExtra
+    geQueueName <- fmap extraGEqueuename getExtra           
+    let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"  
+    let alienLogPath = temporaryDirectoryPath ++ "Log"             
     liftIO (createDirectory temporaryDirectoryPath)
            
     --Write input fasta file
     liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
                   
     --Submit RNAlien Job to SGE
-    let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ temporaryDirectoryPath ++  " > " ++ temporaryDirectoryPath ++ "alienserverLog"
+    let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath
     --sun grid engine settings
-    let qsub_location = "/usr/bin/qsub"
-    let sge_queue_name = "web_short_q"
-    let sge_error_dir = temporaryDirectoryPath ++ "error"
-    let sge_log_output_dir = temporaryDirectoryPath ++ "error"
-    let sge_root_directory = "/usr/share/gridengine"
+    let qsubLocation = "/usr/bin/qsub"
+    let geErrorDir = temporaryDirectoryPath ++ "gelog"
+    let geLogOutputDir = temporaryDirectoryPath ++ "gelog"
+    let geRootDirectory = "/usr/share/gridengine"
     let bashscriptpath = temporaryDirectoryPath ++ "qsub.sh"
     let bashheader = "#!/bin/bash\n"
     let bashcontent = bashheader ++ aliencommand
-    let qsubcommand = qsub_location ++ " -N " ++ sessionId  ++ " -q " ++ sge_queue_name ++ " -e " ++ sge_error_dir ++ " -o " ++ sge_root_directory ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "SGEJobid"
-    liftIO (writeFile (bashscriptpath) bashcontent)
+    let qsubcommand = qsubLocation ++ " -N " ++ sessionId  ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
+    liftIO (writeFile geErrorDir "")
+    liftIO (writeFile alienLogPath "")
+    liftIO (writeFile bashscriptpath bashcontent)
     _ <- liftIO (runCommand (qsubcommand))
            
     --Render page
