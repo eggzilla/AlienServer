@@ -2,9 +2,15 @@ h1 {
     text-align: center
 }
 
-div.spacer
-{
-    font-size: 0; 
-    height: 40px;
-    line-height: 0;
+div.spacer {
+   font-size: 0; 
+   height: 20px;
+   line-height: 0;
+}
+
+td {
+   text-align: center;
+   border-collapse: separate;
+   border-spacing: 2px;
+   border: 1px solid gray;
 }

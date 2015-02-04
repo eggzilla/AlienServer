@@ -63,7 +63,7 @@ postHomeR = do
     let bashscriptpath = temporaryDirectoryPath ++ "qsub.sh"
     let bashheader = "#!/bin/bash\n"
     let bashcontent = bashheader ++ aliencommand
-    let qsubcommand = qsubLocation ++ " -N " ++ sessionId  ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
+    let qsubcommand = qsubLocation ++ " -N " ++ sessionId ++ " -l h_vmem=5G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
     liftIO (writeFile geErrorDir "")
     liftIO (writeFile alienLogPath "")
     liftIO (writeFile bashscriptpath bashcontent)

@@ -11,6 +11,8 @@ import qualified Data.List as DL (head)
 import System.Directory   
 import Settings.StaticFiles
 import System.IO (readFile)
+import Data.List.Split (splitOn)
+import Control.Monad
 import Yesod.Form.Bootstrap3    
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
@@ -29,23 +31,20 @@ getResultR = do
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))
     let unfinished = not done        
     alienLog <- liftIO (readFile (temporaryDirectoryPath ++ "Log"))
-    let resultInsert = DT.pack alienLog        
+    let iterationLogPaths = map (\x -> temporaryDirectoryPath ++ (show x) ++ ".log") [0,1,2,3,4,5,6,7,8,9,10]
+    existentIterationLogs <- liftIO (filterM doesFileExist iterationLogPaths)
+    iterationLogs <- liftIO (mapM retrieveIterationLog existentIterationLogs)
+    
+    let resultInsert = DT.pack (concat iterationLogs)
     defaultLayout $ do
         aDomId <- newIdent
         setTitle "Welcome To RNAlien!"
         $(widgetFile "result")
 
---checkSessionId :: forall (m :: * -> *). MonadHandler m => Bool -> m ()
---checkSessionId tempDirPresent
---  | tempDirPresent == False = sendResponse (DT.pack "Invalid sessionId provided")
---  | otherwise = return ()
-    
---buildResultInsert :: forall (m :: * -> *). a (Data.String.IsString a, Monad m) => Bool -> a -> m a
---buildResultInsert done sessionId = do
---  if done
---    then do
---      let resultInsert = ""
---      return resultInsert
---    else do
---      let resultInsert = sessionId
---      return resultInsert
+retrieveIterationLog :: String -> IO String
+retrieveIterationLog filePath = do
+      iterationLog <- readFile filePath
+      let logfields = splitOn "," iterationLog
+      let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "<td>" ++ logfields !! 1 ++ "<td>" ++ logfields !! 2 ++ "<td>" ++ logfields !! 3 ++"\n"
+      return iterationLine
+

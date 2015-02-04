@@ -5,7 +5,7 @@ Default: &defaults
   revprox: "http://localhost:3000"
   tempdir: "/home/egg/temp/"
   gequeuename: "c_highmem.q"
-  copyright: TBI >2014
+  copyright: TBI - 2015
   #analytics: UA-YOURCODE
 
 Development:
@@ -18,7 +18,7 @@ Testing:
   revprox: "http://kronos.tbi.univie.ac.at:3000"
   tempdir: "/scr/kronos/egg/temp/"
   gequeuename: "c_highmem.q"
-  copyright: TBI >2014
+  copyright: TBI - 2015
 
 Staging:
   host: "*4" # any IPv4 host
@@ -27,7 +27,7 @@ Staging:
   revprox: "http://ventax.tbi.univie.ac.at:6000"
   tempdir: "/mnt/storage/tmp/rnalien/"
   gequeuename: "web_short_q"
-  copyright: TBI >2014
+  copyright: TBI - 2015
 
 Production:
   host: "*4" # any IPv4 host
@@ -36,4 +36,4 @@ Production:
   revprox: "http://nibiru.tbi.univie.ac.at/rnalien"
   tempdir: "/mnt/storage/tmp/rnalien/"
   gequeuename: "web_short_q"
-  copyright: TBI >2014
+  copyright: TBI - 2015

@@ -3,6 +3,5 @@ sessionId = #{toJSON sessionIdjs};
 var ip = location.host;
 windowLocation = "http://" + ip + "/result?sessionId=" + sessionId;
 if(#{toJSON unfinished}){
-            //window.setTimeout (window.location = windowLocation, 5000);
-            setTimeout(function(){location.href=windowLocation} , 5000);   
+            setTimeout(function(){location.href=windowLocation} , 30000);   
 }
