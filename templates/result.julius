@@ -1,5 +1,5 @@
 document.getElementById(#{toJSON aDomId}).innerHTML = "";
-approot=#{toJSON approotjs};
+approot=#{toJSON approot};
 sessionId = #{toJSON sessionIdjs};
 windowLocation =  approot + "/result?sessionId=" + sessionId;
 if(#{toJSON unfinished}){

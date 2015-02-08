@@ -22,6 +22,7 @@ getResultR = do
     let params = reqGetParams result
     let sessionIdjs = snd (DL.head params)
     let sessionId = DT.unpack sessionIdjs
+    approot  <- fmap extraApproot getExtra
     outputPath <- fmap extraTempdir getExtra
     let temporaryDirectoryPath = DT.unpack (outputPath) ++ sessionId ++ "/"
     --check if tempdir exists otherwise short circuit
