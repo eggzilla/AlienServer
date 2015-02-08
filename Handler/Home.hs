@@ -45,7 +45,8 @@ postHomeR = do
     approot  <- fmap extraApproot getExtra
     revprox  <- fmap extraRevprox getExtra
     outputPath <- fmap extraTempdir getExtra
-    geQueueName <- fmap extraGEqueuename getExtra           
+    geQueueName <- fmap extraGEqueuename getExtra  
+    taxNodeFilePath <- fmap extraTaxNodeFilePath getExtra                
     let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"  
     let alienLogPath = temporaryDirectoryPath ++ "Log"             
     liftIO (createDirectory temporaryDirectoryPath)
@@ -54,7 +55,7 @@ postHomeR = do
     liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
                   
     --Submit RNAlien Job to SGE
-    let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath
+    let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -n " ++ (DT.unpack taxNodeFilePath)  ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath
     --sun grid engine settings
     let qsubLocation = "/usr/bin/qsub"
     let geErrorDir = temporaryDirectoryPath ++ "gelog"

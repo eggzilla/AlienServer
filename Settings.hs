@@ -66,6 +66,7 @@ data Extra = Extra
     , extraRevprox :: Text              
     , extraTempdir :: Text
     , extraGEqueuename :: Text
+    , extraTaxNodeFilePath :: Text
     , extraCopyright :: Text
     , extraAnalytics :: Maybe Text -- ^ Google Analytics
     } deriving Show
@@ -76,5 +77,6 @@ parseExtra _ o = Extra
     <*> o .:  "revprox"
     <*> o .:  "tempdir"
     <*> o .:  "gequeuename"
+    <*> o .:  "taxNodeFilePath"
     <*> o .:  "copyright"    
     <*> o .:? "analytics"
