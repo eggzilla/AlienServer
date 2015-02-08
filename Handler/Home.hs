@@ -61,7 +61,7 @@ postHomeR = do
     let geLogOutputDir = temporaryDirectoryPath ++ "gelog"
     let geRootDirectory = "/usr/share/gridengine"
     let bashscriptpath = temporaryDirectoryPath ++ "qsub.sh"
-    let bashheader = "#!/bin/bash\n"
+    let bashheader = "#!/bin/bash\nexport PATH=$HOME/Tools/bin:$HOME/Tools/clustalo/bin:$HOME/Tools/ViennaRNA/bin:$HOME/Tools/locarna/bin:$HOME/Tools/infernal/bin:$HOME/.cabal/bin:$PATH\n"
     let bashcontent = bashheader ++ aliencommand
     let qsubcommand = qsubLocation ++ " -N " ++ sessionId ++ " -l h_vmem=5G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
     liftIO (writeFile geErrorDir "")
