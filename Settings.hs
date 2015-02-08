@@ -62,19 +62,19 @@ widgetFile = (if development then widgetFileReload
               widgetFileSettings
 
 data Extra = Extra
-    { extraCopyright :: Text
-    , extraApproot :: Text
+    { extraApproot :: Text
     , extraRevprox :: Text              
     , extraTempdir :: Text
     , extraGEqueuename :: Text
+    , extraCopyright :: Text
     , extraAnalytics :: Maybe Text -- ^ Google Analytics
     } deriving Show
 
 parseExtra :: DefaultEnv -> Object -> Parser Extra
 parseExtra _ o = Extra
-    <$> o .:  "copyright"
-    <*> o .:  "approot"
+    <$> o .:  "approot"    
     <*> o .:  "revprox"
     <*> o .:  "tempdir"
-    <*> o .:  "gequeuename"    
+    <*> o .:  "gequeuename"
+    <*> o .:  "copyright"    
     <*> o .:? "analytics"
