@@ -32,7 +32,7 @@ Staging:
 Production:
   host: "*4" # any IPv4 host
   port: 6000
-  approot: "http://nibiru.tbi.univie.ac.at:6000"
+  approot: "http://nibiru.tbi.univie.ac.at/rnalien"
   revprox: "http://nibiru.tbi.univie.ac.at/rnalien"
   tempdir: "/mnt/storage/tmp/rnalien/"
   gequeuename: "web_short_q"

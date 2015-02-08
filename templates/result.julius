@@ -1,7 +1,7 @@
 document.getElementById(#{toJSON aDomId}).innerHTML = "";
+approot=#{toJSON approotjs};
 sessionId = #{toJSON sessionIdjs};
-var ip = location.host;
-windowLocation = "http://" + ip + "/result?sessionId=" + sessionId;
+windowLocation =  approot + "/result?sessionId=" + sessionId;
 if(#{toJSON unfinished}){
             setTimeout(function(){location.href=windowLocation} , 30000);   
 }
