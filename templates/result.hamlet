@@ -2,7 +2,8 @@
 <span ##{aDomId} style="color:red;float:left;">Please enable javascript.
 <h2> Results:
 <br>
-  <table><tr><th>Iteration<th>Upper taxonomic treshold id<th>Inclusion threshold[bit]<th>Aligned Sequences</tr>#{preEscapedToMarkup resultInsert}
+  <table><tr><th>Iteration<th>Upper taxonomic treshold id<th>Inclusion threshold[bit]<th>Aligned Sequences<th>Alignment Link<th>Covariance Model Link
+  #{preEscapedToMarkup resultInsert}
   
 <br>
 <div class="spacer">
