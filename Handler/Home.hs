@@ -65,7 +65,7 @@ postHomeR = do
     let home = "/mnt/storage/home/egg"
     let bashheader = "#!/bin/bash\n"
     let bashLDLibrary = "#$ -v LD_LIBRARY_PATH=/mnt/storage/egg/Tools/lib\n"
-    let bashPath = "#$ -v PATH=" ++ home ++ "/Tools/bin:" ++ home ++  "/Tools/clustalo/bin:" ++ home ++ "/Tools/ViennaRNA/bin:" ++ home ++ "/Tools/locarna/bin:" ++ home ++ "/Tools/infernal/bin:" ++ home ++ "/.cabal/bin:$PATH\n"
+    let bashPath = "#$ -v PATH=" ++ home ++ "/Tools/bin:" ++ home ++  "/Tools/clustalo/bin:" ++ home ++ "/Tools/ViennaRNA/bin:" ++ home ++ "/Tools/locarna/bin:" ++ home ++ "/Tools/infernal/bin:" ++ home ++ "/.cabal/bin:/usr/bin/perl:$PATH\n"
     let bashcontent = bashheader ++ bashLDLibrary ++ bashPath ++ aliencommand
     let qsubcommand = qsubLocation ++ " -N " ++ sessionId ++ " -l h_vmem=5G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
     liftIO (writeFile geErrorDir "")
