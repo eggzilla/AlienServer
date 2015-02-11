@@ -26,7 +26,7 @@ getResultR = do
     outputPath <- fmap extraTempdir getExtra
     let temporaryDirectoryPath = DT.unpack (outputPath) ++ sessionId ++ "/"
     let tempDirectoryRootURL = "http://nibiru.tbi.univie.ac.at/rnalien_tmp/rnalien/"
-    let tempDirectoryURL = "http://nibiru.tbi.univie.ac.at/rnalien_tmp/rnalien/" ++ sessionId ++ "/"
+    let tempDirectoryURL = tempDirectoryRootURL ++ sessionId ++ "/"
     --check if tempdir exists otherwise short circuit
     tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)
     --checkSessionId tempDirPresent             
@@ -47,8 +47,8 @@ retrieveIterationLog :: String -> String -> Int -> IO String
 retrieveIterationLog temporaryDirectoryPath tempDirectoryURL counter = do
       let logPath = temporaryDirectoryPath ++ (show counter) ++ ".log"
       iterationLog <- readFile logPath
-      let alnlink = "<a href=\"" ++ tempDirectoryURL ++ "/" ++ show counter ++ "/" ++ "model.stockholm" ++ "\">stockholm-format</a>" 
-      let cmlink = "<a href=\"" ++ tempDirectoryURL ++ "/" ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>" 
+      let alnlink = "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.stockholm" ++ "\">stockholm-format</a>" 
+      let cmlink = "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>" 
       let logfields = splitOn "," iterationLog
-      let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "<td>" ++ logfields !! 1 ++ "<td>" ++ logfields !! 2 ++ "<td>" ++ logfields !! 3 ++ "<td>" ++ alnlink ++ "<td>" ++ cmlink ++"\n"
+      let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td>" ++ logfields !! 1 ++ "</td><td>" ++ logfields !! 2 ++ "</td><td>" ++ logfields !! 3 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</tr>"
       return iterationLine
