@@ -67,7 +67,7 @@ postHomeR = do
     let bashLDLibrary = "#$ -v LD_LIBRARY_PATH=" ++ home ++ "/Tools/locarna/lib\n"
     let bashPath = "#$ -v PATH=" ++ home ++ "/Tools/bin:" ++ home ++  "/Tools/clustalo/bin:" ++ home ++ "/Tools/ViennaRNA/bin:" ++ home ++ "/Tools/locarna/bin:" ++ home ++ "/Tools/infernal/bin:" ++ home ++ "/.cabal/bin:/usr/bin/:/bin/:$PATH\n"
     let bashcontent = bashheader ++ bashLDLibrary ++ bashPath ++ aliencommand
-    let qsubcommand = qsubLocation ++ " -N " ++ sessionId ++ " -l h_vmem=5G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
+    let qsubcommand = qsubLocation ++ " -N " ++ sessionId ++ " -l h_vmem=8G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
     liftIO (writeFile geErrorDir "")
     liftIO (writeFile alienLogPath "")
     liftIO (writeFile bashscriptpath bashcontent)
