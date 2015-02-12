@@ -21,3 +21,24 @@ th {
    border-spacing: 2px;
    border: 1px solid gray;
 }
+
+p.red {
+    color:red;
+}
+
+p.blue {
+    color:blue;
+}
+
+p.green {
+    color:green;
+}
+
+p.orange {
+    color:orange;
+}
+
+p.yellow {
+    color:yellow;
+}
+
