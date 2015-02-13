@@ -72,14 +72,14 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL = do
 
 retrieveIterationLog :: String -> String -> Int -> IO String
 retrieveIterationLog temporaryDirectoryPath tempDirectoryURL counter = do
-      let logPath = temporaryDirectoryPath ++ (show counter) ++ ".log"
-      iterationLog <- readFile logPath
-      let alnlink = "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.stockholm" ++ "\">stockholm-format</a>" 
-      let cmlink = "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>" 
-      let logfields = splitOn "," iterationLog
-      status <- retrieveIterationStatus (temporaryDirectoryPath ++ show counter ++ "/")
-      let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ logfields !! 2 ++ "</td><td>" ++ logfields !! 3 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
-      return iterationLine
+  let logPath = temporaryDirectoryPath ++ (show counter) ++ ".log"
+  iterationLog <- readFile logPath
+  let alnlink = "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.stockholm" ++ "\">stockholm-format</a>" 
+  let cmlink = "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>" 
+  let logfields = splitOn "," iterationLog
+  status <- retrieveIterationStatus (temporaryDirectoryPath ++ show counter ++ "/")
+  let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ (take 5 (logfields !! 2)) ++ "</td><td>" ++ logfields !! 3 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
+  return iterationLine
 
 retrieveIterationStatus :: String -> IO String
 retrieveIterationStatus iterationDirectory = do
@@ -111,4 +111,3 @@ constructTaxonomyRecordsHtmlTable csv = recordtable
   where recordentries = concatMap (\(taxid,iteration,header) -> "<tr><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ taxid  ++ "</a></td><td>" ++ iteration  ++ "</td><td>" ++ header ++ "</td></tr>") csv
         tableheader = "<tr><th>Taxonomy Id</th><th>Included in Iteration</th><th>Entry Header</th></tr>"
         recordtable = "<table>" ++ tableheader ++ recordentries ++ "</table>"
-                      
