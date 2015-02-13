@@ -8,18 +8,12 @@ div.spacer {
    line-height: 0;
 }
 
-td {
+td, th {
    text-align: center;
    border-collapse: separate;
    border-spacing: 2px;
    border: 1px solid gray;
-}
-
-th {
-   text-align: center;
-   border-collapse: separate;
-   border-spacing: 2px;
-   border: 1px solid gray;
+   padding: 3px;
 }
 
 i.red {

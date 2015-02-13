@@ -38,8 +38,7 @@ getResultR = do
     let unfinished = not done
     existentIterationLogs <- liftIO (filterM (\x -> doesFileExist (temporaryDirectoryPath ++ (show x) ++ ".log")) [0,1,2,3,4,5,6,7,8,9,10])
     iterationLogs <- liftIO (mapM (retrieveIterationLog temporaryDirectoryPath tempDirectoryURL) existentIterationLogs)
-    resultLog <- liftIO (retrieveResultCsv done temporaryDirectoryPath)
-    let resultInsert = "<br><table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</td><td><a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</td><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table><br>" ++ resultLog
+    resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL)
     if started
        then do
          let iterationInsert = DT.pack (concat iterationLogs) 
@@ -54,8 +53,8 @@ getResultR = do
                setTitle "RNAlien Server - Results"
                $(widgetFile "result")
 
-retrieveResultCsv :: Bool -> String -> IO String
-retrieveResultCsv done temporaryDirectoryPath = do
+retrieveResultCsv :: Bool -> String -> String -> IO String
+retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL = do
   if done
      then do
        let myOptions = defaultDecodeOptions {
@@ -65,7 +64,7 @@ retrieveResultCsv done temporaryDirectoryPath = do
        inputCSV <- L.readFile alienCSVPath
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultHtmlTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
-       return resultHtmlTable
+       return ("<table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</td><td><a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</td><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table>" ++ resultHtmlTable)
      else do
        return ""
 
