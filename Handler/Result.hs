@@ -63,8 +63,10 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL = do
        let alienCSVPath = temporaryDirectoryPath ++ "result.csv"
        inputCSV <- L.readFile alienCSVPath
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
-       let resultHtmlTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
-       return ("<table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</td><td><a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</td><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table>" ++ resultHtmlTable)
+       let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
+       let resultHeadline = "<h2>Results:</h2>"
+       let resultFilesTable = "<table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</td><td><a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</td><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table>"                   
+       return (resultHeadline ++ resultFilesTable ++ resultFamilyMemberTable)
      else do
        return ""
 
