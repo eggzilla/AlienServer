@@ -35,11 +35,20 @@ getResultR = do
     alienLog <- liftIO (readFile (temporaryDirectoryPath ++ "Log"))
     existentIterationLogs <- liftIO (filterM (\x -> doesFileExist (temporaryDirectoryPath ++ (show x) ++ ".log")) [0,1,2,3,4,5,6,7,8,9,10])
     iterationLogs <- liftIO (mapM (retrieveIterationLog temporaryDirectoryPath tempDirectoryURL) existentIterationLogs)
-    let resultInsert = DT.pack (concat iterationLogs)
-    defaultLayout $ do
-        aDomId <- newIdent
-        setTitle "Welcome To RNAlien!"
-        $(widgetFile "result")
+    let resultInsert = "<table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table>"
+    if started
+       then do
+         let iterationInsert = DT.pack (concat iterationLogs) 
+         defaultLayout $ do
+               aDomId <- newIdent
+               setTitle "RNAlien Server - Results"
+               $(widgetFile "result")
+       else do
+         let iterationInsert = DT.pack "<tr><td colspan=\"7\">Your job is queued</td></tr>"
+         defaultLayout $ do
+               aDomId <- newIdent
+               setTitle "RNAlien Server - Results"
+               $(widgetFile "result")
 
 retrieveIterationLog :: String -> String -> Int -> IO String
 retrieveIterationLog temporaryDirectoryPath tempDirectoryURL counter = do
@@ -68,11 +77,11 @@ retrieveIterationStatus iterationDirectory = do
 
 checkStatus :: Bool ->  Bool ->  Bool ->  Bool ->  Bool ->  Bool ->  Bool -> String
 checkStatus searchStatus sequenceRetrievalStatus alignmentStatus filteringStatus calibrationStatus querySelectionStatus doneStatus
-  | doneStatus = "<p class=\"green\">done</p>"
-  | calibrationStatus = "<p class=\"blue\">model calibration</p>"
-  | querySelectionStatus = "<p class=\"blue\">query selection</p>"                
-  | filteringStatus = "<p class=\"yellow\">candidate filtering</p>"
-  | alignmentStatus = "<p class=\"orange\">candidate alignment</p>"
-  | sequenceRetrievalStatus = "<p class=\"red\">sequence retrieval</p>"
-  | searchStatus = "<p class=\"red\">sequence search</p>"
-  | otherwise = "<p>loading</p>"
+  | doneStatus = "<i class=\"green\">done</i>"
+  | calibrationStatus = "<i class=\"blue\">model calibration</i>"
+  | querySelectionStatus = "<i class=\"blue\">query selection</i>"                
+  | filteringStatus = "<i class=\"orange\">candidate filtering</i>"
+  | alignmentStatus = "<i class=\"orange\">candidate alignment</i>"
+  | sequenceRetrievalStatus = "<i class=\"red\">sequence retrieval</i>"
+  | searchStatus = "<i class=\"red\">sequence search</i>"
+  | otherwise = "<i>loading</i>"

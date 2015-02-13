@@ -22,23 +22,23 @@ th {
    border: 1px solid gray;
 }
 
-p.red {
+i.red {
     color:red;
 }
 
-p.blue {
+i.blue {
     color:blue;
 }
 
-p.green {
+i.green {
     color:green;
 }
 
-p.orange {
+i.orange {
     color:orange;
 }
 
-p.yellow {
+i.yellow {
     color:yellow;
 }
 
