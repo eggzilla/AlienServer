@@ -68,6 +68,9 @@ library
                  , split
                  , process
                  , random
+                 , cassava
+                 , vector
+                 , either-unwrap
 
     -- see https://github.com/yesodweb/yesod/issues/814
     if !os(windows)
