@@ -1,3 +1,4 @@
+
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Result where
 
@@ -78,7 +79,7 @@ retrieveIterationLog temporaryDirectoryPath tempDirectoryURL counter = do
   let cmlink = "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>" 
   let logfields = splitOn "," iterationLog
   status <- retrieveIterationStatus (temporaryDirectoryPath ++ show counter ++ "/")
-  let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ (take 5 (logfields !! 2)) ++ "</td><td>" ++ logfields !! 3 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
+  let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ (truncateThresholdField (logfields !! 2)) ++ "</td><td>" ++ logfields !! 3 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
   return iterationLine
 
 retrieveIterationStatus :: String -> IO String
@@ -111,3 +112,8 @@ constructTaxonomyRecordsHtmlTable csv = recordtable
   where recordentries = concatMap (\(taxid,iteration,header) -> "<tr><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ taxid  ++ "</a></td><td>" ++ iteration  ++ "</td><td>" ++ header ++ "</td></tr>") csv
         tableheader = "<tr><th>Taxonomy Id</th><th>Included in Iteration</th><th>Entry Header</th></tr>"
         recordtable = "<table>" ++ tableheader ++ recordentries ++ "</table>"
+
+truncateThresholdField :: String -> String
+truncateThresholdField thresholdField
+  | thresholdField == "not set" = "not set"
+  | otherwise = (take 5 thresholdField)
