@@ -96,5 +96,5 @@ randomid number = "cm" ++ (show number)
 createSessionId :: IO String                  
 createSessionId = do
   randomNumber <- randomIO :: IO Int16
-  let sessionId = randomid randomNumber
+  let sessionId = randomid (abs randomNumber)
   return sessionId
