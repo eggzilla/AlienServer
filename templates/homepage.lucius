@@ -5,6 +5,6 @@ h1 {
 div.spacer
 {
     font-size: 0; 
-    height: 40px;
+    height: 60px;
     line-height: 0;
 }
