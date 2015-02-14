@@ -33,7 +33,7 @@ getResultR = do
     let tempDirectoryRootURL = "http://nibiru.tbi.univie.ac.at/rnalien_tmp/rnalien/"
     let tempDirectoryURL = tempDirectoryRootURL ++ sessionId ++ "/"
     tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)         
-    started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "0" ++ ".log"))
+    started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "0.log"))
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))  
     let unfinished = not done
     existentIterationLogs <- liftIO (filterM (\x -> doesFileExist (temporaryDirectoryPath ++ (show x) ++ ".log")) [0,1,2,3,4,5,6,7,8,9,10])
