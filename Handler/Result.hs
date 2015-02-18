@@ -1,4 +1,3 @@
-
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Result where
 
@@ -37,7 +36,7 @@ getResultR = do
     started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "0.log"))
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))  
     let unfinished = not done
-    existentIterationLogs <- liftIO (filterM (\x -> doesFileExist (temporaryDirectoryPath ++ (show x) ++ ".log")) [0,1,2,3,4,5,6,7,8,9,10])
+    existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0,1,2,3,4,5,6,7,8,9,10])
     iterationLogs <- liftIO (mapM (retrieveIterationLog temporaryDirectoryPath tempDirectoryURL) existentIterationLogs)
     resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL)
     if started
@@ -66,7 +65,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL = do
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
        let resultHeadline = "<h2>Results:</h2>"
-       let resultFilesTable = "<table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</td><td><a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</td><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table>"                   
+       let resultFilesTable = "<table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</td><td><a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</td><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table><br>"                   
        return (resultHeadline ++ resultFilesTable ++ resultFamilyMemberTable)
      else do
        return ""
@@ -110,7 +109,7 @@ checkStatus searchStatus sequenceRetrievalStatus alignmentStatus filteringStatus
 constructTaxonomyRecordsHtmlTable :: [(String,String,String)] -> String
 constructTaxonomyRecordsHtmlTable csv = recordtable
   where recordentries = concatMap (\(taxid,iteration,header) -> "<tr><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ taxid  ++ "</a></td><td>" ++ iteration  ++ "</td><td>" ++ header ++ "</td></tr>") csv
-        tableheader = "<tr><th>Taxonomy Id</th><th>Included in Iteration</th><th>Entry Header</th></tr>"
+        tableheader = "<h3>Included Sequences</h3><tr><th>Taxonomy Id</th><th>Included in Iteration</th><th>Entry Header</th></tr>"
         recordtable = "<table>" ++ tableheader ++ recordentries ++ "</table>"
 
 truncateThresholdField :: String -> String
