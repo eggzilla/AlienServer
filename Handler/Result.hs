@@ -38,7 +38,7 @@ getResultR = do
     let unfinished = not done
     existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0,1,2,3,4,5,6,7,8,9,10])
     iterationLogs <- liftIO (mapM (retrieveIterationLog temporaryDirectoryPath tempDirectoryURL) existentIterationLogs)
-    resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL)
+    resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approot)
     if started
        then do
          let iterationInsert = DT.pack (concat iterationLogs) 
@@ -53,8 +53,8 @@ getResultR = do
                setTitle "RNAlien Server - Results"
                $(widgetFile "result")
 
-retrieveResultCsv :: Bool -> String -> String -> IO String
-retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL = do
+retrieveResultCsv :: Bool -> String -> String -> Text -> IO String
+retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
   if done
      then do
        let myOptions = defaultDecodeOptions {
@@ -65,8 +65,9 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL = do
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
        let resultHeadline = "<h2>Results:</h2>"
-       let resultFilesTable = "<table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</td><td><a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</td><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table><br>"                   
-       return (resultHeadline ++ resultFilesTable ++ resultFamilyMemberTable)
+       let resultFilesTable = "<table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</td><td><a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</td><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table><br>"
+       let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
+       return (resultHeadline ++ resultFilesTable ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do
        return ""
 
@@ -110,7 +111,7 @@ constructTaxonomyRecordsHtmlTable :: [(String,String,String)] -> String
 constructTaxonomyRecordsHtmlTable csv = recordtable
   where recordentries = concatMap (\(taxid,iteration,header) -> "<tr><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ taxid  ++ "</a></td><td>" ++ iteration  ++ "</td><td>" ++ header ++ "</td></tr>") csv
         tableheader = "<h3>Included Sequences</h3><tr><th>Taxonomy Id</th><th>Included in Iteration</th><th>Entry Header</th></tr>"
-        recordtable = "<table>" ++ tableheader ++ recordentries ++ "</table>"
+        recordtable = "<table>" ++ tableheader ++ recordentries ++ "</table><br>"
 
 truncateThresholdField :: String -> String
 truncateThresholdField thresholdField
