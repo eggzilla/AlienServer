@@ -109,7 +109,7 @@ checkStatus searchStatus sequenceRetrievalStatus alignmentStatus filteringStatus
 
 constructTaxonomyRecordsHtmlTable :: [(String,String,String)] -> String
 constructTaxonomyRecordsHtmlTable csv = recordtable
-  where recordentries = concatMap (\(taxid,iteration,header) -> "<tr><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ taxid  ++ "</a></td><td>" ++ iteration  ++ "</td><td>" ++ header ++ "</td></tr>") csv
+  where recordentries = concatMap (\(taxid,iteration,header) -> "<tr><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ taxid  ++ "\">" ++ taxid ++ "</a></td><td>" ++ iteration  ++ "</td><td>" ++ header ++ "</td></tr>") csv
         tableheader = "<h3>Included Sequences</h3><tr><th>Taxonomy Id</th><th>Included in Iteration</th><th>Entry Header</th></tr>"
         recordtable = "<table>" ++ tableheader ++ recordentries ++ "</table><br>"
 
