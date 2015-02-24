@@ -65,7 +65,13 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
        let resultHeadline = "<h2>Results:</h2>"
-       let resultFilesTable = "<table><tr><td><a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</td><td><a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</td><td><a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</td></tr></table><br>"
+       fastaPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fa")
+       stockholmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.stockholm")
+       cmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.cm")
+       let falink = fileStatusMessage fastaPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</a>")
+       let alnlink = fileStatusMessage stockholmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</a>")
+       let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</a>")
+       let resultFilesTable = "<table><tr><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td></tr></table><br>"
        let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
        return (resultHeadline ++ resultFilesTable ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do
@@ -74,13 +80,21 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
 retrieveIterationLog :: String -> String -> Int -> IO String
 retrieveIterationLog temporaryDirectoryPath tempDirectoryURL counter = do
   let logPath = temporaryDirectoryPath ++ (show counter) ++ ".log"
-  iterationLog <- readFile logPath
-  let alnlink = "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.stockholm" ++ "\">stockholm-format</a>" 
-  let cmlink = "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>" 
+  let iterationDirectoryPath = temporaryDirectoryPath ++ show counter ++ "/"
+  iterationLog <- readFile logPath 
+  stockholmPresent <- doesFileExist (iterationDirectoryPath ++ "model.stockholm")
+  cmPresent <- doesFileExist (iterationDirectoryPath ++ "model.cm")
+  let alnlink = fileStatusMessage stockholmPresent "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.stockholm" ++ "\">stockholm-format</a>" 
+  let cmlink = fileStatusMessage cmPresent "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>" 
   let logfields = splitOn "," iterationLog
-  status <- retrieveIterationStatus (temporaryDirectoryPath ++ show counter ++ "/")
+  status <- retrieveIterationStatus iterationDirectoryPath
   let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ (truncateThresholdField (logfields !! 2)) ++ "</td><td>" ++ logfields !! 3 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
   return iterationLine
+
+fileStatusMessage :: Bool -> String -> String
+fileStatusMessage filePresent message 
+  | filePresent = message
+  | otherwise = "loading"
 
 retrieveIterationStatus :: String -> IO String
 retrieveIterationStatus iterationDirectory = do
