@@ -84,8 +84,8 @@ retrieveIterationLog temporaryDirectoryPath tempDirectoryURL counter = do
   iterationLog <- readFile logPath 
   stockholmPresent <- doesFileExist (iterationDirectoryPath ++ "model.stockholm")
   cmPresent <- doesFileExist (iterationDirectoryPath ++ "model.cm")
-  let alnlink = fileStatusMessage stockholmPresent "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.stockholm" ++ "\">stockholm-format</a>" 
-  let cmlink = fileStatusMessage cmPresent "<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>" 
+  let alnlink = fileStatusMessage stockholmPresent ("<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.stockholm" ++ "\">stockholm-format</a>")
+  let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>")
   let logfields = splitOn "," iterationLog
   status <- retrieveIterationStatus iterationDirectoryPath
   let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ (truncateThresholdField (logfields !! 2)) ++ "</td><td>" ++ logfields !! 3 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
