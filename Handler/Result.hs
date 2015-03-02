@@ -65,7 +65,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
        let resultHeadline = "<h2>Results:</h2>"
-       fastaPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fa")
+       fastaPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fasta")
        stockholmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.stockholm")
        cmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.cm")
        let falink = fileStatusMessage fastaPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.fasta\">Result Fasta</a>")
