@@ -1,6 +1,10 @@
+<span ##{aDomId} style="color:red;float:left;">
+  <div class="alert alert-danger" role="alert">
+    Please enable javascript.
 <div class="spacer">
-<span ##{aDomId} style="color:red;float:left;">Please enable javascript.
-<h2> Calculation:
+<div class="page-header">
+  <h2><span class="label label-default">Webservice - Computation:</span><br>
+<div class="spacer">
 <br>
   Your Job with the id #{sessionIdInsert} has been submitted.
   You will be redirected to the result-page upon completion.
