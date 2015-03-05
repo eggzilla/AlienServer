@@ -36,7 +36,7 @@ getResultR = do
     started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "0.log"))
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))  
     let unfinished = not done
-    existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0,1,2,3,4,5,6,7,8,9,10])
+    existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])
     iterationLogs <- liftIO (mapM (retrieveIterationLog temporaryDirectoryPath tempDirectoryURL) existentIterationLogs)
     resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approot)
     if started
