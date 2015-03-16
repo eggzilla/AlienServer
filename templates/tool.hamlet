@@ -1,5 +1,28 @@
 <div class="spacer">
 <div class="page-header">
-  <h2><span class="label label-default">Commandline Tool:</span><br>
+  <h2><span class="label label-default">Commandline Tool:
+<br>
 <div class="spacer">
+RNAlien is available as a commandline tool, for testing or construction
+of few sequences the webservice can be used.<br>
+<br>
+Forinstruction how to use RNAlien please see the Help page.
+<br>
+Dependencies:<br>
+RNAlien requires several tools:<br>
+<ul>
+ <li><a href="http://www.clustal.org/omega/#Download">clustal-omega
+ <li><a href="http://www.bioinf.uni-freiburg.de/Software/LocARNA/#download">Locarna
+ <li><a href="https://www.tbi.univie.ac.at/~wash/RNAz/">RNAz
+ <li><a href="http://www.tbi.univie.ac.at/RNA/index.html#download">ViennaRNApackage
+<br>
+The ncbi taxonomy nodes file contained in the taxonomy dump:
+<ul>
+ <li><a href="ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip">Taxonomy dump
+<br>
 
+Installation via cabal-install:<br>
+RNAlien is implemented in Haskell and can be installed via the Haskell
+package distribution sytem <a href="https://www.haskell.org/cabal/">cabal
+<br>
+[user@host]$ cabal-install install RNAlien
