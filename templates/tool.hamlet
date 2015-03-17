@@ -11,18 +11,18 @@ Forinstruction how to use RNAlien please see the Help page.
 Dependencies:<br>
 RNAlien requires several tools:<br>
 <ul>
- <li><a href="http://www.clustal.org/omega/#Download">clustal-omega
- <li><a href="http://www.bioinf.uni-freiburg.de/Software/LocARNA/#download">Locarna
- <li><a href="https://www.tbi.univie.ac.at/~wash/RNAz/">RNAz
- <li><a href="http://www.tbi.univie.ac.at/RNA/index.html#download">ViennaRNApackage
+ <li><a href="http://www.clustal.org/omega/#Download">clustal-omega</a>
+ <li><a href="http://www.bioinf.uni-freiburg.de/Software/LocARNA/#download">Locarna</a>
+ <li><a href="https://www.tbi.univie.ac.at/~wash/RNAz/">RNAz</a>
+ <li><a href="http://www.tbi.univie.ac.at/RNA/index.html#download">ViennaRNApackage</a>
 <br>
 The ncbi taxonomy nodes file contained in the taxonomy dump:
 <ul>
- <li><a href="ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip">Taxonomy dump
+ <li><a href="ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip">Taxonomy dump</a>
 <br>
 
 Installation via cabal-install:<br>
 RNAlien is implemented in Haskell and can be installed via the Haskell
-package distribution sytem <a href="https://www.haskell.org/cabal/">cabal
+package distribution sytem <a href="https://www.haskell.org/cabal/">cabal</a>
 <br>
 [user@host]$ cabal-install install RNAlien
