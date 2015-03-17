@@ -66,7 +66,7 @@ makeArchive done temporaryDirectoryPath = do
             return ()
           else do
             _ <- system ("zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath)
-       return ()
+            return ()
      else do
        return ()
                 
