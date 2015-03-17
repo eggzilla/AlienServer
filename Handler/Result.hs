@@ -85,7 +85,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let alnlink = fileStatusMessage stockholmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</a>")
        let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</a>")
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Result Zip</a>")
-       let resultFilesTable = "<table><tr><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td></tr></table><br>"
+       let resultFilesTable = "<table><tr><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
        let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
        return (resultHeadline ++ resultFilesTable ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do
