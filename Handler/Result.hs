@@ -60,7 +60,12 @@ makeArchive :: Bool -> String -> IO ()
 makeArchive done temporaryDirectoryPath = do
   if done
      then do
-       _ <- system ("zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath)
+       archivePresent <- doesFileExist (temporaryDirectoryPath ++ "result.zip")
+       if archivePresent
+          then do
+            return ()
+          else do
+            _ <- system ("zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath)
        return ()
      else do
        return ()
