@@ -18,6 +18,8 @@ import Data.Csv
 import Data.Char
 import qualified Data.Vector as V
 import Data.Either.Unwrap
+import System.Process
+import System.Exit
 import Yesod.Form.Bootstrap3    
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
@@ -41,7 +43,8 @@ getResultR = do
     resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approot)
     if started
        then do
-         let iterationInsert = DT.pack (concat iterationLogs) 
+         let iterationInsert = DT.pack (concat iterationLogs)
+         liftIO (makeArchive done temporaryDirectoryPath)
          defaultLayout $ do
                aDomId <- newIdent
                setTitle "RNAlien Server - Results"
@@ -53,6 +56,15 @@ getResultR = do
                setTitle "RNAlien Server - Results"
                $(widgetFile "result")
 
+makeArchive :: Bool -> String -> IO ()
+makeArchive done temporaryDirectoryPath = do
+  if done
+     then do
+       _ <- system ("zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath)
+       return ()
+     else do
+       return ()
+                
 retrieveResultCsv :: Bool -> String -> String -> Text -> IO String
 retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
   if done
@@ -68,9 +80,11 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        fastaPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fasta")
        stockholmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.stockholm")
        cmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.cm")
+       archivePresent <- doesFileExist (temporaryDirectoryPath ++ "result.zip")
        let falink = fileStatusMessage fastaPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.fasta\">Result Fasta</a>")
        let alnlink = fileStatusMessage stockholmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</a>")
        let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</a>")
+       let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Result Zip</a>")
        let resultFilesTable = "<table><tr><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td></tr></table><br>"
        let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
        return (resultHeadline ++ resultFilesTable ++ resultFamilyMemberTable ++ cmcwsSendToField)
