@@ -5,7 +5,7 @@
 <div class="page-header">
   <h2><span class="label label-default">Webservice:</span><br>
 <div class="spacer">
-<h2>Results:
+<h2>Progress:
 <table><tr><th> Iteration <th> Upper taxonomic treshold id <th> Inclusion threshold[bit] <th> Aligned Sequences <th> Alignment Link <th> Covariance Model Link <th> Status#{preEscapedToMarkup iterationInsert} 
 <br>
   #{preEscapedToMarkup resultInsert}
