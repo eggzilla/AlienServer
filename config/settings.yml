@@ -5,7 +5,7 @@ Default: &defaults
   revprox: "http://localhost:3000"
   tempdir: "/home/egg/temp/"
   gequeuename: "c_highmem.q"
-  taxNodeFilePath: "~egg/current/Data/Taxonomy/taxdump/nodes.dmp"
+  taxDumpPath: "~egg/current/Data/Taxonomy/taxdump/"
   copyright: TBI - 2015
   #analytics: UA-YOURCODE
 
@@ -19,7 +19,7 @@ Testing:
   revprox: "http://kronos.tbi.univie.ac.at:3000"
   tempdir: "/scr/kronos/egg/temp/"
   gequeuename: "c_highmem.q"
-  taxNodeFilePath: "~egg/current/Data/Taxonomy/taxdump/nodes.dmp"
+  taxDumpPath: "~egg/current/Data/Taxonomy/taxdump/"
   copyright: TBI - 2015
 
 Staging:
@@ -29,7 +29,7 @@ Staging:
   revprox: "http://ventax.tbi.univie.ac.at:6000"
   tempdir: "/mnt/storage/tmp/rnalien/"
   gequeuename: "web_long_q"
-  taxNodeFilePath: "/mnt/storage/data/rnalien/nodes.dmp"
+  taxDumpPath: "/mnt/storage/data/rnalien/"
   copyright: TBI - 2015
 
 Production:
@@ -39,5 +39,5 @@ Production:
   revprox: "http://nibiru.tbi.univie.ac.at/rnalien"
   tempdir: "/mnt/storage/tmp/rnalien/"
   gequeuename: "web_long_q"
-  taxNodeFilePath: "/mnt/storage/data/rnalien/nodes.dmp"
+  taxDumpPath: "/mnt/storage/data/rnalien/"
   copyright: TBI - 2015

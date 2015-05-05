@@ -30,6 +30,7 @@ getResultR = do
     let sessionIdjs = snd (DL.head params)
     let sessionId = DT.unpack sessionIdjs
     approot  <- fmap extraApproot getExtra
+    taxDumpDirectoryPath <- fmap extraTaxDumpPath getExtra                
     outputPath <- fmap extraTempdir getExtra
     let temporaryDirectoryPath = DT.unpack (outputPath) ++ sessionId ++ "/"
     let tempDirectoryRootURL = "http://nibiru.tbi.univie.ac.at/rnalien_tmp/rnalien/"
@@ -38,13 +39,14 @@ getResultR = do
     started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "0.log"))
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))  
     let unfinished = not done
-    existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])
+    existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0..35])
     iterationLogs <- liftIO (mapM (retrieveIterationLog temporaryDirectoryPath tempDirectoryURL) existentIterationLogs)
     resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approot)
     if started
        then do
          let iterationInsert = DT.pack (concat iterationLogs)
          liftIO (makeArchive done temporaryDirectoryPath)
+         liftIO (makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath)
          defaultLayout $ do
                aDomId <- newIdent
                setTitle "RNAlien Server - Results"
@@ -69,7 +71,25 @@ makeArchive done temporaryDirectoryPath = do
             return ()
      else do
        return ()
-                
+  
+makeTaxonomicOverview :: Bool -> String -> Text -> IO ()
+makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath = do
+  let taxOverviewDotFilePath = temporaryDirectoryPath ++ "taxonomy.dot"
+  let taxOverviewSvgFilePath = temporaryDirectoryPath ++ "taxonomy.svg"
+  let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
+  if done
+     then do
+       overviewPresent <- doesFileExist taxOverviewSvgFilePath
+       if overviewPresent
+          then do
+            return ()
+          else do
+            _ <- system ("Ids2Tree -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ taxOverviewDotFilePath)
+            _ <- system ("dot -Tsvg " ++ taxOverviewDotFilePath ++ " -o " ++ taxOverviewSvgFilePath ++ " -r " ++ alienResultCsvFilePath)
+            return ()
+     else do
+       return ()
+              
 retrieveResultCsv :: Bool -> String -> String -> Text -> IO String
 retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
   if done
@@ -78,6 +98,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
          decDelimiter = fromIntegral (ord ';')
          }
        let alienCSVPath = temporaryDirectoryPath ++ "result.csv"
+       let taxonomySvgPath = temporaryDirectoryPath ++ "taxonomy.svg"
        inputCSV <- L.readFile alienCSVPath
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
@@ -91,6 +112,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</a>")
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Result Zip</a>")
        let resultFilesTable = "<table><tr><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
+       let taxonomyOverview = "<table><tr><td>Taxonomic overview of alien hits</td></tr><tr><td><img src=\"" ++ taxonomySvgPath ++ "\" alt=\"Taxonomic overview of alien hits\"></td></tr></table><br>"
        let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
        return (resultHeadline ++ resultFilesTable ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do

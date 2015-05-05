@@ -45,8 +45,7 @@ postHomeR = do
     approot  <- fmap extraApproot getExtra
     revprox  <- fmap extraRevprox getExtra
     outputPath <- fmap extraTempdir getExtra
-    geQueueName <- fmap extraGEqueuename getExtra  
-    taxNodeFilePath <- fmap extraTaxNodeFilePath getExtra                
+    geQueueName <- fmap extraGEqueuename getExtra            
     let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"  
     let alienLogPath = temporaryDirectoryPath ++ "Log"             
     liftIO (createDirectory temporaryDirectoryPath)
