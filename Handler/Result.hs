@@ -77,6 +77,7 @@ makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath = do
   let taxOverviewDotFilePath = temporaryDirectoryPath ++ "taxonomy.dot"
   let taxOverviewSvgFilePath = temporaryDirectoryPath ++ "taxonomy.svg"
   let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
+  let home = "/mnt/storage/home/egg"
   if done
      then do
        overviewPresent <- doesFileExist taxOverviewSvgFilePath
@@ -84,8 +85,8 @@ makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath = do
           then do
             return ()
           else do
-            _ <- system ("Ids2Tree -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ taxOverviewDotFilePath)
-            _ <- system ("dot -Tsvg " ++ taxOverviewDotFilePath ++ " -o " ++ taxOverviewSvgFilePath ++ " -r " ++ alienResultCsvFilePath)
+            _ <- system (home ++ "Ids2Tree -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ taxOverviewDotFilePath ++ " -r " ++ alienResultCsvFilePath)
+            _ <- system ("dot -Tsvg " ++ taxOverviewDotFilePath ++ " -o " ++ taxOverviewSvgFilePath)
             return ()
      else do
        return ()
@@ -98,7 +99,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
          decDelimiter = fromIntegral (ord ';')
          }
        let alienCSVPath = temporaryDirectoryPath ++ "result.csv"
-       let taxonomySvgPath = temporaryDirectoryPath ++ "taxonomy.svg"
+       let taxonomySvgPath = tempDirectoryURL ++ "taxonomy.svg"
        inputCSV <- L.readFile alienCSVPath
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
