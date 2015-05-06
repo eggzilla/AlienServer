@@ -114,7 +114,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let resultFilesTable = "<table><tr><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
        let taxonomyOverview = "<table><tr><td>Taxonomic overview of alien hits</td></tr><tr><td><img src=\"" ++ taxonomySvgPath ++ "\" alt=\"Taxonomic overview of alien hits\"></td></tr></table><br>"
        let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
-       return (resultHeadline ++ resultFilesTable ++ resultFamilyMemberTable ++ cmcwsSendToField)
+       return (resultHeadline ++ resultFilesTable ++ taxonomyOverview  ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do
        return ""
 
