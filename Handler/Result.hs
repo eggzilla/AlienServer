@@ -121,7 +121,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
 
 retrieveIterationLog :: String -> String -> Int -> IO String
 retrieveIterationLog temporaryDirectoryPath tempDirectoryURL counter = do
-  let logPath = temporaryDirectoryPath ++ (show counter) ++ ".log"
+  let logPath = temporaryDirectoryPath ++ "log/" ++ (show counter) ++ ".log"
   let iterationDirectoryPath = temporaryDirectoryPath ++ show counter ++ "/"
   iterationLog <- readFile logPath 
   stockholmPresent <- doesFileExist (iterationDirectoryPath ++ "model.stockholm")
