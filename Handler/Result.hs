@@ -85,7 +85,7 @@ makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath = do
           then do
             return ()
           else do
-            _ <- system (home ++ "Ids2Tree -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ taxOverviewDotFilePath ++ " -r " ++ alienResultCsvFilePath)
+            _ <- system ("Ids2Tree -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ taxOverviewDotFilePath ++ " -r " ++ alienResultCsvFilePath)
             _ <- system ("dot -Tsvg " ++ taxOverviewDotFilePath ++ " -o " ++ taxOverviewSvgFilePath)
             return ()
      else do
@@ -104,15 +104,21 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
        let resultHeadline = "<h2>Results:</h2>"
+       logPresent <- doesFileExist (temporaryDirectoryPath ++ "Log")
        fastaPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fa")
        stockholmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.stockholm")
        cmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.cm")
+       rnazPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fa")
+       cmstatPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fa")
        archivePresent <- doesFileExist (temporaryDirectoryPath ++ "result.zip")
-       let falink = fileStatusMessage fastaPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.fa\">Result Fasta</a>")
-       let alnlink = fileStatusMessage stockholmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Result Alignment</a>")
-       let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cm\">Result CM</a>")
-       let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Result Zip</a>")
-       let resultFilesTable = "<table><tr><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
+       let loglink = fileStatusMessage logPresent ("<a href=\"" ++ tempDirectoryURL ++ "Log\">Log</a>")
+       let falink = fileStatusMessage fastaPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.fa\">Fasta</a>")
+       let alnlink = fileStatusMessage stockholmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Stockholm Alignment</a>")
+       let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cm\">Covariance Model</a>")
+       let rnazlink = fileStatusMessage rnazPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnaz\">Rnaz Output</a>")
+       let cmstatlink = fileStatusMessage cmstatPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cmstat\">cmstat Output</a>")
+       let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
+       let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
        let taxonomyOverview = "<table><tr><td>Taxonomic overview of alien hits</td></tr><tr><td><img src=\"" ++ taxonomySvgPath ++ "\" alt=\"Taxonomic overview of alien hits\"></td></tr></table><br>"
        let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
        return (resultHeadline ++ resultFilesTable ++ taxonomyOverview  ++ resultFamilyMemberTable ++ cmcwsSendToField)
