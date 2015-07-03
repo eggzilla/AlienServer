@@ -46,7 +46,7 @@ getResultR = do
        then do
          let iterationInsert = DT.pack (concat iterationLogs)
          liftIO (makeArchive done temporaryDirectoryPath)
-         liftIO (makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath)
+         --liftIO (makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath)
          defaultLayout $ do
                aDomId <- newIdent
                setTitle "RNAlien Server - Results"
@@ -72,24 +72,24 @@ makeArchive done temporaryDirectoryPath = do
      else do
        return ()
   
-makeTaxonomicOverview :: Bool -> String -> Text -> IO ()
-makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath = do
-  let taxOverviewDotFilePath = temporaryDirectoryPath ++ "taxonomy.dot"
-  let taxOverviewSvgFilePath = temporaryDirectoryPath ++ "taxonomy.svg"
-  let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
-  let home = "/mnt/storage/home/egg"
-  if done
-     then do
-       overviewPresent <- doesFileExist taxOverviewSvgFilePath
-       if overviewPresent
-          then do
-            return ()
-          else do
-            _ <- system ("Ids2Tree -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ taxOverviewDotFilePath ++ " -r " ++ alienResultCsvFilePath)
-            _ <- system ("dot -Tsvg " ++ taxOverviewDotFilePath ++ " -o " ++ taxOverviewSvgFilePath)
-            return ()
-     else do
-       return ()
+--makeTaxonomicOverview :: Bool -> String -> Text -> IO ()
+--makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath = do
+--  let taxOverviewDotFilePath = temporaryDirectoryPath ++ "taxonomy.dot"
+--  let taxOverviewSvgFilePath = temporaryDirectoryPath ++ "taxonomy.svg"
+--  let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
+--  let home = "/mnt/storage/home/egg"
+--  if done
+--     then do
+--       overviewPresent <- doesFileExist taxOverviewSvgFilePath
+--       if overviewPresent
+--          then do
+--            return ()
+--          else do
+--            _ <- system ("Ids2Tree -l 4 -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ taxOverviewDotFilePath ++ " -r " ++ alienResultCsvFilePath) 
+--           _ <- system ("dot -Tsvg " ++ taxOverviewDotFilePath ++ " -o " ++ taxOverviewSvgFilePath)
+--            return ()
+--     else do
+--       return ()
               
 retrieveResultCsv :: Bool -> String -> String -> Text -> IO String
 retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
@@ -108,8 +108,8 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        fastaPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fa")
        stockholmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.stockholm")
        cmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.cm")
-       rnazPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fa")
-       cmstatPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fa")
+       rnazPresent <- doesFileExist (temporaryDirectoryPath ++ "result.rnaz")
+       cmstatPresent <- doesFileExist (temporaryDirectoryPath ++ "result.cmstat")
        archivePresent <- doesFileExist (temporaryDirectoryPath ++ "result.zip")
        let loglink = fileStatusMessage logPresent ("<a href=\"" ++ tempDirectoryURL ++ "Log\">Log</a>")
        let falink = fileStatusMessage fastaPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.fa\">Fasta</a>")
@@ -119,7 +119,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let cmstatlink = fileStatusMessage cmstatPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cmstat\">cmstat Output</a>")
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
        let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
-       let taxonomyOverview = "<table><tr><td>Taxonomic overview of alien hits</td></tr><tr><td><img src=\"" ++ taxonomySvgPath ++ "\" alt=\"Taxonomic overview of alien hits\"></td></tr></table><br>"
+       let taxonomyOverview = "<table><tr><td>Taxonomic overview of alien hits</td></tr><tr><td><img src=\"" ++ taxonomySvgPath ++ "\" alt=\"loading\"></td></tr></table><br>"
        let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
        return (resultHeadline ++ resultFilesTable ++ taxonomyOverview  ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do

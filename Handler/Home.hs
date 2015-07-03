@@ -49,12 +49,20 @@ postHomeR = do
     let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"  
     let alienLogPath = temporaryDirectoryPath ++ "Log"             
     liftIO (createDirectory temporaryDirectoryPath)
-           
+  
+    --Paths for rendering result taxonomy tree
+    taxDumpDirectoryPath <- fmap extraTaxDumpPath getExtra
+    let taxOverviewDotFilePath = temporaryDirectoryPath ++ "taxonomy.dot"
+    let taxOverviewSvgFilePath = temporaryDirectoryPath ++ "taxonomy.svg"
+    let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
+
     --Write input fasta file
     liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
                   
     --Submit RNAlien Job to SGE
-    let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath
+    let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath ++ "\n"
+    let ids2treecommand = "Ids2Tree -l 4 -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ taxOverviewDotFilePath ++ " -r " ++ alienResultCsvFilePath  ++ "\n"
+    let dotcommand = "dot -Tsvg " ++ taxOverviewDotFilePath ++ " -o " ++ taxOverviewSvgFilePath ++ "\n"
     --sun grid engine settings
     let qsubLocation = "/usr/bin/qsub"
     let geErrorDir = temporaryDirectoryPath ++ "gelog"
