@@ -36,7 +36,7 @@ getResultR = do
     let tempDirectoryRootURL = "http://nibiru.tbi.univie.ac.at/rnalien_tmp/rnalien/"
     let tempDirectoryURL = tempDirectoryRootURL ++ sessionId ++ "/"
     tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)         
-    started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "0.log"))
+    started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "log/0.log"))
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))  
     let unfinished = not done
     existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0..35])
@@ -130,7 +130,7 @@ retrieveIterationLog temporaryDirectoryPath tempDirectoryURL counter = do
   let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>")
   let logfields = splitOn "," iterationLog
   status <- retrieveIterationStatus iterationDirectoryPath
-  let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ (truncateThresholdField (logfields !! 2)) ++ "</td><td>" ++ logfields !! 3 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
+  let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ logfields !! 2 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
   return iterationLine
 
 fileStatusMessage :: Bool -> String -> String
