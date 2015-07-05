@@ -45,7 +45,7 @@ getResultR = do
     if started
        then do
          let iterationInsert = DT.pack (concat iterationLogs)
-         liftIO (makeArchive done temporaryDirectoryPath)
+         --liftIO (makeArchive done temporaryDirectoryPath)
          --liftIO (makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath)
          defaultLayout $ do
                aDomId <- newIdent
@@ -58,19 +58,19 @@ getResultR = do
                setTitle "RNAlien Server - Results"
                $(widgetFile "result")
 
-makeArchive :: Bool -> String -> IO ()
-makeArchive done temporaryDirectoryPath = do
-  if done
-     then do
-       archivePresent <- doesFileExist (temporaryDirectoryPath ++ "result.zip")
-       if archivePresent
-          then do
-            return ()
-          else do
-            _ <- system ("zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath)
-            return ()
-     else do
-       return ()
+--makeArchive :: Bool -> String -> IO ()
+--makeArchive done temporaryDirectoryPath = do
+--  if done
+--     then do
+--       archivePresent <- doesFileExist (temporaryDirectoryPath ++ "result.zip")
+--       if archivePresent
+--          then do
+--            return ()
+--          else do
+--            _ <- system ("zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath)
+--            return ()
+--     else do
+--       return ()
   
 --makeTaxonomicOverview :: Bool -> String -> Text -> IO ()
 --makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath = do

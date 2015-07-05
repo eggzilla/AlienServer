@@ -63,6 +63,7 @@ postHomeR = do
     let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath ++ "\n"
     let ids2treecommand = "Ids2Tree -l 4 -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ taxOverviewDotFilePath ++ " -r " ++ alienResultCsvFilePath  ++ "\n"
     let dotcommand = "dot -Tsvg " ++ taxOverviewDotFilePath ++ " -o " ++ taxOverviewSvgFilePath ++ "\n"
+    let archivecommand = "zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath ++ "\n"
     --sun grid engine settings
     let qsubLocation = "/usr/bin/qsub"
     let geErrorDir = temporaryDirectoryPath ++ "gelog"
@@ -73,7 +74,7 @@ postHomeR = do
     let bashheader = "#!/bin/bash\n"
     let bashLDLibrary = "#$ -v LD_LIBRARY_PATH=" ++ home ++ "/Tools/locarna/lib\n"
     let bashPath = "#$ -v PATH=" ++ home ++ "/Tools/bin:" ++ home ++  "/Tools/clustalo/bin:" ++ home ++ "/Tools/ViennaRNA/bin:" ++ home ++ "/Tools/locarna/bin:" ++ home ++ "/Tools/infernal/bin:" ++ home ++ "/.cabal/bin:/usr/bin/:/bin/:$PATH\n"
-    let bashcontent = bashheader ++ bashLDLibrary ++ bashPath ++ aliencommand
+    let bashcontent = bashheader ++ bashLDLibrary ++ bashPath ++ aliencommand ++ ids2treecommand ++ dotcommand ++ archivecommand
     let qsubcommand = qsubLocation ++ " -N " ++ sessionId ++ " -l h_vmem=8G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
     liftIO (writeFile geErrorDir "")
     liftIO (writeFile alienLogPath "")
