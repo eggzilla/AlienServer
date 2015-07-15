@@ -35,6 +35,7 @@ getResultR = do
     let temporaryDirectoryPath = DT.unpack (outputPath) ++ sessionId ++ "/"
     let tempDirectoryRootURL = "http://nibiru.tbi.univie.ac.at/rnalien_tmp/rnalien/"
     let tempDirectoryURL = tempDirectoryRootURL ++ sessionId ++ "/"
+    let tempDirectoryURLjs = DT.pack (tempDirectoryRootURL ++ sessionId ++ "/")
     tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)         
     started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "log/0.log"))
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))  
@@ -119,7 +120,8 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let cmstatlink = fileStatusMessage cmstatPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cmstat\">cmstat Output</a>")
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
        let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
-       let taxonomyOverview = "<table><tr><td>Taxonomic overview of alien hits</td></tr><tr><td><img src=\"" ++ taxonomySvgPath ++ "\" alt=\"loading\"></td></tr></table><br>"
+       --let taxonomyOverview = "<table><tr><td>Taxonomic overview of alien hits</td></tr><tr><td><img src=\"" ++ taxonomySvgPath ++ "\" alt=\"loading\"></td></tr></table><br>"
+       let taxonomyOverview = "<div id=\"tree-container\"></div>"
        let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
        return (resultHeadline ++ resultFilesTable ++ taxonomyOverview  ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do
