@@ -20,6 +20,8 @@ import qualified Data.Vector as V
 import Data.Either.Unwrap
 import System.Process
 import System.Exit
+import Bio.RNAzParser
+import Text.ParserCombinators.Parsec 
 import Yesod.Form.Bootstrap3    
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
@@ -35,7 +37,7 @@ getResultR = do
     let temporaryDirectoryPath = DT.unpack (outputPath) ++ sessionId ++ "/"
     let tempDirectoryRootURL = "http://nibiru.tbi.univie.ac.at/rnalien_tmp/rnalien/"
     let tempDirectoryURL = tempDirectoryRootURL ++ sessionId ++ "/"
-    let tempDirectoryURLjs = DT.pack (tempDirectoryRootURL ++ sessionId ++ "/")
+    let tempDirectoryURLjs = DT.pack ("../rnalien_tmp/rnalien/" ++ sessionId ++ "/")
     tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)         
     started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "log/0.log"))
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))  
@@ -120,10 +122,11 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let cmstatlink = fileStatusMessage cmstatPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cmstat\">cmstat Output</a>")
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
        let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
+       evaluationResults <- constructEvaluationResults (length decodedCsvOutput) (temporaryDirectoryPath ++ "result.rnaz") (temporaryDirectoryPath ++ "result.cmstat")
        --let taxonomyOverview = "<table><tr><td>Taxonomic overview of alien hits</td></tr><tr><td><img src=\"" ++ taxonomySvgPath ++ "\" alt=\"loading\"></td></tr></table><br>"
-       let taxonomyOverview = "<div id=\"tree-container\"></div>"
+       let taxonomyOverview = "<h3>Taxonomy overview:</h3><br>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div>"
        let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
-       return (resultHeadline ++ resultFilesTable ++ taxonomyOverview  ++ resultFamilyMemberTable ++ cmcwsSendToField)
+       return (resultHeadline ++ resultFilesTable ++ evaluationResults  ++ taxonomyOverview  ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do
        return ""
 
@@ -181,3 +184,161 @@ truncateThresholdField :: String -> String
 truncateThresholdField thresholdField
   | thresholdField == "not set" = "not set"
   | otherwise = (take 5 thresholdField)
+
+
+constructEvaluationResults :: Int -> String -> String -> IO String
+constructEvaluationResults entryNumber rnazPath cmStatPath = do
+  inputcmStat <- readCMstat cmStatPath
+  let cmstatString = cmstatHtmlOutput inputcmStat
+  if (entryNumber > 1)
+    then do 
+      inputRNAz <- readRNAz rnazPath 
+      let rnaZString = rnaZHtmlOutput inputRNAz
+      return ("<h3>Evaluation Results:</h3><table><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmstatString ++ "</table><table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table>")
+    else do 
+      return ("<h3>Evaluation Results:</h3><table><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmstatString ++ "</table><table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz statistics with a single sequence.</td></tr></table>")
+
+cmstatHtmlOutput :: Either ParseError CMstat -> String 
+cmstatHtmlOutput inputcmstat
+  | isRight inputcmstat = cmstatString
+  | otherwise = "<tr><td colspan=\"2\">" ++ show (fromLeft inputcmstat) ++ "</td></tr>"
+    where cmStat = fromRight inputcmstat  
+          cmstatString = "<tr><td>Sequence Number:</td><td>" ++ show (statSequenceNumber cmStat)++ "</td></tr>" ++ "<tr><td>Effective Sequences: " ++ show (statEffectiveSequences cmStat)++ "</td></tr>" ++ "<tr><td>Consensus length: " ++ show (statConsensusLength cmStat) ++ "</td></tr>" ++ "<tr><td>Expected maximum hit-length: " ++ show (statW cmStat) ++ "</td></tr>" ++ "<tr><td>Basepairs: " ++ show (statBasepairs cmStat)++ "</td></tr>" ++ "<tr><td>Bifurcations: " ++ show (statBifurcations cmStat) ++ "</td></tr>" ++ "<tr><td>Modeltype: " ++ show (statModel cmStat) ++ "</td></tr>" ++ "<tr><td>Relative Entropy CM: " ++ show (relativeEntropyCM cmStat) ++ "</td></tr>" ++ "<tr><td>Relative Entropy HMM: " ++ show (relativeEntropyHMM cmStat) ++ "</td></tr>"
+
+rnaZHtmlOutput :: Either ParseError RNAz -> String 
+rnaZHtmlOutput inputRNAz 
+  | isRight inputRNAz = rnazString
+  | otherwise = show (fromLeft inputRNAz)
+    where rnaZ = fromRight inputRNAz
+          rnazString = "<tr><td>Mean pairwise identity</td><td>" ++ show (meanPairwiseIdentity rnaZ) ++ "</td></tr><tr><td>Shannon entropy</td><td>" ++ show (shannonEntropy rnaZ) ++  "</td></tr><tr><td>GC content</td><td>" ++ show (gcContent rnaZ) ++ "</td></tr><tr><td>Mean single sequence minimum free energy</td><td>" ++ show (meanSingleSequenceMinimumFreeEnergy rnaZ) ++ "</td></tr><tr><td>Consensus minimum free energy</td><td>" ++ show (consensusMinimumFreeEnergy rnaZ) ++ "</td></tr><tr><td>Energy contribution</td><td>" ++ show (energyContribution rnaZ) ++ "</td></tr><tr><td>Covariance contribution</td><td>" ++ show (covarianceContribution rnaZ) ++ "</td></tr><tr><td>Combinations pair</td><td>" ++ show (combinationsPair rnaZ) ++ "</td></tr><tr><td>Mean z-score</td><td>" ++ show (meanZScore rnaZ) ++ "</td></tr><tr><td>Structure conservation index</td><td>" ++ show (structureConservationIndex rnaZ) ++ "</td></tr>Background model</td><td>" ++ backgroundModel rnaZ ++ "</td></tr><tr><td>Decision model</td><td>" ++ decisionModel rnaZ ++ "</td></tr><tr><td>SVM decision value</td><td>" ++ show (svmDecisionValue rnaZ) ++ "</td></tr><tr><td>SVM class propability</td><td>" ++ show (svmRNAClassProbability rnaZ) ++ "</td></tr><tr><td>Prediction</td><td>" ++ (prediction rnaZ)++ "</td></tr>"
+
+
+-- | CMstat datastructure
+data CMstat = CMstat
+  { statIndex :: Int,
+    statName :: String,
+    statAccession :: String,
+    statSequenceNumber :: Int,
+    statEffectiveSequences :: Double,
+    statConsensusLength :: Int,
+    -- W The expected maximum length of a hit to the model.
+    statW :: Int,
+    statBasepairs :: Int,
+    statBifurcations :: Int,
+    statModel :: String,
+    relativeEntropyCM :: Double,
+    relativeEntropyHMM :: Double
+  } deriving (Eq, Read) 
+
+instance Show CMstat where
+  show (CMstat _statIndex _statName _statAccession _statSequenceNumber _statEffectiveSequences _statConsensusLength _statW _statBasepairs _statBifurcations _statModel _relativeEntropyCM _relativeEntropyHMM) = a ++ b ++ c ++ d ++ e ++ f ++ g ++ h ++ i ++ j ++ k ++ l
+    where a = "CMstat - covariance model statistics:\nIndex: " ++ show _statIndex ++ "\n" 
+          b = "Name: " ++ show _statName ++ "\n" 
+          c = "Accession: " ++ show _statAccession ++ "\n"
+          d = "Sequence Number: " ++ show _statSequenceNumber ++ "\n"
+          e = "Effective Sequences: " ++ show _statEffectiveSequences ++ "\n"
+          f = "Consensus length: " ++ show _statConsensusLength ++ "\n"
+          g = "Expected maximum hit-length: " ++ show _statW ++ "\n"
+          h = "Basepairs: " ++ show _statBasepairs ++ "\n"
+          i = "Bifurcations: " ++ show _statBifurcations ++ "\n"
+          j = "Modeltype: " ++ show _statModel ++ "\n"
+          k = "Relative Entropy CM: " ++ show _relativeEntropyCM ++ "\n"
+          l = "Relative Entropy HMM: " ++ show _relativeEntropyHMM ++ "\n"
+
+-- | parse from input filePath              
+parseCMstat :: String -> Either ParseError CMstat
+parseCMstat input = parse genParserCMstat "parseCMstat" input
+
+-- | parse from input filePath                      
+readCMstat :: String -> IO (Either ParseError CMstat)             
+readCMstat filePath = do 
+  parsedFile <- parseFromFile genParserCMstat filePath
+  return parsedFile 
+                      
+genParserCMstat :: GenParser Char st CMstat
+genParserCMstat = do
+  string "# cmstat :: display summary statistics for CMs"
+  newline
+  string "# INFERNAL "
+  many1 (noneOf "\n")
+  newline       
+  string "# Copyright (C) 201"
+  many1 (noneOf "\n")
+  newline       
+  string "# Freely distributed under the GNU General Public License (GPLv3)."
+  newline       
+  string "# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+  newline
+  char '#'
+  many1 (char ' ')
+  string "rel entropy"
+  newline
+  char '#'
+  many1 (char ' ')
+  many1 (char '-')
+  newline
+  char '#'
+  many1 space 
+  string "idx"
+  many1 space        
+  string "name"
+  many1 space 
+  string "accession"
+  many1 space 
+  string "nseq"
+  many1 space  
+  string "eff_nseq"
+  many1 space 
+  string "clen"
+  many1 space 
+  string "W"
+  many1 space 
+  string "bps"
+  many1 space 
+  string "bifs"
+  many1 space 
+  string "model"
+  many1 space 
+  string "cm"
+  many1 space
+  string "hmm"
+  newline
+  string "#"
+  many1 (try (oneOf " -"))
+  newline
+  many1 space     
+  _statIndex <- many1 digit
+  many1 space
+  _statName <- many1 letter
+  many1 space                  
+  _statAccession <- many1 (noneOf " ")
+  many1 space             
+  _statSequenceNumber <- many1 digit
+  many1 space   
+  _statEffectiveSequences <- many1 (oneOf "0123456789.e-")
+  many1 space
+  _statConsensusLength <- many digit
+  many1 space                
+  _statW <- many1 digit
+  many1 space
+  _statBasepaires <- many1 digit
+  many1 space            
+  _statBifurcations <- many1 digit
+  many1 space              
+  _statModel <- many1 letter
+  many1 space          
+  _relativeEntropyCM <- many1 (oneOf "0123456789.e-")
+  many1 space                   
+  _relativeEntropyHMM <- many1 (oneOf "0123456789.e-")
+  newline
+  char '#'
+  newline
+  eof  
+  return $ CMstat (readInt _statIndex) _statName _statAccession (readInt _statSequenceNumber) (readDouble _statEffectiveSequences) (readInt _statConsensusLength) (readInt _statW) (readInt _statBasepaires) (readInt _statBifurcations) _statModel (readDouble _relativeEntropyCM) (readDouble _relativeEntropyHMM)
+
+readDouble :: String -> Double
+readDouble = read
+
+readInt :: String -> Int
+readInt = read
+
