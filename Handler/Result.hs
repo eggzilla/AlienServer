@@ -123,9 +123,8 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
        let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
        evaluationResults <- constructEvaluationResults (length decodedCsvOutput) (temporaryDirectoryPath ++ "result.rnaz") (temporaryDirectoryPath ++ "result.cmstat")
-       --let taxonomyOverview = "<table><tr><td>Taxonomic overview of alien hits</td></tr><tr><td><img src=\"" ++ taxonomySvgPath ++ "\" alt=\"loading\"></td></tr></table><br>"
        let taxonomyOverview = "<h3>Taxonomy overview</h3><br>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div>"
-       let cmcwsSendToField = "<img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\">"
+       let cmcwsSendToField = "<a href=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi\"><img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\"></a>"
        return (resultHeadline ++ resultFilesTable ++ evaluationResults  ++ taxonomyOverview  ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do
        return ""
