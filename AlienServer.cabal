@@ -73,7 +73,7 @@ library
                  , cassava
                  , vector
                  , either-unwrap
-                 , ViennaRNAParser 
+                 , ViennaRNAParser>=1.2.5 
                  , parsec
 
     -- see https://github.com/yesodweb/yesod/issues/814

@@ -22,4 +22,3 @@ Installation via cabal-install:<br>
 RNAlien is implemented in Haskell and can be installed via the Haskell
 package distribution sytem <a href="https://www.haskell.org/cabal/">cabal</a>
 <br>
-[user@host]$ cabal-install install RNAlien
