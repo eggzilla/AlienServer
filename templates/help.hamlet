@@ -2,14 +2,49 @@
 <div class="page-header">
   <h2><span class="label label-default">Help:</span><br>
 <div class="spacer">
-<h2>Webservice:
 
-<h3>Input:
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2>Webservice:
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Input:</h3>
+        RNAlien Webservice accepts a fasta file with a single sequence as obligatory input.
+        Example tmRNA fasta file content:
+        <div class="panel panel-default">
+          <div class="panel-body">
+            >AF389977.1/33-350
+            GACAAGAUUCACGAAACCCAAGGUGCAUGCCGAGGUGCGGUAGGCCUCGUUAACAAACCG
+            CAAAAAAAUAGUCGCAAACGACGAAAACUACGCACUCGCAGCUUAAUAACCUGCGCUGAG
+            CCCUUCUCCCCCAGCUUGCCUGUGUCCUAGGGAAUUGGAAGGUCAUCCUUCACAGGAUCG
+            UGUGGAAGUCCUGCUCGGGGCGGAAGCAUUAAAACCAUUCGAGCUAGUCAAUGCGUGGCG
+            UGUCUCUCCGCAGCGUGUUGGCGAAUGUAAAGAGUGACUAAGCAUGUAGUACCGAGGAUG
+            UAGUAAUUUUGGACGGGG
+          Optionally the organism the sequence originates from can be passed as an NCBI Taxononomy id (see Taxonomy Id). 
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Output:</h3>
+ 
 
-<h3>Output:
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2>Tool:
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Input:</h3>
+        
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Output:</h3>
 
-<h2>Tool:
-
-<h3>Input:
-
-<h3>Output:
+<div class="panel panel-default">
+  <div class="panel-body">
+    <h2>Taxnonomy id
+    
+      To obtain the Taxonomy id go to http://www.ncbi.nlm.nih.gov/taxonomy.
+      Enter the organisms name in the Taxonomy field (e.g Escherichia coli) and
+      click search. You are then redirected to a Summary page (http://www.ncbi.nlm.nih.gov/taxonomy/?term=Escherichia+coli).
+      Click the organism name. Depending on how specific your search was you can either select from a list of organisms
+      (http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=562) or you are directed to
+      a organism page (Escherichia coli str. K-12 substr. MG1655star http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=879462&lvl=3&lin=f&keep=1&srchmode=1&unlock).
+      You can find the taxonomy id right below the organisms name (Escherichia coli str. K-12 substr. MG1655star Taxonomy ID: 879462).
