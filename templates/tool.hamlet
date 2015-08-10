@@ -6,19 +6,16 @@
 RNAlien is available as a commandline tool, for testing or construction
 of few sequences the webservice can be used.<br>
 <br>
-Forinstruction how to use RNAlien please see the Help page.
+For instruction how to use RNAlien please see the Help page.
 <br>
 Dependencies:<br>
 RNAlien requires several tools:<br>
 <ul>
+ <li><a href="http://infernal.janelia.org/">Infernal: inference of RNA alignments</a>
  <li><a href="http://www.clustal.org/omega/#Download">clustal-omega</a>
  <li><a href="http://www.bioinf.uni-freiburg.de/Software/LocARNA/#download">Locarna</a>
  <li><a href="https://www.tbi.univie.ac.at/~wash/RNAz/">RNAz</a>
  <li><a href="http://www.tbi.univie.ac.at/RNA/index.html#download">ViennaRNApackage</a>
-<br>
-The ncbi taxonomy nodes file contained in the taxonomy dump:
-<ul>
- <li><a href="ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip">Taxonomy dump</a>
 <br>
 
 Installation via cabal-install:<br>
