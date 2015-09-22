@@ -2,12 +2,12 @@
 module Handler.Home where
 
 import Import
-import Data.ByteString.Lazy (unpack)
-import Yesod.Core.Handler
+--import Data.ByteString.Lazy (unpack)
+--import Yesod.Core.Handler
 import Data.Maybe (fromJust)
-import Data.Tuple (fst, snd)
+--import Data.Tuple (fst, snd)
 import qualified Data.Text as DT
-import Settings.StaticFiles
+--import Settings.StaticFiles
 import System.Process
 import System.Random
 import System.Directory
@@ -35,14 +35,16 @@ getHomeR = do
 
 postHomeR :: Handler Html
 postHomeR = do
-    ((result, formWidget), formEnctype) <- runFormPost inputForm
-    let handlerName = "postHomeR" :: Text
-        submission = case result of
+    
+    --((result, formWidget), formEnctype) <- runFormPost inputForm
+    ((result, _), _) <- runFormPost inputForm
+    --let handlerName = "postHomeR" :: Text
+    let submission = case result of
             FormSuccess (fasta,taxid) -> Just (fasta,taxid)
             _ -> Nothing
     --Create tempdir and session-Id
     sessionId <- liftIO createSessionId
-    approot  <- fmap extraApproot getExtra
+    --approot  <- fmap extraApproot getExtra
     revprox  <- fmap extraRevprox getExtra
     outputPath <- fmap extraTempdir getExtra
     geQueueName <- fmap extraGEqueuename getExtra            
@@ -52,8 +54,8 @@ postHomeR = do
   
     --Paths for rendering result taxonomy tree
     taxDumpDirectoryPath <- fmap extraTaxDumpPath getExtra
-    let taxOverviewDotFilePath = temporaryDirectoryPath ++ "taxonomy.dot"
-    let taxOverviewSvgFilePath = temporaryDirectoryPath ++ "taxonomy.svg"
+    --let taxOverviewDotFilePath = temporaryDirectoryPath ++ "taxonomy.dot"
+    --let taxOverviewSvgFilePath = temporaryDirectoryPath ++ "taxonomy.svg"
     let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
 
     --Write input fasta file
@@ -69,7 +71,7 @@ postHomeR = do
     let qsubLocation = "/usr/bin/qsub"
     let geErrorDir = temporaryDirectoryPath ++ "gelog"
     let geLogOutputDir = temporaryDirectoryPath ++ "gelog"
-    let geRootDirectory = "/usr/share/gridengine"
+    --let geRootDirectory = "/usr/share/gridengine"
     let bashscriptpath = temporaryDirectoryPath ++ "qsub.sh"
     let home = "/mnt/storage/home/egg"
     let bashheader = "#!/bin/bash\n"
