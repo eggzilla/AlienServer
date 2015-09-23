@@ -2,6 +2,7 @@
 module Handler.Home where
 
 import Import
+import Control.Applicative
 import Data.Maybe (fromJust)
 import qualified Data.Text as DT
 import System.Process

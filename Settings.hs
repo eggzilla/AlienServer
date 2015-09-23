@@ -6,6 +6,7 @@
 module Settings where
 
 import Prelude
+import Control.Applicative
 import Text.Shakespeare.Text (st)
 import Language.Haskell.TH.Syntax
 import Yesod.Default.Config
