@@ -2,12 +2,8 @@
 module Handler.Home where
 
 import Import
---import Data.ByteString.Lazy (unpack)
---import Yesod.Core.Handler
 import Data.Maybe (fromJust)
---import Data.Tuple (fst, snd)
 import qualified Data.Text as DT
---import Settings.StaticFiles
 import System.Process
 import System.Random
 import System.Directory
@@ -16,18 +12,9 @@ import Data.Int (Int16)
 import Yesod.Form.Bootstrap3
     ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
--- This is a handler function for the GET request method on the HomeR
--- resource pattern. All of your resource patterns are defined in
--- config/routes
---
--- The majority of the code you will write in Yesod lives in these handler
--- functions. You can spread them across multiple files if you are so
--- inclined, or create a single monolithic file.
 getHomeR :: Handler Html
 getHomeR = do
     (formWidget, formEnctype) <- generateFormPost inputForm
-    let submission = Nothing :: Maybe (FileInfo, Text)
-        handlerName = "getHomeR" :: Text
     defaultLayout $ do
         aDomId <- newIdent
         setTitle "Welcome To RNAlien!"
@@ -35,16 +22,12 @@ getHomeR = do
 
 postHomeR :: Handler Html
 postHomeR = do
-    
-    --((result, formWidget), formEnctype) <- runFormPost inputForm
     ((result, _), _) <- runFormPost inputForm
-    --let handlerName = "postHomeR" :: Text
     let submission = case result of
             FormSuccess (fasta,taxid) -> Just (fasta,taxid)
             _ -> Nothing
     --Create tempdir and session-Id
     sessionId <- liftIO createSessionId
-    --approot  <- fmap extraApproot getExtra
     revprox  <- fmap extraRevprox getExtra
     outputPath <- fmap extraTempdir getExtra
     geQueueName <- fmap extraGEqueuename getExtra            
@@ -54,8 +37,6 @@ postHomeR = do
   
     --Paths for rendering result taxonomy tree
     taxDumpDirectoryPath <- fmap extraTaxDumpPath getExtra
-    --let taxOverviewDotFilePath = temporaryDirectoryPath ++ "taxonomy.dot"
-    --let taxOverviewSvgFilePath = temporaryDirectoryPath ++ "taxonomy.svg"
     let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
 
     --Write input fasta file
@@ -64,14 +45,11 @@ postHomeR = do
     --Submit RNAlien Job to SGE
     let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath ++ "\n"
     let ids2treecommand = "Ids2Tree -l 3 -f json -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ temporaryDirectoryPath ++ " -r " ++ alienResultCsvFilePath  ++ "\n"
-    --let ids2treecommand = "Ids2Tree -l 3 -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ temporaryDirectoryPath ++ " -r " ++ alienResultCsvFilePath  ++ "\n"
-    --let dotcommand = "dot -Tsvg " ++ taxOverviewDotFilePath ++ " -o " ++ taxOverviewSvgFilePath ++ "\n"
     let archivecommand = "zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath ++ "\n"
     --sun grid engine settings
     let qsubLocation = "/usr/bin/qsub"
     let geErrorDir = temporaryDirectoryPath ++ "gelog"
     let geLogOutputDir = temporaryDirectoryPath ++ "gelog"
-    --let geRootDirectory = "/usr/share/gridengine"
     let bashscriptpath = temporaryDirectoryPath ++ "qsub.sh"
     let home = "/mnt/storage/home/egg"
     let bashheader = "#!/bin/bash\n"

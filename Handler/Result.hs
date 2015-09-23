@@ -2,15 +2,10 @@
 module Handler.Result where
 
 import Import
-import Data.ByteString.Lazy (unpack)
 import qualified Data.ByteString.Lazy.Char8 as L
-import Yesod.Core.Handler
-import Data.Maybe (fromJust)
-import Data.Tuple (fst, snd)
 import qualified Data.Text as DT
 import qualified Data.List as DL (head)
 import System.Directory   
-import Settings.StaticFiles
 import System.IO (readFile)
 import Data.List.Split (splitOn)
 import Control.Monad
@@ -18,12 +13,8 @@ import Data.Csv
 import Data.Char
 import qualified Data.Vector as V
 import Data.Either.Unwrap
-import System.Process
-import System.Exit
 import Bio.RNAzParser
 import Text.ParserCombinators.Parsec 
-import Yesod.Form.Bootstrap3    
-    ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
 
 getResultR :: Handler Html
 getResultR = do
@@ -31,20 +22,20 @@ getResultR = do
     let params = reqGetParams result
     let sessionIdjs = snd (DL.head params)
     let sessionId = DT.unpack sessionIdjs
-    approot  <- fmap extraApproot getExtra
-    taxDumpDirectoryPath <- fmap extraTaxDumpPath getExtra                
+    currentApproot  <- fmap extraApproot getExtra
+    --taxDumpDirectoryPath <- fmap extraTaxDumpPath getExtra                
     outputPath <- fmap extraTempdir getExtra
     let temporaryDirectoryPath = DT.unpack (outputPath) ++ sessionId ++ "/"
     let tempDirectoryRootURL = "http://nibiru.tbi.univie.ac.at/rnalien_tmp/rnalien/"
     let tempDirectoryURL = tempDirectoryRootURL ++ sessionId ++ "/"
     let tempDirectoryURLjs = DT.pack ("../rnalien_tmp/rnalien/" ++ sessionId ++ "/")
-    tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)         
+    --tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)         
     started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "log/0.log"))
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))  
     let unfinished = not done
     existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0..35])
     iterationLogs <- liftIO (mapM (retrieveIterationLog temporaryDirectoryPath tempDirectoryURL) existentIterationLogs)
-    resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approot)
+    resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL currentApproot)
     if started
        then do
          let iterationInsert = DT.pack (concat iterationLogs)
@@ -102,7 +93,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
          decDelimiter = fromIntegral (ord ';')
          }
        let alienCSVPath = temporaryDirectoryPath ++ "result.csv"
-       let taxonomySvgPath = tempDirectoryURL ++ "taxonomy.svg"
+       --let taxonomySvgPath = tempDirectoryURL ++ "taxonomy.svg"
        inputCSV <- L.readFile alienCSVPath
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
@@ -175,7 +166,7 @@ checkStatus searchStatus sequenceRetrievalStatus alignmentStatus filteringStatus
 
 constructTaxonomyRecordsHtmlTable :: [(String,String,String)] -> String
 constructTaxonomyRecordsHtmlTable csv = recordtable
-  where recordentries = concatMap (\(taxid,iteration,header) -> "<tr><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ taxid  ++ "\">" ++ taxid ++ "</a></td><td>" ++ iteration  ++ "</td><td>" ++ header ++ "</td></tr>") csv
+  where recordentries = concatMap (\(taxid,iteration,fastaheader) -> "<tr><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ taxid  ++ "\">" ++ taxid ++ "</a></td><td>" ++ iteration  ++ "</td><td>" ++ fastaheader ++ "</td></tr>") csv
         tableheader = "<h3>Included Sequences</h3><tr><th>Taxonomy Id</th><th>Included in Iteration</th><th>Entry Header</th></tr>"
         recordtable = "<table>" ++ tableheader ++ recordentries ++ "</table><br>"
 

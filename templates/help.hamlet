@@ -50,6 +50,8 @@
     <h3 class="panel-title">Input:</h3>
        <div class="panel-body">
 
+
+
 <div class="panel panel-default">
   <div class="panel-heading">
      <h3 class="panel-title">Output:</h3>
@@ -60,8 +62,7 @@
 <h2>Taxnonomy id</h2><br>
 <div class="panel panel-default">
   <div class="panel-body">
-   
-    
+       
       <p>To obtain the Taxonomy id go to http://www.ncbi.nlm.nih.gov/taxonomy.
       Enter the organisms name in the Taxonomy field (e.g Escherichia coli) and
       click search. You are then redirected to a Summary page (http://www.ncbi.nlm.nih.gov/taxonomy/?term=Escherichia+coli).
