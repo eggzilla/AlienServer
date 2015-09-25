@@ -7,9 +7,14 @@
 <br>
 <p>The source code of RNAlien, as well as the webserver is open source and available via GitHub and Hackage (License GPL-3):
 <ul>
-  <li> <a href="https://github.com/eggzilla/RNAlien"><img alt="GitHub" src="https://img.shields.io/github/downloads/eggzilla/RNAlien/latest/total.svg"></a> <a href="https://travis-ci.org/eggzilla/RNAlien"><img alt="Build Status" src="https://travis-ci.org/eggzilla/RNAlien.svg?branch=master"> </a> <a href="https://img.shields.io/hackage/v/RNAlien.svg"> <img alt="Hackage" src="https://img.shields.io/hackage/v/RNAlien.svg"></a>
-  <li> <a href="https://github.com/eggzilla/AlienServer"><img alt="GitHub" src="https://img.shields.io/github/downloads/eggzilla/AlienServer/latest/total.svg"></a> <a href="https://travis-ci.org/eggzilla/AlienServer"><img alt="Build Status" src="https://travis-ci.org/eggzilla/AlienServer.svg?branch=master"></a> <a href="https://img.shields.io/hackage/v/AlienServer.svg"><img alt="Hackage" src="https://img.shields.io/hackage/v/AlienServer.svg"></a>
-<br>  
+  <li><a href="https://github.com/eggzilla/RNAlien"><img alt="GitHub" src="https://img.shields.io/github/tag/eggzilla/RNAlien.svg"></a> <a href="https://travis-ci.org/eggzilla/RNAlien"><img alt="Build Status" src="https://travis-ci.org/eggzilla/RNAlien.svg?branch=master"> </a> <a href="https://img.shields.io/hackage/v/RNAlien.svg"> <img alt="Hackage" src="https://img.shields.io/hackage/v/RNAlien.svg"></a>
+  <li> <a href="https://github.com/eggzilla/AlienServer"><img alt="GitHub" src="https://img.shields.io/github/tag/eggzilla/AlienServer"></a> <a href="https://travis-ci.org/eggzilla/AlienServer"><img alt="Build Status" src="https://travis-ci.org/eggzilla/AlienServer.svg?branch=master"></a> <a href="https://img.shields.io/hackage/v/AlienServer.svg"><img alt="Hackage" src="https://img.shields.io/hackage/v/AlienServer.svg"></a>
+<br>
+<p>TaxonomyTools which can be used to visualise the organisms included in a RNAlien result can be found here (License GPL-3):
+<ul>
+  <li><a href="https://github.com/eggzilla/TaxonomyTools"><img alt="GitHub" src="https://img.shields.io/github/tag/eggzilla/TaxonomyTools.svg"></a> <a href="https://travis-ci.org/eggzilla/TaxonomyTools"><img alt="Build Status" src="https://travis-ci.org/eggzilla/TaxonomyTools.svg?branch=master"> </a> <a href="https://img.shields.io/hackage/v/TaxonomyTools.svg"> <img alt="Hackage" src="https://img.shields.io/hackage/v/TaxonomyTools.svg"></a>
+<br>
+
 <p>For instruction how to use RNAlien please see the <a href="http://rna.tbi.univie.ac.at/rnalien/help">Help page.</a>
 <h3><u>Dependencies:</u></h3><br>
 <ul>
