@@ -13,5 +13,5 @@ install:
  - cabal --version
  - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
  - travis_retry cabal update
- - cabal install alex happy hspec yesod-test
+ - cabal install alex happy hspec yesod-test-1.4.4
  - cabal install --force-reinstalls
