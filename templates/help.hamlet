@@ -42,15 +42,101 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title">Output:</h3>
- 
+        RNAlien collects potential family members in multiple iterations. While the construction process continues,
+        the progress and intermediate results are summarized in a table. 
+        <img src="incomplete progress table">
+        Once the construction is finished all result files are available in the result table.
+        The organisms of found sequences are visualized in the taxonomic overview.
+        <img src="">
+        The evaluation results for the constructed covariance model and the stockholm alignment used to build it
+        are summarized in the evaluation table.
+        <img src="">
 <hr>
 <h2>Tool:</h2>
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Input:</h3>
        <div class="panel-body">
-
-
+       The RNAlien command line utility accepts several command line parameters:
+       <table>
+       <tr>
+       <th>Parameter
+       <th>Switch
+       <th>Required
+       <th>Description
+       <th>Default value
+       <tr>
+       <td>inputFastaFilePath
+       <td>-i
+       <td>yes
+       <td>Path to input fasta file
+       <td>
+       <tr>
+       <td>outputPath
+       <td>-o
+       <td>yes
+       <td>Path to output directory
+       <td>
+       <tr>
+       <td>inputTaxId
+       <td>-t
+       <td>no
+       <td>NCBI taxonomy ID number of input RNA organism
+       <td>
+       <tr>
+       <td>inputnSCICutoff
+       <td>-z
+       <td>no
+       <td>Only candidate sequences with a normalized structure conservation index (nSCI) higher than this value are accepted.
+       <td>1.0
+       <tr>
+       <td>inputEvalueCutoff
+       <td>-e
+       <td>no
+       <td>Evalue cutoff for cmsearch filtering.
+       <td>0.001
+       <tr>
+       <td>inputBlastDatabase
+       <td>-b
+       <td>no
+       <td>Specify name of blast database to use.
+       <td>nt
+       <tr>
+       <td>coverageFilter
+       <td>-a
+       <td>no
+       <td>Filter blast hits by coverage of at least 80%.
+       <td>True
+       <tr>
+       <td>singleHitperTax
+       <td>-s
+       <td>no
+       <td>Only the best blast hit per taxonomic entry is considered.
+       <td>True
+       <tr>
+       <td>threads
+       <td>-c
+       <td>no
+       <td>Number of available cpu slots/cores.
+       <td>1
+       <tr>
+       <td>taxonomy
+       <td>-r
+       <td>no
+       <td>Restrict search space to taxonomic kingdom (bacteria,archea,eukaryia).
+       <td>none
+       <tr>
+       <td>sessionIdentificator = Nothing &= name "d" &= help "Optional session id that is used instead of automatically generated one.
+       <td>-d
+       <td>no
+       <td>Optional session id that is used instead of automatically generated one.
+       <td>none
+       <tr>
+       <td>Help
+       <td>-?
+       <td>no
+       <td>Print this help
+       <td>
 
 <div class="panel panel-default">
   <div class="panel-heading">
