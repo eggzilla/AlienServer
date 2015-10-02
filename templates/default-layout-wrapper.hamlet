@@ -29,7 +29,7 @@ $newline never
                <div class="container-fluid">
                 <div class="navbar-header">
                  <a class="navbar-brand" href="#" style="height:105px;width:305px;">
-                  <img src=@{StaticR images_RNAlien_svg} style="float:center;height:75px;width:290px;" alt="RNlien">
+                  <img src=@{StaticR images_RNAlien_svg} style="float:center;height:75px;width:290px;" alt="RNAlien">
                 <div class="btn-group btn-group-lg navbar-right" role="group" aria-label="..."> 
                   <a href="http://nibiru.tbi.univie.ac.at/rnalien" class="active"><button type="button" class="btn btn-default navbar-btn">Webservice</button></a>
                   <a href="http://nibiru.tbi.univie.ac.at/rnalien/tool" class="active"><button type="button" class="btn btn-default navbar-btn">Tool</button></a>

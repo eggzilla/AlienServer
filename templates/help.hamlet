@@ -2,6 +2,16 @@
 <div class="page-header">
   <h2><span class="label label-default">Help:</span><br>
 <div class="spacer">
+<div class="panel panel-default">
+  <div class="panel-body">
+        <p>RNAlien is a tool for automatic construction of RNA family models 
+           from a single sequence. The sections of this help document cover 
+           the use of the webservice and the commandline tool, as well as details 
+           of the pipeline used in the backend. If you look for source code 
+           or a installation guide for the tool please refer to the Tool subpage 
+           This manual is included with the Tool as <a href="">manual.pdf.</a>
+
+<hr>
 <h2> Table of contents: </h2><br>
           <div class="list-group">
             <a href="#" class="list-group-item">Introduction</a>
@@ -11,22 +21,12 @@
             <a href="#" class="list-group-item">Retrieve Taxonomy id</a>
 
 <hr>
-  <h2> Introduction: </h2><br>
-<div class="panel panel-default">
-  <div class="panel-body">
-        RNAlien is a tool for automatic construction of RNAfamily models
-        from a single sequence. The sections of this help document cover
-        the use of the webservice and the commandline tool, as well as details
-        of the pipeline used in the backend. If you look for source code
-        or a installation guide for the tool please refer to the Tool subpage
-
-<hr>
 <h2> Webservice: </h2><br>
     <div class="panel panel-default">
       <div class="panel-heading">
         <h2 class="panel-title">Input:
       <div class="panel-body">	
-        <p>RNAlien Webservice accepts a fasta file with a single sequence as obligatory input.
+        RNAlien Webservice accepts a fasta file with a single sequence as obligatory input.
         Example tmRNA fasta file content:<br>
         <div class="panel panel-default">
           <div class="panel-body">
@@ -37,122 +37,138 @@
             UGUGGAAGUCCUGCUCGGGGCGGAAGCAUUAAAACCAUUCGAGCUAGUCAAUGCGUGGCG
             UGUCUCUCCGCAGCGUGUUGGCGAAUGUAAAGAGUGACUAAGCAUGUAGUACCGAGGAUG
             UAGUAAUUUUGGACGGGG<br>
-        <p>Optionally the organism the sequence originates from can be passed as an NCBI Taxononomy id (see Taxonomy Id).
+        Optionally the organism the sequence originates from can be passed as an NCBI Taxononomy id (see Taxonomy Id).
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">Output:</h3>
+        <h2 class="panel-title">Output:</h3>
+      <div class="panel-body">
         RNAlien collects potential family members in multiple iterations. While the construction process continues,
-        the progress and intermediate results are summarized in a table. 
-        <img src="incomplete progress table">
+        the progress and intermediate results are summarized in a table. <br>
+        <img src="incomplete progress table"><br>
         Once the construction is finished all result files are available in the result table.
-        The organisms of found sequences are visualized in the taxonomic overview.
-        <img src="">
+        The organisms of found sequences are visualized in the taxonomic overview.<br>
+        <img src=""><br>
         The evaluation results for the constructed covariance model and the stockholm alignment used to build it
-        are summarized in the evaluation table.
-        <img src="">
+        are summarized in the evaluation table.<br>
+        <img src=""><br>
 <hr>
-<h2>Tool:</h2>
+<h2>Tool:</h2><br>
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Input:</h3>
-       <div class="panel-body">
-       The RNAlien command line utility accepts several command line parameters:
-       <table>
-       <tr>
-       <th>Parameter
-       <th>Switch
-       <th>Required
-       <th>Description
-       <th>Default value
-       <tr>
-       <td>inputFastaFilePath
-       <td>-i
-       <td>yes
-       <td>Path to input fasta file
-       <td>
-       <tr>
-       <td>outputPath
-       <td>-o
-       <td>yes
-       <td>Path to output directory
-       <td>
-       <tr>
-       <td>inputTaxId
-       <td>-t
-       <td>no
-       <td>NCBI taxonomy ID number of input RNA organism
-       <td>
-       <tr>
-       <td>inputnSCICutoff
-       <td>-z
-       <td>no
-       <td>Only candidate sequences with a normalized structure conservation index (nSCI) higher than this value are accepted.
-       <td>1.0
-       <tr>
-       <td>inputEvalueCutoff
-       <td>-e
-       <td>no
-       <td>Evalue cutoff for cmsearch filtering.
-       <td>0.001
-       <tr>
-       <td>inputBlastDatabase
-       <td>-b
-       <td>no
-       <td>Specify name of blast database to use.
-       <td>nt
-       <tr>
-       <td>coverageFilter
-       <td>-a
-       <td>no
-       <td>Filter blast hits by coverage of at least 80%.
-       <td>True
-       <tr>
-       <td>singleHitperTax
-       <td>-s
-       <td>no
-       <td>Only the best blast hit per taxonomic entry is considered.
-       <td>True
-       <tr>
-       <td>threads
-       <td>-c
-       <td>no
-       <td>Number of available cpu slots/cores.
-       <td>1
-       <tr>
-       <td>taxonomy
-       <td>-r
-       <td>no
-       <td>Restrict search space to taxonomic kingdom (bacteria,archea,eukaryia).
-       <td>none
-       <tr>
-       <td>sessionIdentificator = Nothing &= name "d" &= help "Optional session id that is used instead of automatically generated one.
-       <td>-d
-       <td>no
-       <td>Optional session id that is used instead of automatically generated one.
-       <td>none
-       <tr>
-       <td>Help
-       <td>-?
-       <td>no
-       <td>Print this help
-       <td>
+  <div class="panel-body">
+       The RNAlien command line utility accepts several command line parameters(see table).
+       Please note that RNAlien requires a active and uninterrupted internet connection, which it also verifies before starting.
+         <table class="table-bordered">
+           <tr>
+             <th>Parameter
+             <th>Switch
+             <th>Required
+             <th>Description
+             <th>Default value
+           <tr>
+             <td>inputFastaFilePath
+             <td> -i
+             <td>yes
+             <td>Path to input fasta file
+             <td>
+           <tr>
+             <td>outputPath
+             <td> -o
+             <td>yes
+             <td>Path to output directory
+             <td>
+           <tr>
+             <td>inputTaxId
+             <td> -t
+             <td>no
+             <td>NCBI taxonomy ID number of input RNA organism
+             <td>
+           <tr>
+             <td>inputnSCICutoff
+             <td> -z
+             <td>no
+             <td>Only candidate sequences with a nSCI higher than this value are accepted.
+             <td>1.0
+           <tr>
+             <td>inputEvalueCutoff
+             <td> -e
+             <td>no
+             <td>Evalue cutoff for cmsearch filtering.
+             <td>0.001
+           <tr>
+             <td>inputBlastDatabase
+             <td> -b
+             <td>no
+             <td>Specify name of blast database to use.
+             <td>nt
+           <tr>
+             <td>coverageFilter
+             <td> -a
+             <td>no
+             <td>Filter blast hits by coverage of at least 80%.
+             <td>True
+           <tr>
+             <td>singleHitperTax
+             <td> -s
+             <td>no
+             <td>Only the best blast hit per taxonomic entry is considered.
+             <td>True
+           <tr>
+             <td>threads
+             <td> -c
+             <td>no
+             <td>Number of available cpu slots/cores.
+             <td>1
+           <tr>
+             <td>taxonomyRestriction
+             <td> -r
+             <td>no
+             <td>Restrict search space to taxonomic kingdom (bacteria,archea,eukaryia).
+             <td>
+           <tr>
+             <td>sessionIdentificator
+             <td> -d
+             <td>no
+             <td>Optional session id that is used instead of automatically generated one.
+             <td>
+           <tr>
+             <td>Help
+             <td> -?
+             <td>no
+             <td>Print this help
+             <td>
+        <br>
+        Example call for RNAlien<br>
+        RNAlien -i ....<br>
+        <br>
 
 <div class="panel panel-default">
   <div class="panel-heading">
      <h3 class="panel-title">Output:</h3>
-        <div class="panel-body">
-
+  <div class="panel-body">
+    RNAlien creates a output folder which contains all files used in the construction and log files. The most relevant output files and the logfile are directly deposited in the main folder. Each step of model expansion has an own subfolder. 
+    Following is a annotated description of the file tree.
+    
 <hr>
 
-<h2>Taxnonomy id</h2><br>
+<h2>RNAalien pipeline</h2><br>
 <div class="panel panel-default">
   <div class="panel-body">
        
-      <p>To obtain the Taxonomy id go to http://www.ncbi.nlm.nih.gov/taxonomy.
-      Enter the organisms name in the Taxonomy field (e.g Escherichia coli) and
-      click search. You are then redirected to a Summary page (http://www.ncbi.nlm.nih.gov/taxonomy/?term=Escherichia+coli).
-      Click the organism name. Depending on how specific your search was you can either select from a list of organisms
-      (http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=562) or you are directed to
-      a organism page (Escherichia coli str. K-12 substr. MG1655star http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=879462&lvl=3&lin=f&keep=1&srchmode=1&unlock).
-      You can find the taxonomy id right below the organisms name (Escherichia coli str. K-12 substr. MG1655star Taxonomy ID: 879462).
+      <p>RNAlien pipeline<br>
+         <img src=@{StaticR images_RNAlienprogramflow_svg}>
+
+
+<hr>
+
+<h2>Retrieve Taxnonomy id</h2><br>
+<div class="panel panel-default">
+  <div class="panel-body">
+       
+        To obtain the Taxonomy id go to <a href="http://www.ncbi.nlm.nih.gov/taxonomy">NCBI Taxonomy</a>.<br>
+        Enter the organisms name in the Taxonomy field (e.g Escherichia coli) and
+        click search. You are then redirected to a <a href="http://www.ncbi.nlm.nih.gov/taxonomy/?term=Escherichia+coli">Summary page</a>.
+        Click the organism name. Depending on how specific your search was you can either select from a <a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=562">list of organisms</a> or you are directed to a organism page <a href="http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Info&id=879462&lvl=3&lin=f&keep=1&srchmode=1&unlock">Escherichia coli str. K-12 substr. MG1655star</a>.
+        You can find the taxonomy id right below the organisms name (Escherichia coli str. K-12 substr. MG1655star Taxonomy ID: 879462).
