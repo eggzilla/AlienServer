@@ -1,4 +1,3 @@
-<div class="spacer">
 <div class="page-header">
   <h2><span class="label label-default">Help:</span><br>
 <div class="spacer">
@@ -8,20 +7,22 @@
            from a single sequence. The sections of this help document cover 
            the use of the webservice and the commandline tool, as well as details 
            of the pipeline used in the backend. If you look for source code 
-           or a installation guide for the tool please refer to the Tool subpage 
+           or a installation guide for the tool please refer to the Tool subpage.
+           Please note that constructions can take up to 24h, if you want to
+           construct multiple families please use the tool instead of the webservice.
            This manual is included with the Tool as <a href="">manual.pdf.</a>
 
 <hr>
-<h2> Table of contents: </h2><br>
+<h2 id="toc"> Table of contents: </h2><br>
           <div class="list-group">
-            <a href="#" class="list-group-item">Introduction</a>
-            <a href="#" class="list-group-item">Webservice</a>
-            <a href="#" class="list-group-item">Commandline Tool</a>
-            <a href="#" class="list-group-item">Pipeline</a>
-            <a href="#" class="list-group-item">Retrieve Taxonomy id</a>
+            <a href="#ws" class="list-group-item">Webservice</a>
+            <a href="#tool" class="list-group-item">Commandline Tool</a>
+            <a href="#examples" class="list-group-item">Examples</a>
+            <a href="#pipe" class="list-group-item">Pipeline</a>
+            <a href="#tax" class="list-group-item">Retrieve Taxonomy id</a>
 
 <hr>
-<h2> Webservice: </h2><br>
+<h2 id="ws"> Webservice: </h2><br>
     <div class="panel panel-default">
       <div class="panel-heading">
         <h2 class="panel-title">Input:
@@ -53,7 +54,7 @@
         are summarized in the evaluation table.<br>
         <img src=""><br>
 <hr>
-<h2>Tool:</h2><br>
+<h2 id="tool">Tool:</h2><br>
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Input:</h3>
@@ -140,7 +141,7 @@
              <td>Print this help
              <td>
         <br>
-        Example call for RNAlien<br>
+        Example call for RNAlien:<br>
         RNAlien -i ....<br>
         <br>
 
@@ -149,11 +150,314 @@
      <h3 class="panel-title">Output:</h3>
   <div class="panel-body">
     RNAlien creates a output folder which contains all files used in the construction and log files. The most relevant output files and the logfile are directly deposited in the main folder. Each step of model expansion has an own subfolder. 
-    Following is a annotated description of the file tree.
-    
+    Following is a description of the output folder contents, of the different iteration directories that are created during model construction
+    (empty,initial model construction, model expansion), the blast log directory that is contained in each iteration directory
+    and the Log file content.<br>
+    <br>
+    +<strong>RNAlien output folder</strong><br>
+    |<br>
+    |--Log file: Summary for construction process, tool versions, iteration info, evaluation results (see Log file)<br>
+    |--result.cm: Result covariance model<br>
+    |--result.stockholm: Result stockholm alignment<br>
+    |--result.fa: Result fasta<br>
+    |--result.csv<br>
+    |--evaluation: contains RNAz and cmstat output for result-files<br>
+    |--log: contains non-iteration specific log files<br>
+    |--1 iteration directories (see description below)<br>
+    |--2 ..<br>
+    |--3 ..<br>
+    <br>
+    <br>
+    +<strong>iterationdirectory: initial model construction</strong><br>
+    |<br>
+    |--model.cm: Result covariance model<br>
+    |--model.stockholm: Result stockholm alignment<br>
+    |--model.fa: Result fasta<br>
+    |--log: Raw and processed blast hits and accepted /rejected candidates (see iteration log directory)<br>
+    |--input.fa: The input fasta sequence 
+    |--input.fold: RNAfold output of the input fasta sequence
+    |--1.fa: fasta file for first candidate
+    |--1.alifold: RNAalifold file for the input sequence and the first candidate <br>
+    |--1.fold: RNAfold output for the first candidate<br>
+    |--2.fa: Fasta file for the second candidate<br>
+    |-..<br>
+    <br>
+    <br>
+    <br>
+    +<strong>iterationdirectory: modelexpansion</strong><br>
+    |<br>
+    |--model.cm: Result covariance model<br>
+    |--model.stockholm: Result stockholm alignment<br>
+    |--model.fa: Result fasta<br>
+    |--log: Directory that contains raw and processed blast hits (see blastdirectory)<br>
+    |--1.fa: fasta file for first candidate<br>
+    |--1.cmsearch <br>
+    |--2.fa<br>
+    |--2.cmsearch<br>
+    |--..<br>
+    <br>
+    <br>
+    +<strong>iteration log directory</strong><br>
+    |<br>
+    |--1_1blastOutput: Raw blast output for first query, indicated by leading 1_<br>
+    |--1_2blastHits: Parsed blast output<br>
+    |--1_3blastHitsFilteredByLength: Blasthits filtered by exceeding 3* query length<br>
+    |--1_3ablastHitsFilteredByLength: Blasthits filtered by having >80% coverage<br>
+    |--1_4blastHitsFilteredByParentTaxId: Only one blasthit per parent taxid<br>
+    |--1_5filteredBlastResult: Only one blasthit per taxid<br>
+    |--1_6requestedSequenceElements: Blasthit derived sequences requested from Entrez<br>
+    |--1_10afullSequencesWithSimilars: Sequences retrieved from Entrez<br>
+    |--1_10fullSequences: fullSequencesWithSimilars filtered for only containing unique sequences<br>
+    |--2_1blastOutput: Raw blast output for second query, indicated by leading 2_<br>
+    |--..<br>
+    |--11candidates: All query specific sequences merged<br>
+    |--12candidatesFilteredByCollected: Filter for sequences not identical with collected<br>
+    |--13selectedCandidates: Sequences selected either by nSCI or cmsearch for inclusion in model by set evalue cutoff<br>
+    |--14rejectedCandidates: Sequences that were rejected<br>
+    |--15potentialCandidates: Sequences that are within a 10^3 interval of the set evalue cutoff,<br>
+    will be reevaluated at end of modelconstruction<br>
+    <br>
+    <strong>Log file<strong:>
+
+<hr>
+<h2 id="examples">Examples</h2><br>
+<div class="panel panel-default">
+  <div class="panel-body">
+       
+      <p>RNAfamilies constructed for benchmark are available as archive:<br>
+         <table class="table-bordered">
+           <tr>
+             <th>Rfam id
+             <th>Family name
+             <th>Archive link (.tar.gz)
+           <tr>
+             <td>RF00001
+             <td> 5S rRNA
+             <td><a href="">archive<a/>
+           <tr>
+             <td>RF00002
+             <td>5_8S rRNA
+             <td><a href="">archive<a/>
+           <tr>
+             <td>RF00003
+             <td>U1
+             <td><a href="">archive<a/>
+           <tr>
+             <td>RF00004
+             <td>U2
+             <td><a href="">archive<a/>
+           <tr>
+             <td>RF00005
+             <td>tRNA
+             <td><a href="">archive<a/>
+           <tr>
+             <td>RF00008
+             <td>Hammerhead_3
+             <td><a href="">archive<a/>
+           <tr>
+             <td>RF00010
+             <td>RNaseP_bact_a 
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00011
+             <td>RNaseP_bact_b
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00017
+             <td>Metazoa_SRP
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00023
+             <td>tmRNA
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00026
+             <td>U6
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00028
+             <td>Intron_gpI
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00029
+             <td>Intron_gpII
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00032
+             <td>Histone3
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00037
+             <td>IRE_I
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00044
+             <td>Phage_pRNA
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00050
+             <td>FMN
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00059
+             <td>TPP
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00114
+             <td>S15
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00162
+             <td>SAM
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00164
+             <td>s2m
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00167
+             <td>Purine
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00168
+             <td>Lysine
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00169
+             <td>Bacteria_small_SRP
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00174
+             <td>Cobalamin
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00175
+             <td>HIV-1_DIS
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00177
+             <td>SSU_rRNA_bacteria
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00207
+             <td>K10_TLS
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00209
+             <td>IRES_Pesti
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00234
+             <td>glmS
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00374
+             <td>Gammaretro_CES
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00380
+             <td>ykoK
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00458
+             <td>IRES_Cripavirus
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00480
+             <td>HIV_FE
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00500
+             <td>TCV_H5
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00504
+             <td>Glycine
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00843
+             <td>mir-228
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF00871
+             <td>mir-689
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01051
+             <td>c-di-GMP-I
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01054
+             <td>preQ1-II
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01073
+             <td>GP_knot1
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01118
+             <td>PK-G12rRNA
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01380
+             <td>HIV-1_SD
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01510
+             <td>MFR
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01689
+             <td>AdoCbl-variant
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01734
+             <td>crcB
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01786
+             <td>c-di-GMP-II
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01831
+             <td>THF
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01852
+             <td>tRNA-Sec
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01856
+             <td>Protozoa_SRP
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01857
+             <td>Archaea_SRP
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF01998
+             <td>group-II-D1D4-1
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF02001
+             <td>group-II-D1D4-3
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF02095
+             <td>mir-2985-2
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF02253
+             <td>IRE_II
+             <td><a href="">archive<a/>
+          <tr>
+             <td>RF02519 
+             <td>ToxI
+             <td><a href="">archive<a/>
 <hr>
 
-<h2>RNAalien pipeline</h2><br>
+
+<h2 id="pipe">RNAalien pipeline</h2><br>
 <div class="panel panel-default">
   <div class="panel-body">
        
@@ -163,7 +467,7 @@
 
 <hr>
 
-<h2>Retrieve Taxnonomy id</h2><br>
+<h2 id="tax">Retrieve Taxnonomy id</h2><br>
 <div class="panel panel-default">
   <div class="panel-body">
        
