@@ -18,6 +18,7 @@ import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
 import Network.Wai.Logger (clockDateCacher)
 import Data.Default (def)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
+import Data.ByteString.Lazy.Char8
 
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
