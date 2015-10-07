@@ -1,7 +1,7 @@
 document.getElementById(#{toJSON aDomId}).innerHTML = "";
 approot=#{toJSON currentApproot};
 sessionId = #{toJSON sessionIdjs};
-windowLocation = currentApproot + "/result?sessionId=" + sessionId;
+windowLocation = approot + "/result?sessionId=" + sessionId;
 taxonomyJsonLocation = #{toJSON tempDirectoryURLjs} + "taxonomy.json";
 if(#{toJSON unfinished}){
             setTimeout(function(){location.href=windowLocation} , 30000);   
