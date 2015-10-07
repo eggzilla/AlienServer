@@ -39,7 +39,7 @@
             UUGUGGACGAAGCGGCUAAAACUUACACAACUCGCCCAAAGCACCCUGCCCGUCGGGUCG
             CUGAGGGUUAACUUAAUAGACACGGCUACGCAUGUAGUACCGACAGCGGAGUACUGGCGG
             ACGGGGGUUCAAAUCCCCCCGGCUCCACCA<br>
-        Optionally the organism (Pseudomonas fluorescens Pf0-1) the sequence originates from can be passed as an NCBI Taxononomy id(205922), see (<a href="#tax" class="list-group-item">Retrieve Taxonomy id</a>).
+        Optionally the organism (Pseudomonas fluorescens Pf0-1) the sequence originates from can be passed as an NCBI Taxononomy id(205922), see (<a href="#tax">Retrieve Taxonomy id</a>).
 
     <div class="panel panel-default">
       <div class="panel-heading">
