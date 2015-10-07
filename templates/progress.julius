@@ -1,0 +1,7 @@
+document.getElementById(#{toJSON aDomId}).innerHTML = "";
+approot=#{toJSON currentApproot};
+sessionId = #{toJSON sessionIdjs};
+windowLocation = approot + "/result?sessionId=" + sessionId;
+if(#{toJSON unfinished}){
+            setTimeout(function(){location.href=windowLocation} , 30000);   
+}

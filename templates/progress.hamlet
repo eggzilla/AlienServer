@@ -1,0 +1,13 @@
+<script src="http://code.jquery.com/jquery-1.10.2.min.js">
+<span ##{aDomId} style="color:red;float:left;">
+  <div class="alert alert-danger" role="alert">
+    Please enable javascript.
+<div class="spacer">
+<div class="page-header">
+  <h2><span class="label label-default">Webservice:</span><br>
+<div class="spacer">
+<h2>Progress:
+<table><tr><th> Iteration <th> Upper taxonomic treshold id <th> Aligned Sequences <th> Alignment Link <th> Covariance Model Link <th> Status#{preEscapedToMarkup iterationInsert} 
+<br>
+  #{preEscapedToMarkup resultInsert}
+

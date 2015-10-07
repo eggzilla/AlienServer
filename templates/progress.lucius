@@ -1,0 +1,80 @@
+h1 {
+    text-align: center
+}
+
+div.spacer {
+   font-size: 0; 
+   height: 20px;
+   line-height: 0;
+}
+
+td, th {
+   text-align: center;
+   border-collapse: separate;
+   border-spacing: 2px;
+   border: 1px solid gray;
+   padding: 3px;
+}
+
+i.red {
+    color:red;
+}
+
+i.blue {
+    color:blue;
+}
+
+i.green {
+    color:green;
+}
+
+i.orange {
+    color:orange;
+}
+
+i.yellow {
+    color:yellow;
+}
+
+/* 
+Following css was copied from d3js example http://bl.ocks.org/robschmuecker/7880033
+*/
+
+.node {
+    cursor: pointer;
+}
+
+.overlay{
+      background-color:#EEE;
+}
+   
+.node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+   
+.node text {
+    font-size:10px; 
+    font-family:sans-serif;
+}
+   
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+}
+
+.templink {
+    fill: none;
+    stroke: red;
+    stroke-width: 3px;
+}
+
+.ghostCircle.show{
+      display:block;
+}
+
+.ghostCircle, .activeDrag .ghostCircle{
+       display: none;
+}

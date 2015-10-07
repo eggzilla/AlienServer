@@ -38,13 +38,21 @@ getResultR = do
     resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL currentApproot)
     if started
        then do
-         let iterationInsert = DT.pack (concat iterationLogs)
-         --liftIO (makeArchive done temporaryDirectoryPath)
-         --liftIO (makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath)
-         defaultLayout $ do
+         if done
+           then do
+             let iterationInsert = DT.pack (concat iterationLogs)
+             --liftIO (makeArchive done temporaryDirectoryPath)
+             --liftIO (makeTaxonomicOverview done temporaryDirectoryPath taxDumpDirectoryPath)
+             defaultLayout $ do
                aDomId <- newIdent
                setTitle "RNAlien Server - Results"
                $(widgetFile "result")
+           else do
+             let iterationInsert = DT.pack (concat iterationLogs)
+             defaultLayout $ do
+               aDomId <- newIdent
+               setTitle "RNAlien Server - Results"
+               $(widgetFile "progress")
        else do
          let iterationInsert = DT.pack "<tr><td colspan=\"7\">Your job is queued</td></tr>"
          defaultLayout $ do
@@ -114,7 +122,7 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
        let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
        evaluationResults <- constructEvaluationResults (length decodedCsvOutput) (temporaryDirectoryPath ++ "result.rnaz") (temporaryDirectoryPath ++ "result.cmstat")
-       let taxonomyOverview = "<h3>Taxonomy overview</h3><br>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div>"
+       let taxonomyOverview = "<h3>Taxonomy overview</h3><brv>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div>"
        let cmcwsSendToField = "<a href=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi\"><img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\"></a>"
        return (resultHeadline ++ resultFilesTable ++ evaluationResults  ++ taxonomyOverview  ++ resultFamilyMemberTable ++ cmcwsSendToField)
      else do
