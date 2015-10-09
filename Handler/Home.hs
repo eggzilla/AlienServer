@@ -44,7 +44,7 @@ postHomeR = do
     liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
                   
     --Submit RNAlien Job to SGE
-    let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath ++ "\n"
+    let aliencommand = "RNAlien -pe para 5 -i "++ temporaryDirectoryPath ++ "input.fa -c 1 -t " ++ (DT.unpack (snd (fromJust submission))) ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath ++ "\n"
     let ids2treecommand = "Ids2Tree -l 3 -f json -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ temporaryDirectoryPath ++ " -r " ++ alienResultCsvFilePath  ++ "\n"
     let archivecommand = "zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath ++ "\n"
     --sun grid engine settings
