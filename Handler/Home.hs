@@ -1,3 +1,4 @@
+
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Home where
 
@@ -56,9 +57,10 @@ postHomeR = do
     let bashheader = "#!/bin/bash\n"
     let bashLDLibrary = "#$ -v LD_LIBRARY_PATH=" ++ home ++ "/Tools/locarna/lib\n"
     let bashmemrequest = "#$ -l mem_free=4G\n"
+    let parallelenv = "#$ -pe para 5\n"
     let bashPath = "#$ -v PATH=" ++ home ++ "/Tools/bin:" ++ home ++  "/Tools/clustalo/bin:" ++ home ++ "/Tools/ViennaRNA/bin:" ++ home ++ "/Tools/locarna/bin:" ++ home ++ "/Tools/infernal/bin:" ++ home ++ "/.cabal/bin:/usr/bin/:/bin/:$PATH\n"
-    let bashcontent = bashheader ++ bashLDLibrary ++ bashmemrequest ++ bashPath ++ aliencommand ++ ids2treecommand ++ archivecommand
-    let qsubcommand = qsubLocation ++ "-pe para 5 -N " ++ sessionId ++ " -l h_vmem=8G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
+    let bashcontent = bashheader ++ bashLDLibrary ++ bashmemrequest ++ parallelenv ++ bashPath ++ aliencommand ++ ids2treecommand ++ archivecommand
+    let qsubcommand = qsubLocation ++ " -N " ++ sessionId ++ " -l h_vmem=12G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
     liftIO (writeFile geErrorDir "")
     liftIO (writeFile alienLogPath "")
     liftIO (writeFile bashscriptpath bashcontent)

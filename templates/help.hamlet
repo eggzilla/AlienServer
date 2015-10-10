@@ -46,8 +46,9 @@
         <h2 class="panel-title">Output:</h3>
       <div class="panel-body">
         RNAlien collects potential family members in multiple iterations. While the construction process continues,
-        the progress and intermediate results are summarized in a table. <br>
-        <img src="incomplete progress table"><br>
+        the progress and intermediate results are summarized in a table. Each iteration goes through multiple
+        states (loading, sequence search, sequence retrieval, candidate alignment, candidate filtering, query selection, model calibration, done).<br>
+        <img src="@{StaticR images_progress_png}"><br>
         Once the construction is finished all result files are available in the result table.
         The organisms of found sequences are visualized in the taxonomic overview.<br>
         <img src=""><br>
@@ -148,7 +149,7 @@
             RNAlien -i /home/user/newrna.fa -c 5 -t 562 -o /home/user/temp/ -d construction1 <br>
         <br>
         This command starts RNAlien with the input fasta file /home/user/newrna.fa, 5 cores, the taxonomy id set to E. coli. RNAlien will create a directory called construction1 in /home/user/temp/.
-        On how to obtain the taxonomy id for the organism the sequence originates from see <a href="#tax" class="list-group-item">Retrieve Taxonomy id</a>.
+        On how to obtain the taxonomy id for the organism the sequence originates from see <a href="#tax">Retrieve Taxonomy id</a>.
 
 <div class="panel panel-default">
   <div class="panel-heading">
