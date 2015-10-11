@@ -48,7 +48,7 @@
         RNAlien collects potential family members in multiple iterations. While the construction process continues,
         the progress and intermediate results are summarized in a table. Each iteration goes through multiple
         states (loading, sequence search, sequence retrieval, candidate alignment, candidate filtering, query selection, model calibration, done).<br>
-        <img src="@{StaticR images_progress_png}"><br>
+        <img src="@{StaticR images_progress_png}" style="width:850px;"><br>
         Once the construction is finished all result files are available in the result table.
         The organisms of found sequences are visualized in the taxonomic overview.<br>
         <img src="@{StaticR images_alienresults_png}"><br>
