@@ -51,10 +51,17 @@
         <img src="@{StaticR images_progress_png}"><br>
         Once the construction is finished all result files are available in the result table.
         The organisms of found sequences are visualized in the taxonomic overview.<br>
-        <img src=""><br>
+        <img src="@{StaticR images_alienresults_png}"><br>
         The evaluation results for the constructed covariance model and the stockholm alignment used to build it
         are summarized in the evaluation table.<br>
-        <img src=""><br>
+        <img src="@{StaticR images_evaluation_png}"><br>
+        The taxonomnic tree of the organsims the included sequences originated from can be found in the zoom and
+        collapsable taxonomy tree<br>
+        <img src="@{StaticR images_taxonomy_png}"><br>
+        Finally all included sequences are listed in the included sequences table.<br>
+        <img src="@{StaticR images_includedsequences_png}"><br>  
+
+ 
 <hr>
 <h2 id="tool">Tool:</h2><br>
 <div class="panel panel-default">
