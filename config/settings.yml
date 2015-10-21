@@ -7,7 +7,7 @@ Default: &defaults
   gequeuename: "c_highmem.q"
   taxDumpPath: "~egg/current/Data/Taxonomy/taxdump/"
   copyright: TBI - 2015
-  #analytics: UA-YOURCODE
+  analytics: UA-69119480-1
 
 Development:
   <<: *defaults
@@ -21,6 +21,7 @@ Testing:
   gequeuename: "c_highmem.q"
   taxDumpPath: "~egg/current/Data/Taxonomy/taxdump/"
   copyright: TBI - 2015
+  analytics: UA-69119480-1
 
 Staging:
   host: "*4" # any IPv4 host
@@ -31,6 +32,7 @@ Staging:
   gequeuename: "web_long_q"
   taxDumpPath: "/mnt/storage/data/rnalien/"
   copyright: TBI - 2015
+  analytics: UA-69119480-1
 
 Production:
   host: "*4" # any IPv4 host
@@ -41,3 +43,4 @@ Production:
   gequeuename: "web_long_q"
   taxDumpPath: "/mnt/storage/data/rnalien/"
   copyright: TBI - 2015
+  analytics: UA-69119480-1
