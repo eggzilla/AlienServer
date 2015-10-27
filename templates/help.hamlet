@@ -17,7 +17,7 @@
           <div class="list-group">
             <a href="#ws" class="list-group-item">Webservice</a>
             <a href="#tool" class="list-group-item">Commandline Tool</a>
-            <a href="#examples" class="list-group-item">Examples</a>
+            <a href="#benchmark" class="list-group-item">Benchmark</a>
             <a href="#pipe" class="list-group-item">Pipeline</a>
             <a href="#tax" class="list-group-item">Retrieve Taxonomy id</a>
 
@@ -233,7 +233,7 @@
     <strong>Log file<strong:>
 
 <hr>
-<h2 id="examples">Examples</h2><br>
+<h2 id="benchmark">Benchmark</h2><br>
 <div class="panel panel-default">
   <div class="panel-body">
        
@@ -246,227 +246,227 @@
            <tr>
              <td>RF00001
              <td> 5S rRNA
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/1.tar.gz">archive<a/>
            <tr>
              <td>RF00002
              <td>5_8S rRNA
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/2.tar.gz">archive<a/>
            <tr>
              <td>RF00003
              <td>U1
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/3.tar.gz">archive<a/>
            <tr>
              <td>RF00004
              <td>U2
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/4.tar.gz">archive<a/>
            <tr>
              <td>RF00005
              <td>tRNA
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/5.tar.gz">archive<a/>
            <tr>
              <td>RF00008
              <td>Hammerhead_3
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/6.tar.gz">archive<a/>
            <tr>
              <td>RF00010
              <td>RNaseP_bact_a 
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/7.tar.gz">archive<a/>
           <tr>
              <td>RF00011
              <td>RNaseP_bact_b
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/8.tar.gz">archive<a/>
           <tr>
              <td>RF00017
              <td>Metazoa_SRP
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/9.tar.gz">archive<a/>
           <tr>
              <td>RF00023
              <td>tmRNA
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/10.tar.gz">archive<a/>
           <tr>
              <td>RF00026
              <td>U6
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/11.tar.gz">archive<a/>
           <tr>
              <td>RF00028
              <td>Intron_gpI
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/12.tar.gz">archive<a/>
           <tr>
              <td>RF00029
              <td>Intron_gpII
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/13.tar.gz">archive<a/>
           <tr>
              <td>RF00032
              <td>Histone3
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/14.tar.gz">archive<a/>
           <tr>
              <td>RF00037
              <td>IRE_I
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/15.tar.gz">archive<a/>
           <tr>
              <td>RF00044
              <td>Phage_pRNA
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/16.tar.gz">archive<a/>
           <tr>
              <td>RF00050
              <td>FMN
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/17.tar.gz">archive<a/>
           <tr>
              <td>RF00059
              <td>TPP
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/18.tar.gz">archive<a/>
           <tr>
              <td>RF00114
              <td>S15
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/19.tar.gz">archive<a/>
           <tr>
              <td>RF00162
              <td>SAM
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/20.tar.gz">archive<a/>
           <tr>
              <td>RF00164
              <td>s2m
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/21.tar.gz">archive<a/>
           <tr>
              <td>RF00167
              <td>Purine
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/22.tar.gz">archive<a/>
           <tr>
              <td>RF00168
              <td>Lysine
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/23.tar.gz">archive<a/>
           <tr>
              <td>RF00169
              <td>Bacteria_small_SRP
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/24.tar.gz">archive<a/>
           <tr>
              <td>RF00174
              <td>Cobalamin
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/25.tar.gz">archive<a/>
           <tr>
              <td>RF00175
              <td>HIV-1_DIS
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/26.tar.gz">archive<a/>
           <tr>
              <td>RF00177
              <td>SSU_rRNA_bacteria
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/27.tar.gz">archive<a/>
           <tr>
              <td>RF00207
              <td>K10_TLS
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/28.tar.gz">archive<a/>
           <tr>
              <td>RF00209
              <td>IRES_Pesti
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/29.tar.gz">archive<a/>
           <tr>
              <td>RF00234
              <td>glmS
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/30.tar.gz">archive<a/>
           <tr>
              <td>RF00374
              <td>Gammaretro_CES
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/31.tar.gz">archive<a/>
           <tr>
              <td>RF00380
              <td>ykoK
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/32.tar.gz">archive<a/>
           <tr>
              <td>RF00458
              <td>IRES_Cripavirus
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/33.tar.gz">archive<a/>
           <tr>
              <td>RF00480
              <td>HIV_FE
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/34.tar.gz">archive<a/>
           <tr>
              <td>RF00500
              <td>TCV_H5
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/35.tar.gz">archive<a/>
           <tr>
              <td>RF00504
              <td>Glycine
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/36.tar.gz">archive<a/>
           <tr>
              <td>RF00843
              <td>mir-228
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/37.tar.gz">archive<a/>
           <tr>
              <td>RF00871
              <td>mir-689
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/38.tar.gz">archive<a/>
           <tr>
              <td>RF01051
              <td>c-di-GMP-I
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/39.tar.gz">archive<a/>
           <tr>
              <td>RF01054
              <td>preQ1-II
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/40.tar.gz">archive<a/>
           <tr>
              <td>RF01073
              <td>GP_knot1
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/41.tar.gz">archive<a/>
           <tr>
              <td>RF01118
              <td>PK-G12rRNA
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/42.tar.gz">archive<a/>
           <tr>
              <td>RF01380
              <td>HIV-1_SD
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/44.tar.gz">archive<a/>
           <tr>
              <td>RF01510
              <td>MFR
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/45.tar.gz">archive<a/>
           <tr>
              <td>RF01689
              <td>AdoCbl-variant
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/46.tar.gz">archive<a/>
           <tr>
              <td>RF01734
              <td>crcB
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/47.tar.gz">archive<a/>
           <tr>
              <td>RF01786
              <td>c-di-GMP-II
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/48.tar.gz">archive<a/>
           <tr>
              <td>RF01831
              <td>THF
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/49.tar.gz">archive<a/>
           <tr>
              <td>RF01852
              <td>tRNA-Sec
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/50.tar.gz">archive<a/>
           <tr>
              <td>RF01856
              <td>Protozoa_SRP
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/51.tar.gz">archive<a/>
           <tr>
              <td>RF01857
              <td>Archaea_SRP
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/52.tar.gz">archive<a/>
           <tr>
              <td>RF01998
              <td>group-II-D1D4-1
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/53.tar.gz">archive<a/>
           <tr>
              <td>RF02001
              <td>group-II-D1D4-3
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/54.tar.gz">archive<a/>
           <tr>
              <td>RF02095
              <td>mir-2985-2
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/55.tar.gz">archive<a/>
           <tr>
              <td>RF02253
              <td>IRE_II
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/56.tar.gz">archive<a/>
           <tr>
              <td>RF02519 
              <td>ToxI
-             <td><a href="">archive<a/>
+             <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/57.tar.gz">archive<a/>
 <hr>
 
 
