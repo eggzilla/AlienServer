@@ -35,7 +35,7 @@ getResultR = do
     let unfinished = not done
     existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0..35])
     iterationLogs <- liftIO (mapM (retrieveIterationLog temporaryDirectoryPath tempDirectoryURL) existentIterationLogs)
-    resultInsert <- liftIO (retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL currentApproot)
+    resultInsert <-liftIO (retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL currentApproot)
     if started
        then do
          if done
@@ -93,15 +93,14 @@ getResultR = do
 --     else do
 --       return ()
               
-retrieveResultCsv :: Bool -> String -> String -> Text -> IO String
-retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
+retrieveResultCsv :: Bool -> String -> String -> String -> Text -> IO String
+retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL approotURL = do
   if done
      then do
        let myOptions = defaultDecodeOptions {
          decDelimiter = fromIntegral (ord ';')
          }
        let alienCSVPath = temporaryDirectoryPath ++ "result.csv"
-       --let taxonomySvgPath = tempDirectoryURL ++ "taxonomy.svg"
        inputCSV <- L.readFile alienCSVPath
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
@@ -123,8 +122,14 @@ retrieveResultCsv done temporaryDirectoryPath tempDirectoryURL approotURL = do
        let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
        evaluationResults <- constructEvaluationResults (length decodedCsvOutput) (temporaryDirectoryPath ++ "result.rnaz") (temporaryDirectoryPath ++ "result.cmstat")
        let taxonomyOverview = "<h3>Taxonomy overview</h3><brv>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div>"
-       let cmcwsSendToField = "<a href=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi\"><img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\"></a>"
-       return (resultHeadline ++ resultFilesTable ++ evaluationResults  ++ taxonomyOverview  ++ resultFamilyMemberTable ++ cmcwsSendToField)
+       --let cmcwsSendToField = "<a href=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi\"><img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\"></a>"
+       let cmcwsSendToField = "<form id=\"submit-form\" enctype=\"multipart/form-data\" method=\"post\" action=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi/cmcws.cgi\">" ++
+                              "<input id=\"select_slice\" type=\"hidden\" name=\"page\" value=\"All\">" ++
+                              "<input id=\"page\" type=\"hidden\" name=\"page\" value=\"1\">" ++
+                              "<input id=\"mode\" type=\"hidden\" name=\"mode\" value=\"1\">" ++
+                              "<input id=\"uploaded_file\" type=\"hidden\" name=\"uploaded_file\" value=\"" ++ sessionId ++ ">" ++
+                              "<input type=\"image\" src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\" value=\"Compare\">"
+       return (resultHeadline ++ resultFilesTable ++ evaluationResults  ++ taxonomyOverview  ++ cmcwsSendToField ++ resultFamilyMemberTable)
      else do
        return ""
 
