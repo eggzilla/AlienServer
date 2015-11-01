@@ -467,8 +467,9 @@
              <td>RF02519 
              <td>ToxI
              <td><a href="http://nibiru.tbi.univie.ac.at/rnalien_tmp/benchmark/57.tar.gz">archive<a/>
+         <br>
+         <p>Values for the specificity and recall plots were computed with the RNAlienStatistics executable and the <a href="https://github.com/eggzilla/RNAlien/blob/master/scripts/alienresultstatistics.pl">rnalienstatistics.pl</a> script included in RNAlien.<br>
 <hr>
-
 
 <h2 id="pipe">RNAalien pipeline</h2><br>
 <div class="panel panel-default">

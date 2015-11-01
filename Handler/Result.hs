@@ -1,3 +1,4 @@
+
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Result where
 
@@ -127,7 +128,7 @@ retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL approot
                               "<input id=\"select_slice\" type=\"hidden\" name=\"page\" value=\"All\">" ++
                               "<input id=\"page\" type=\"hidden\" name=\"page\" value=\"1\">" ++
                               "<input id=\"mode\" type=\"hidden\" name=\"mode\" value=\"1\">" ++
-                              "<input id=\"uploaded_file\" type=\"hidden\" name=\"uploaded_file\" value=\"" ++ sessionId ++ ">" ++
+                              "<input id=\"uploaded_file\" type=\"hidden\" name=\"uploaded_file\" value=\"" ++ sessionId ++ "\">" ++
                               "<input type=\"image\" src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\" value=\"Compare\">"
        return (resultHeadline ++ resultFilesTable ++ evaluationResults  ++ taxonomyOverview  ++ cmcwsSendToField ++ resultFamilyMemberTable)
      else do
