@@ -10,4 +10,9 @@
       ^{formWidget}
       <button .btn .btn-primary type="submit">
          Send it! <span class="glyphicon glyphicon-upload">
-         
+   <br>
+    <form method=post action=@{HomeR}#form enctype=#{sampleEnctype}>
+      ^{sampleWidget}
+      <button .btn .btn-info class="btn-xs" type="submit">Sample - GlmS - Listeria monocytogenes FSL N3-165</button>
+
+ 

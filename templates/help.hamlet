@@ -31,10 +31,10 @@
         Example GlmS fasta file content:<br>
         <div class="panel panel-default">
           <div class="panel-body">
-            >AARQ02000011.1/391-585
-            AAUUGAAUAGAAGCGCCAGAACUGAUUGGGACGAAAAUGCUUGAAGGUGAAAUCCCUGAA
-            AAGUAUCGAUCAGUUGACGAGGAGGAGAUUAAUCGAAGUUUCGGCGGGAGUCUCCCGGCU
-            GUGCAUGCAGUCGUUAAGUCUUACUUACAAAUCAUUUGGGUGACCAAGUGGACAGAGUAG
+            >AARQ02000011.1/391-585<br>
+            AAUUGAAUAGAAGCGCCAGAACUGAUUGGGACGAAAAUGCUUGAAGGUGAAAUCCCUGAA<br>
+            AAGUAUCGAUCAGUUGACGAGGAGGAGAUUAAUCGAAGUUUCGGCGGGAGUCUCCCGGCU<br>
+            GUGCAUGCAGUCGUUAAGUCUUACUUACAAAUCAUUUGGGUGACCAAGUGGACAGAGUAG<br>
             UAAUGAAACAUGCUU
             <br>
         Optionally the organism (Listeria monocytogenes FSL N3-165) where the sequence originates from can be passed as an NCBI Taxononomy id(393124), see (<a href="#tax">Retrieve Taxonomy id</a>).
