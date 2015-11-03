@@ -21,10 +21,6 @@ getHomeR :: Handler Html
 getHomeR = do
     (formWidget, formEnctype) <- generateFormPost inputForm
     (sampleWidget, sampleEnctype) <- generateFormPost sampleForm
-   -- maybeToken <- fmap reqToken getRequest
- --   let token = fromJust maybeToken
-    let samplefasta = DT.pack ">AARQ02000011.1/391-585\nAAUUGAAUAGAAGCGCCAGAACUGAUUGGGACGAAAAUGCUUGAAGGUGAAAUCCCUGAA\nAAGUAUCGAUCAGUUGACGAGGAGGAGAUUAAUCGAAGUUUCGGCGGGAGUCUCCCGGCU\nGUGCAUGCAGUCGUUAAGUCUUACUUACAAAUCAUUUGGGUGACCAAGUGGACAGAGUAG\nUAAUGAAACAUGCUU\n"
-    --let failure = ""
     defaultLayout $ do
         aDomId <- newIdent
         setTitle "Welcome To RNAlien!"
@@ -54,8 +50,6 @@ postHomeR = do
        let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
        --Write input fasta file
        liftIO (writesubmissionData temporaryDirectoryPath inputsubmission samplesubmission)
-       --liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
-       --liftIO (writeFile (temporaryDirectoryPath ++ "input.fa") (L.unpack (fst (fromJust submission))))
        let taxonomyId = extractTaxonomyId inputsubmission samplesubmission
        --Submit RNAlien Job to SGE
        let aliencommand = "RNAlien -i "++ temporaryDirectoryPath ++ "input.fa -c 5 -t " ++ (DT.unpack  taxonomyId) ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath ++ "\n"
@@ -79,53 +73,21 @@ postHomeR = do
        liftIO (writeFile alienLogPath "")
        liftIO (writeFile bashscriptpath bashcontent)
        _ <- liftIO (runCommand (qsubcommand))
---    (formWidget, formEnctype) <- generateFormPost sampleForm
---    (sampleWidget, sampleEnctype) <- generateFormPost sampleForm
---    maybeToken <- fmap reqToken getRequest
---    let token = fromJust maybeToken
---    maybeToken <- fmap reqToken getRequest
---    let samplefasta = DT.pack ">AARQ02000011.1/391-585\nAAUUGAAUAGAAGCGCCAGAACUGAUUGGGACGAAAAUGCUUGAAGGUGAAAUCCCUGAA\nAAGUAUCGAUCAGUUGACGAGGAGGAGAUUAAUCGAAGUUUCGGCGGGAGUCUCCCGGCU\nGUGCAUGCAGUCGUUAAGUCUUACUUACAAAUCAUUUGGGUGACCAAGUGGACAGAGUAG\nUAAUGAAACAUGCUU\n"
---    defaultLayout $ do
---        aDomId <- newIdent
---        setTitle "Welcome To RNAlien!"
---       $(widgetFile "homepage")       
-    --Render page
+       --Render page
        defaultLayout $ do
          aDomId <- newIdent
          let approotjs = revprox
          let sessionIdInsert =  DT.pack sessionId
          let sessionIdjs = sessionId                       
-         --let resultInsert = DT.unpack (fileName (fst (fromJust submission)))
          setTitle "Welcome To RNAlien!"
          $(widgetFile "calc")
       else do
-        (formWidget, formEnctype) <- generateFormPost sampleForm
-        (sampleWidget, sampleEnctype) <- generateFormPost sampleForm
-       -- maybeToken <- fmap reqToken getRequest
-     --   let token = fromJust maybeToken
-        let samplefasta = DT.pack ">AARQ02000011.1/391-585\nAAUUGAAUAGAAGCGCCAGAACUGAUUGGGACGAAAAUGCUUGAAGGUGAAAUCCCUGAA\nAAGUAUCGAUCAGUUGACGAGGAGGAGAUUAAUCGAAGUUUCGGCGGGAGUCUCCCGGCU\nGUGCAUGCAGUCGUUAAGUCUUACUUACAAAUCAUUUGGGUGACCAAGUGGACAGAGUAG\nUAAUGAAACAUGCUU\n"
-        --let failure = ""
-        defaultLayout $ do
-          aDomId <- newIdent
-          setTitle "Welcome To RNAlien!"
-          $(widgetFile "homepage")
-
+        getHomeR
          
 inputForm :: Form (FileInfo, Text)
 inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
     <$> fileAFormReq "Upload a fasta sequence file"
     <*> areq textField (withSmallInput "Enter Taxonomy Id:") Nothing
-
-writesubmissionData :: [Char] -> Maybe (FileInfo, b) -> Maybe (L.ByteString, b1) -> IO()
-writesubmissionData temporaryDirectoryPath inputsubmission samplesubmission = do
-  if isJust inputsubmission
-     then do
-       liftIO (fileMove (fst (fromJust inputsubmission)) (temporaryDirectoryPath ++ "input.fa"))
-     else do
-       liftIO (L.writeFile (temporaryDirectoryPath ++ "input.fa") ((fst (fromJust samplesubmission))))
---liftIO (fileMove (fst (fromJust submission)) (temporaryDirectoryPath ++ "input.fa"))
---liftIO (writeFile (temporaryDirectoryPath ++ "input.fa") (L.unpack (fst (fromJust submission))))
-
 
 sampleForm :: Form (Text, Text)
 sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
@@ -137,22 +99,21 @@ sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
 randomid :: Int16 -> String
 randomid number = "cm" ++ (show number)
 
+writesubmissionData :: [Char] -> Maybe (FileInfo, b) -> Maybe (L.ByteString, b1) -> IO()
+writesubmissionData temporaryDirectoryPath inputsubmission samplesubmission = do
+  if isJust inputsubmission
+     then do
+       liftIO (fileMove (fst (fromJust inputsubmission)) (temporaryDirectoryPath ++ "input.fa"))
+     else do
+       liftIO (L.writeFile (temporaryDirectoryPath ++ "input.fa") ((fst (fromJust samplesubmission))))
+
 createSessionId :: IO String                  
 createSessionId = do
   randomNumber <- randomIO :: IO Int16
   let sessionId = randomid (abs randomNumber)
   return sessionId
 
-
-
---extractTaxonomyId :: Maybe (L.ByteString,Text) -> Maybe (L.ByteString,Text) -> Text
+extractTaxonomyId :: Maybe (a, Text) -> Maybe (a1, Text) -> Text
 extractTaxonomyId inputsubmission samplesubmission
   | isJust inputsubmission = snd (fromJust inputsubmission)
   | otherwise = snd (fromJust samplesubmission)
-
-
---selectSubmission :: Maybe (L.ByteString,Text) -> Maybe (L.ByteString,Text) -> Maybe (L.ByteString,Text)
---selectSubmission inputsubmission samplesubmission
---  | isJust inputsubmission =  inputsubmission
---  | isJust samplesubmission = samplesubmission
---  | otherwise = Nothing
