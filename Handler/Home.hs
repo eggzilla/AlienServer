@@ -11,7 +11,7 @@ import System.Directory
 import System.IO (writeFile)
 import Data.Int (Int16)
 import Yesod.Form.Bootstrap3
-    ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
+    ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput, withLargeInput )
 import Text.Parsec
 import Text.Parsec.ByteString
 import Data.Either.Unwrap
@@ -98,7 +98,7 @@ postHomeR = do
 inputForm :: Form (FileInfo, Maybe Text)
 inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
     <$> fileAFormReq "Upload a fasta sequence file"
-    <*> aopt ((jqueryAutocompleteField' 2) TaxonomyR) (withSmallInput "Enter Taxonomy Id:") Nothing
+    <*> aopt ((jqueryAutocompleteField' 2) TaxonomyR) (withLargeInput "Enter Taxonomy Id or Name:") Nothing
  -- where taxroute = (fromJust (parseRoute (map DT.pack (splitOn "/" "//nibiru.tbi.univie.ac.at/rnalien/taxonomy"),[])))
     --(Just (Just (Just (DT.pack "//nibiru.tbi.univie.ac.at/rnalien/taxonomy")))))
     --(fromJust (parseRoute (map DT.pack (splitOn "/" "//nibiru.tbi.univie.ac.at/rnalien/taxonomy"),[])))
