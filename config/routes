@@ -7,3 +7,4 @@
 /result ResultR GET
 /tool ToolR GET
 /help HelpR GET
+/taxonomy TaxonomyR GET

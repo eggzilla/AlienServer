@@ -22,6 +22,7 @@ library
                      Handler.Result
                      Handler.Tool
                      Handler.Help
+                     Handler.Taxonomy
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

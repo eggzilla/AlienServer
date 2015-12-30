@@ -26,6 +26,7 @@ import Handler.Home
 import Handler.Result
 import Handler.Tool
 import Handler.Help
+import Handler.Taxonomy
     
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the

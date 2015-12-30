@@ -3,10 +3,7 @@
 module Handler.Home where
 
 import Import hiding ((<|>),many,optional)
---import Control.Applicative
---import Data.Maybe
 import qualified Data.Text as DT
---import qualified Data.Text.Encoding as DTE
 import qualified Data.ByteString as B
 import System.Process
 import System.Random
@@ -20,6 +17,9 @@ import Text.Parsec.ByteString
 import Data.Either.Unwrap
 import Data.List.Split hiding (oneOf)
 import Data.List
+import Yesod.Form.Jquery
+import Yesod.Core (Route)
+import Data.Maybe
 
 getHomeR :: Handler Html
 getHomeR = do
@@ -42,12 +42,6 @@ postHomeR = do
     geQueueName <- fmap extraGEqueuename getExtra
     let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"
     let inputPath = temporaryDirectoryPath ++ "input.fa"
---    let inputsubmission = case result of
---            FormSuccess (fasta,taxid) -> Just (fasta,taxid)
---            _ -> Nothing
---    let samplesubmission = case sampleresult of
---            FormSuccess (fasta,taxid) -> Just (DTE.encodeUtf8 fasta,taxid)
---            _ -> Nothing
     liftIO (writesubmissionData formResult sampleResult temporaryDirectoryPath)
     uploadedFile <- liftIO (B.readFile inputPath)
     let taxonomyInfo = extractTaxonomyInfo formResult sampleResult
@@ -104,7 +98,11 @@ postHomeR = do
 inputForm :: Form (FileInfo, Maybe Text)
 inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
     <$> fileAFormReq "Upload a fasta sequence file"
-    <*> aopt textField (withSmallInput "Enter Taxonomy Id:") Nothing
+    <*> aopt ((jqueryAutocompleteField' 2) TaxonomyR) (withSmallInput "Enter Taxonomy Id:") Nothing
+ -- where taxroute = (fromJust (parseRoute (map DT.pack (splitOn "/" "//nibiru.tbi.univie.ac.at/rnalien/taxonomy"),[])))
+    --(Just (Just (Just (DT.pack "//nibiru.tbi.univie.ac.at/rnalien/taxonomy")))))
+    --(fromJust (parseRoute (map DT.pack (splitOn "/" "//nibiru.tbi.univie.ac.at/rnalien/taxonomy"),[])))
+    -- (withSmallInput "Enter Taxonomy Id:")
 
 sampleForm :: Form (Text, Maybe Text)
 sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
@@ -123,11 +121,6 @@ writesubmissionData inputsubmission samplesubmission temporaryDirectoryPath = do
       _ -> case samplesubmission of
         FormSuccess (fasta,_) -> (writeFile (temporaryDirectoryPath ++ "input.fa") (DT.unpack fasta))
         _ -> return ()
---  if isJust inputsubmission
---     then do
---       liftIO (fileMove (fst (fromJust inputsubmission)) (temporaryDirectoryPath ++ "input.fa"))
---     else do
---       liftIO (L.writeFile (temporaryDirectoryPath ++ "input.fa") ((fst (fromJust samplesubmission))))
 
 createSessionId :: IO String                  
 createSessionId = do
@@ -139,11 +132,6 @@ extractTaxonomyInfo :: FormResult (FileInfo,Maybe Text) -> FormResult (Text,Mayb
 extractTaxonomyInfo (FormSuccess (_,taxonomyInfo)) _ = taxonomyInfo
 extractTaxonomyInfo _ (FormSuccess (_,taxonomyInfo)) = taxonomyInfo
 extractTaxonomyInfo _ _ = Nothing
-
---extractTaxonomyId :: Maybe (a, Text) -> Maybe (a1, Text) -> Text
---extractTaxonomyId inputsubmission samplesubmission
---  | isJust inputsubmission = snd (fromJust inputsubmission)
---  | otherwise = snd (fromJust samplesubmission)
 
 validateInput :: B.ByteString -> Maybe Text -> Either String String
 validateInput fastaFileContent taxonomyInfo 
