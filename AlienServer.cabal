@@ -76,6 +76,7 @@ library
                  , either-unwrap
                  , ViennaRNAParser>=1.2.5 
                  , parsec
+                 , hashmap
 
     -- see https://github.com/yesodweb/yesod/issues/814
     if !os(windows)
