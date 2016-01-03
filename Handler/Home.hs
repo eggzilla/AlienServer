@@ -4,14 +4,16 @@ module Handler.Home where
 
 import Import hiding ((<|>),many,optional)
 import qualified Data.Text as DT
-import qualified Data.ByteString as B
+import qualified Data.Text.Encoding as DTE
+--import qualified Data.Text.IO as DTI
+import qualified Data.ByteString.Char8 as B
 import System.Process
 import System.Random
 import System.Directory
 import System.IO (writeFile)
 import Data.Int (Int16)
 import Yesod.Form.Bootstrap3
-    ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput )
+    ( BootstrapFormLayout (..), renderBootstrap3, withSmallInput, withLargeInput )
 import Text.Parsec
 import Text.Parsec.ByteString
 import Data.Either.Unwrap
@@ -20,6 +22,8 @@ import Data.List
 import Yesod.Form.Jquery
 import Yesod.Core (Route)
 import Data.Maybe
+import qualified Data.HashMap as HM
+import Data.Tuple
 
 getHomeR :: Handler Html
 getHomeR = do
@@ -44,8 +48,11 @@ postHomeR = do
     let inputPath = temporaryDirectoryPath ++ "input.fa"
     liftIO (writesubmissionData formResult sampleResult temporaryDirectoryPath)
     uploadedFile <- liftIO (B.readFile inputPath)
+    taxIdsOrganismsFile <- liftIO (B.readFile "/mnt/storage/data/rnalien/taxidsorganisms")
+    --cut -f 1,3  names.dmp > taxidsorganisms
+    let taxIdsOrganismsHash = HM.fromList $ catMaybes $ map pairs (map (B.split '\t') (B.lines taxIdsOrganismsFile))
     let taxonomyInfo = extractTaxonomyInfo formResult sampleResult
-    let validatedInput = validateInput uploadedFile taxonomyInfo
+    let validatedInput = validateInput uploadedFile taxonomyInfo taxIdsOrganismsHash
     if (isRight validatedInput)
       then do  
        let alienLogPath = temporaryDirectoryPath ++ "Log"             
@@ -53,7 +60,7 @@ postHomeR = do
        taxDumpDirectoryPath <- fmap extraTaxDumpPath getExtra
        let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
        --Write input fasta file
-       let taxonomySwitch = setTaxonomyId taxonomyInfo
+       let taxonomySwitch = setTaxonomyId (fromRight validatedInput)
        --Submit RNAlien Job to SGE
        let aliencommand = "RNAlien -i "++ inputPath ++ " -c 5 " ++ taxonomySwitch ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath ++ "\n"
        let ids2treecommand = "Ids2Tree -l 3 -f json -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ temporaryDirectoryPath ++ " -r " ++ alienResultCsvFilePath  ++ "\n"
@@ -98,11 +105,7 @@ postHomeR = do
 inputForm :: Form (FileInfo, Maybe Text)
 inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
     <$> fileAFormReq "Upload a fasta sequence file"
-    <*> aopt ((jqueryAutocompleteField' 2) TaxonomyR) (withSmallInput "Enter Taxonomy Id:") Nothing
- -- where taxroute = (fromJust (parseRoute (map DT.pack (splitOn "/" "//nibiru.tbi.univie.ac.at/rnalien/taxonomy"),[])))
-    --(Just (Just (Just (DT.pack "//nibiru.tbi.univie.ac.at/rnalien/taxonomy")))))
-    --(fromJust (parseRoute (map DT.pack (splitOn "/" "//nibiru.tbi.univie.ac.at/rnalien/taxonomy"),[])))
-    -- (withSmallInput "Enter Taxonomy Id:")
+    <*> aopt ((jqueryAutocompleteField' 2) TaxonomyR) (withLargeInput "Enter Taxonomy Id or Name:") Nothing
 
 sampleForm :: Form (Text, Maybe Text)
 sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
@@ -133,17 +136,31 @@ extractTaxonomyInfo (FormSuccess (_,taxonomyInfo)) _ = taxonomyInfo
 extractTaxonomyInfo _ (FormSuccess (_,taxonomyInfo)) = taxonomyInfo
 extractTaxonomyInfo _ _ = Nothing
 
-validateInput :: B.ByteString -> Maybe Text -> Either String String
-validateInput fastaFileContent taxonomyInfo 
-  | (isRight checkedForm) && (isRight checkedTaxonomyInfo) = Right "Input ok"
+validateInput :: B.ByteString -> Maybe Text -> HM.HashMap B.ByteString Int -> Either String (Maybe Text)
+validateInput fastaFileContent taxonomyInfo taxIdsOrganismsHash
+  | (isRight checkedForm) && (isRight checkedTaxonomyInfo) = checkedTaxonomyInfo
   | otherwise = Left (convertErrorMessagetoHTML((unwrapEither checkedForm) ++ (unwrapEither checkedTaxonomyInfo)))
   where checkedForm =  either (\a -> Left (show a)) (\_ -> Right ("Input ok" :: String)) (parseFasta fastaFileContent)
-        checkedTaxonomyInfo = checkTaxonomyInfo taxonomyInfo 
+        checkedTaxonomyInfo = checkTaxonomyInfo taxonomyInfo taxIdsOrganismsHash
 
-checkTaxonomyInfo :: Maybe t -> Either String String
-checkTaxonomyInfo (Just taxonomyInfo) = Right ("Taxinfo ok" :: String)
-checkTaxonomyInfo Nothing = Right ("" :: String)
-    
+checkTaxonomyInfo :: Maybe Text -> HM.HashMap B.ByteString Int -> Either String (Maybe Text)
+checkTaxonomyInfo (Just taxonomyInfo) taxIdsOrganismsHash = parseTaxonomyInfo taxonomyInfo taxIdsOrganismsHash
+checkTaxonomyInfo Nothing taxIdsOrganismsHash = Right Nothing
+
+parseTaxonomyInfo :: Text -> HM.HashMap B.ByteString Int -> Either String (Maybe Text)
+parseTaxonomyInfo taxonomyInfo taxIdsOrganismsHash
+  | isRight parsedAsInteger = Right (Just taxonomyInfo)
+  | isRight parsedAsOrganismName = Right (Just (DT.pack (show (fromRight parsedAsOrganismName))))
+  | otherwise = Left (show (fromLeft parsedAsInteger) ++ "<br>" ++ unwrapEither parsedAsOrganismName)
+  where parsedAsInteger = parse genParserTaxid "Error in TaxonomyId input:" (DTE.encodeUtf8 taxonomyInfo)
+        parsedAsOrganismName = maybe (Left "Error in TaxonomyId input:<br>Provided organism not found<br>") (\a -> Right (DT.pack (show a))) (HM.lookup (DTE.encodeUtf8 taxonomyInfo) taxIdsOrganismsHash)
+
+
+genParserTaxid :: GenParser B.ByteString st Int
+genParserTaxid = do
+  taxid <- many1 digit
+  return (read taxid ::Int)
+
 setTaxonomyId :: Maybe Text -> String
 setTaxonomyId (Just taxonomyInfo) = " -t " ++ (DT.unpack taxonomyInfo) ++ " "
 setTaxonomyId Nothing = ""
@@ -174,7 +191,7 @@ data Fasta = Fasta
   }
   deriving (Show, Eq)
 
-unwrapEither :: Either String String -> String
+unwrapEither :: Either String a -> String
 unwrapEither eithervalue = either (\a -> (show a) ++ "<br>") (\_ -> ("" :: String)) eithervalue 
 
 convertErrorMessagetoHTML :: String -> String
@@ -182,3 +199,8 @@ convertErrorMessagetoHTML errorMessage = htmlMessage
         where replacedquotes = intercalate "<br>" . splitOn "\\n" $ errorMessage
               replacedlinebreaks = intercalate " " . splitOn "\"" $ replacedquotes
               htmlMessage = intercalate " " . splitOn "\\" $ replacedlinebreaks
+
+pairs :: [B.ByteString] -> Maybe (B.ByteString,Int)
+pairs [v,k] = Just (k,fst (fromJust (B.readInt v)))
+pairs [] = Nothing
+pairs [_] = Nothing
