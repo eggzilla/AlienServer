@@ -24,6 +24,7 @@ import Yesod.Core (Route)
 import Data.Maybe
 import qualified Data.HashMap as HM
 import Data.Tuple
+import Control.Applicative ((<*>),(<$>))
 
 getHomeR :: Handler Html
 getHomeR = do
