@@ -82,7 +82,7 @@ library
                  , cassava
                  , vector
                  , either-unwrap
-                 , ViennaRNAParser>=1.2.5 
+                 , ViennaRNAParser>=1.2.8 
                  , parsec
                  , hashmap
 

@@ -15,6 +15,7 @@ import Data.Char
 import qualified Data.Vector as V
 import Data.Either.Unwrap
 import Bio.RNAzParser
+import qualified Bio.RNAcodeParser as RC
 import Text.ParserCombinators.Parsec 
 
 getResultR :: Handler Html
@@ -102,6 +103,9 @@ retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL approot
          decDelimiter = fromIntegral (ord ';')
          }
        let alienCSVPath = temporaryDirectoryPath ++ "result.csv"
+       let rnazPath = temporaryDirectoryPath ++ "result.rnaz"
+       let rnacodePath = temporaryDirectoryPath ++ "result.rnacode"
+       let cmstatPath = temporaryDirectoryPath ++ "result.cmstat"
        inputCSV <- L.readFile alienCSVPath
        let decodedCsvOutput = V.toList (fromRight (decodeWith myOptions HasHeader (inputCSV) :: Either String (V.Vector (String,String,String))))
        let resultFamilyMemberTable = constructTaxonomyRecordsHtmlTable decodedCsvOutput
@@ -110,18 +114,20 @@ retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL approot
        fastaPresent <- doesFileExist (temporaryDirectoryPath ++ "result.fa")
        stockholmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.stockholm")
        cmPresent <- doesFileExist (temporaryDirectoryPath ++ "result.cm")
-       rnazPresent <- doesFileExist (temporaryDirectoryPath ++ "result.rnaz")
-       cmstatPresent <- doesFileExist (temporaryDirectoryPath ++ "result.cmstat")
+       rnazPresent <- doesFileExist rnazPath
+       rnacodePresent <- doesFileExist rnacodePath
+       cmstatPresent <- doesFileExist cmstatPath
        archivePresent <- doesFileExist (temporaryDirectoryPath ++ "result.zip")
        let loglink = fileStatusMessage logPresent ("<a href=\"" ++ tempDirectoryURL ++ "Log\">Log</a>")
        let falink = fileStatusMessage fastaPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.fa\">Fasta</a>")
        let alnlink = fileStatusMessage stockholmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Stockholm Alignment</a>")
        let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cm\">Covariance Model</a>")
-       let rnazlink = fileStatusMessage rnazPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnaz\">Rnaz Output</a>")
+       let rnazlink = fileStatusMessage rnazPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnaz\">RNAz Output</a>")
+       let rnacodelink = fileStatusMessage rnacodePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnacode\">RNAcode Output</a>")
        let cmstatlink = fileStatusMessage cmstatPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cmstat\">cmstat Output</a>")
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
-       let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
-       evaluationResults <- constructEvaluationResults (length decodedCsvOutput) (temporaryDirectoryPath ++ "result.rnaz") (temporaryDirectoryPath ++ "result.cmstat")
+       let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ rnacodelink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
+       evaluationResults <- constructEvaluationResults (length decodedCsvOutput) rnazPath rnacodePath  cmstatPath
        let taxonomyOverview = "<h3>Taxonomy overview</h3><brv>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div>"
        --let cmcwsSendToField = "<a href=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi\"><img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\"></a>"
        let cmcwsSendToField = "<form id=\"submit-form\" enctype=\"multipart/form-data\" method=\"post\" action=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi/cmcws.cgi\">" ++
@@ -190,17 +196,19 @@ truncateThresholdField thresholdField
   | otherwise = (take 5 thresholdField)
 
 
-constructEvaluationResults :: Int -> String -> String -> IO String
-constructEvaluationResults entryNumber rnazPath cmStatPath = do
+constructEvaluationResults :: Int -> String -> String -> String -> IO String
+constructEvaluationResults entryNumber rnazPath rnaCodePath cmStatPath = do
   inputcmStat <- readCMstat cmStatPath
   let cmstatString = cmstatHtmlOutput inputcmStat
   if (entryNumber > 1)
     then do 
-      inputRNAz <- readRNAz rnazPath 
+      inputRNAz <- readRNAz rnazPath
+      inputRNAcode <- RC.readRNAcodeTabular rnaCodePath
       let rnaZString = rnaZHtmlOutput inputRNAz
-      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmstatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table>")
+      let rnacodeString = rnaCodeHtmlOutput inputRNAcode
+      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmstatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcode statistics for result alignment:</td></tr>" ++ rnacodeString ++ "</table>")
     else do 
-      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmstatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz statistics with a single sequence.</td></tr></table>")
+      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmstatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>")
 
 cmstatHtmlOutput :: Either ParseError CMstat -> String 
 cmstatHtmlOutput inputcmstat
@@ -215,6 +223,18 @@ rnaZHtmlOutput inputRNAz
   | otherwise = show (fromLeft inputRNAz)
     where rnaZ = fromRight inputRNAz
           rnazString = "<tr><td>Mean pairwise identity</td><td>" ++ show (meanPairwiseIdentity rnaZ) ++ "</td></tr><tr><td>Shannon entropy</td><td>" ++ show (shannonEntropy rnaZ) ++  "</td></tr><tr><td>GC content</td><td>" ++ show (gcContent rnaZ) ++ "</td></tr><tr><td>Mean single sequence minimum free energy</td><td>" ++ show (meanSingleSequenceMinimumFreeEnergy rnaZ) ++ "</td></tr><tr><td>Consensus minimum free energy</td><td>" ++ show (consensusMinimumFreeEnergy rnaZ) ++ "</td></tr><tr><td>Energy contribution</td><td>" ++ show (energyContribution rnaZ) ++ "</td></tr><tr><td>Covariance contribution</td><td>" ++ show (covarianceContribution rnaZ) ++ "</td></tr><tr><td>Combinations pair</td><td>" ++ show (combinationsPair rnaZ) ++ "</td></tr><tr><td>Mean z-score</td><td>" ++ show (meanZScore rnaZ) ++ "</td></tr><tr><td>Structure conservation index</td><td>" ++ show (structureConservationIndex rnaZ) ++ "</td></tr><tr><td>Background model</td><td>" ++ backgroundModel rnaZ ++ "</td></tr><tr><td>Decision model</td><td>" ++ decisionModel rnaZ ++ "</td></tr><tr><td>SVM decision value</td><td>" ++ show (svmDecisionValue rnaZ) ++ "</td></tr><tr><td>SVM class propability</td><td>" ++ show (svmRNAClassProbability rnaZ) ++ "</td></tr><tr><td>Prediction</td><td>" ++ (prediction rnaZ)++ "</td></tr>"
+
+rnaCodeHtmlOutput :: Either ParseError RC.RNAcode -> String 
+rnaCodeHtmlOutput inputRNAcode 
+  | isRight inputRNAcode = rnaCodeString
+  | otherwise = show (fromLeft inputRNAcode)
+    where rnaCodeHits = RC.rnacodeHits (fromRight inputRNAcode)
+          rnaCodeHeader ="<tr><td>Hss</td><td>Frame</td><td>Length</td><td>From</td><td>TO</td><td>Name</td><td>Start</td><td>End</td><td>Score</td><td>p-value</td></tr>"
+          rnaCodeBody = concatMap rnaCodeHitHtml rnaCodeHits
+          rnaCodeString = rnaCodeHeader ++ rnaCodeBody
+
+rnaCodeHitHtml :: RC.RNAcodeHit -> String
+rnaCodeHitHtml rnaCode = "<tr><td>" ++ show (RC.hss rnaCode) ++ "</td><td>" ++ show (RC.frame rnaCode) ++  "</td><td>" ++ show (RC.length rnaCode) ++ "</td><td>" ++ show (RC.from rnaCode) ++ "</td><td>" ++ show (RC.to rnaCode) ++ "</td><td>" ++ RC.name rnaCode ++ "</td><td>" ++ show (RC.start rnaCode) ++ "</td><td>" ++ show (RC.end rnaCode) ++ "</td><td>" ++ show (RC.score rnaCode) ++ "</td><td>" ++ show (RC.pvalue rnaCode) ++ "</td></tr>"
 
 
 -- | CMstat datastructure
