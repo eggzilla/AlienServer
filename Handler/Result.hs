@@ -118,7 +118,7 @@ retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL approot
        rnazPresent <- doesFileExist rnazPath
        rnacodePresent <- doesFileExist rnacodePath
        cmstatPresent <- doesFileExist cmstatPath
-       rnacentralPresent <- doesExist rnacentralPath
+       rnacentralPresent <- doesFileExist rnacentralPath
        archivePresent <- doesFileExist (temporaryDirectoryPath ++ "result.zip")
        let loglink = fileStatusMessage logPresent ("<a href=\"" ++ tempDirectoryURL ++ "Log\">Log</a>")
        let falink = fileStatusMessage fastaPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.fa\">Fasta</a>")
@@ -202,7 +202,7 @@ constructEvaluationResults :: Int -> String -> IO String
 constructEvaluationResults entryNumber temporaryDirectoryPath = do
   let rnazPath = temporaryDirectoryPath ++ "result.rnaz"
   let rnaCodePath = temporaryDirectoryPath ++ "result.rnacode"
-  let cmstatPath = temporaryDirectoryPath ++ "result.cmstat"
+  let cmStatPath = temporaryDirectoryPath ++ "result.cmstat"
   let rnaCentralPath = temporaryDirectoryPath ++ "result.rnacentral"
   inputcmStat <- readCMstat cmStatPath
   let cmStatString = cmstatHtml inputcmStat
@@ -210,7 +210,7 @@ constructEvaluationResults entryNumber temporaryDirectoryPath = do
   let myOptions = defaultDecodeOptions {
          decDelimiter = fromIntegral (ord '\t')
          }
-  let decodedRNAcentralCSV = V.toList (fromRight (decodeWith myOptions HasHeader (inputRNAcentralCSV) :: Either String V.Vector (String,String,String))))
+  let decodedRNAcentralCSV = decodeWith myOptions HasHeader (inputRNAcentralCSV) :: Either String (V.Vector (String,String,String))
   let rnaCentralString = rnaCentralHtml decodedRNAcentralCSV
   if (entryNumber > 1)
     then do 
@@ -220,10 +220,10 @@ constructEvaluationResults entryNumber temporaryDirectoryPath = do
       let rnaCodeString = rnaCodeHtml inputRNAcode
       return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmStatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcode statistics for result alignment:</td></tr>" ++ rnaCodeString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcentral entries for found sequences</td></tr>" ++ rnaCentralString ++ "</table>")
     else do 
-      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmStatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcentral entries for found sequences</td></tr>" ++ rnaCentralString ++ "</table>")
+      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmStatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>")
 
-rnaCentralHtml ::(Either String (V.Vector (String,String,String)) -> String
-rnaCentralHtml inputRNAcentral = output
+rnaCentralHtml :: Either String (V.Vector (String,String,String)) -> String
+rnaCentralHtml inputRNAcentral
   | isRight inputRNAcentral = rnaCentralString
   | otherwise = show (fromLeft inputRNAcentral)
     where rnaCentralHits = V.toList (fromRight inputRNAcentral)
@@ -231,8 +231,8 @@ rnaCentralHtml inputRNAcentral = output
           rnaCentralBody = concatMap rnaCentralEntryHtml rnaCentralHits
           rnaCentralString = rnaCentralHeader ++ rnaCentralBody
              
-rnaCentralEntryHtml :: (String,Stgring,String) -> String
-rnaCentralentryHtml (id,md5,length) = "<tr><td><a href=\"http://rnacentral.org/api/v1/rna/" ++ id ++ "\">" ++ id ++ "</a></td><td>" ++ md5 ++ "</td><td>" ++ length ++"</td></tr>"
+rnaCentralEntryHtml :: (String,String,String) -> String
+rnaCentralEntryHtml (id,md5,length) = "<tr><td><a href=\"http://rnacentral.org/api/v1/rna/" ++ id ++ "\">" ++ id ++ "</a></td><td>" ++ md5 ++ "</td><td>" ++ length ++"</td></tr>"
 
 cmstatHtml :: Either ParseError CMstat -> String 
 cmstatHtml inputcmstat
