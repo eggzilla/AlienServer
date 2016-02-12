@@ -46,6 +46,7 @@ postHomeR = do
     outputPath <- fmap extraTempdir getExtra
     geQueueName <- fmap extraGEqueuename getExtra
     let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"
+    liftIO (createDirectory temporaryDirectoryPath) 
     let inputPath = temporaryDirectoryPath ++ "input.fa"
     liftIO (writesubmissionData formResult sampleResult temporaryDirectoryPath)
     uploadedFile <- liftIO (B.readFile inputPath)
@@ -57,7 +58,6 @@ postHomeR = do
     if (isRight validatedInput)
       then do  
        let alienLogPath = temporaryDirectoryPath ++ "Log"             
-       liftIO (createDirectory temporaryDirectoryPath) 
        taxDumpDirectoryPath <- fmap extraTaxDumpPath getExtra
        let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
        --Write input fasta file
