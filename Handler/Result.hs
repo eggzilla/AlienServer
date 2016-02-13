@@ -211,7 +211,7 @@ constructEvaluationResults entryNumber temporaryDirectoryPath = do
          decDelimiter = fromIntegral (ord '\t')
          }
   let decodedRNAcentralCSV = decodeWith myOptions HasHeader (inputRNAcentralCSV) :: Either String (V.Vector (String,String,String))
-  let rnaCentralString = rnaCentralHtml decodedRNAcentralCSV
+  let rnaCentralString = rnaCentralHtml decodedRNAcentralCSV inputRNAcentralCSV
   if (entryNumber > 1)
     then do 
       inputRNAz <- readRNAz rnazPath
@@ -222,17 +222,17 @@ constructEvaluationResults entryNumber temporaryDirectoryPath = do
     else do 
       return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmStatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>")
 
-rnaCentralHtml :: Either String (V.Vector (String,String,String)) -> String
-rnaCentralHtml inputRNAcentral
+rnaCentralHtml :: Either String (V.Vector (String,String,String)) -> L.ByteString -> String
+rnaCentralHtml inputRNAcentral inputRNAcentralCSV
   | isRight inputRNAcentral = rnaCentralString
-  | otherwise = show (fromLeft inputRNAcentral)
+  | otherwise = "<tr><td>" ++ L.unpack inputRNAcentralCSV ++ "</td></tr>"
     where rnaCentralHits = V.toList (fromRight inputRNAcentral)
           rnaCentralHeader ="<tr><td>RNAcentral id</td><td>MD5 sequence checksum</td><td>Length</td>"
           rnaCentralBody = concatMap rnaCentralEntryHtml rnaCentralHits
           rnaCentralString = rnaCentralHeader ++ rnaCentralBody
              
 rnaCentralEntryHtml :: (String,String,String) -> String
-rnaCentralEntryHtml (id,md5,length) = "<tr><td><a href=\"http://rnacentral.org/api/v1/rna/" ++ id ++ "\">" ++ id ++ "</a></td><td>" ++ md5 ++ "</td><td>" ++ length ++"</td></tr>"
+rnaCentralEntryHtml (centralid,centralmd5,centrallength) = "<tr><td><a href=\"http://rnacentral.org/api/v1/rna/" ++ centralid ++ "\">" ++ centralid ++ "</a></td><td>" ++ centralmd5 ++ "</td><td>" ++ centrallength ++"</td></tr>"
 
 cmstatHtml :: Either ParseError CMstat -> String 
 cmstatHtml inputcmstat
