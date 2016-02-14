@@ -110,7 +110,7 @@ inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
 
 sampleForm :: Form (Text, Maybe Text)
 sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
-    <$> areq hiddenField (withSmallInput "") (Just ">AARQ02000011.1/391-585\nAAUUGAAUAGAAGCGCCAGAACUGAUUGGGACGAAAAUGCUUGAAGGUGAAAUCCCUGAA\nAAGUAUCGAUCAGUUGACGAGGAGGAGAUUAAUCGAAGUUUCGGCGGGAGUCUCCCGGCU\nGUGCAUGCAGUCGUUAAGUCUUACUUACAAAUCAUUUGGGUGACCAAGUGGACAGAGUAG\nUAAUGAAACAUGCUU\n")
+    <$> areq hiddenField (withSmallInput "") (Just ">AARQ02000011.1/391-585\nAAUUGAAUAGAAGCGCCAGAACUGAUUGGGACGAAAAUGCUUGAAGGUGAAAUCCCUGAAAAGUAUCGAUCAGUUGACGAGGAGGAGAUUAAUCGAAGUUUCGGCGGGAGUCUCCCGGCUGUGCAUGCAGUCGUUAAGUCUUACUUACAAAUCAUUUGGGUGACCAAGUGGACAGAGUAGUAAUGAAACAUGCUU\n") 
     <*> aopt hiddenField (withSmallInput "") (Just (Just (DT.pack "393124")))
 
 -- Auxiliary functions:
@@ -172,7 +172,7 @@ genParserFasta = do
   _header <- many1 (noneOf "\n")                
   _ <- newline
   _sequence <- many genParserSequenceFragments
-  eof
+  --eof
   return $ Fasta _header (concat _sequence)
 
 genParserSequenceFragments :: GenParser B.ByteString st String
