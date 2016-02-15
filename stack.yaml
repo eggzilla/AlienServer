@@ -2,7 +2,4 @@ flags: {}
 packages:
 - '.'
 compiler-check: newer-minor
-extra-deps:
-- either-unwrap-1.1
-- ViennaRNAParser-1.2.6
-resolver: lts-3.20
+resolver: nightly-2016-02-14
