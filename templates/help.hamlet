@@ -6,10 +6,10 @@
         <p>RNAlien is a tool for automatic construction of RNA family models 
            from a single sequence. The sections of this help document cover 
            the use of the webservice and the commandline tool, as well as details 
-           of the pipeline used in the backend. If you look for source code 
-           or a installation guide for the tool please refer to the Tool subpage.
+           of the pipeline used in the backend. <br>
+           If you look for source code or a installation guide for the tool please refer to the Tool subpage.<br>
            Please note that constructions can take up to 24h, if you want to
-           construct multiple families please use the tool instead of the webservice.
+           construct multiple families please use the tool instead of the webservice.<br>
            This manual is included with the Tool as <a href="https://github.com/eggzilla/RNAlien/raw/master/manual.pdf">manual.pdf.</a>
 
 <hr>
@@ -37,7 +37,7 @@
             GUGCAUGCAGUCGUUAAGUCUUACUUACAAAUCAUUUGGGUGACCAAGUGGACAGAGUAG<br>
             UAAUGAAACAUGCUU
             <br>
-        Optionally the organism (Listeria monocytogenes FSL N3-165) where the sequence originates from can be passed as an NCBI Taxononomy id(393124), see (<a href="#tax">Retrieve Taxonomy id</a>).
+        The organism where this sequence originates from can either be supplied via the autocomplete function, as name or via the NCBI Taxononomy id. In out current example that would be the organism (Listeria monocytogenes FSL N3-165) or Taxononomy id(393124). The id can be retrieved as described here (<a href="#tax">Retrieve Taxonomy id</a>).
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -122,7 +122,19 @@
              <td> -s
              <td>no
              <td>Only the best blast hit per taxonomic entry is considered.
+             <td>False
+            <tr>
+             <td>blastsoftmasking
+             <td> -f
+             <td>no
+             <td>Toggles blast softmasking, meaning exclusion of low complexity (repetative) regions in lookup table.
              <td>True
+            <tr>
+             <td>inputqueryselectionmethod
+             <td> -m
+             <td>no
+             <td>Method for selection of queries (filtering,clustering).
+             <td>filtering
            <tr>
              <td>threads
              <td> -c
