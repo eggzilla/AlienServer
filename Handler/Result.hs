@@ -154,8 +154,18 @@ retrieveIterationLog temporaryDirectoryPath tempDirectoryURL counter = do
   let cmlink = fileStatusMessage cmPresent ("<a href=\"" ++ tempDirectoryURL ++ show counter ++ "/" ++ "model.cm" ++ "\">covariance-model</a>")
   let logfields = splitOn "," iterationLog
   status <- retrieveIterationStatus iterationDirectoryPath
-  let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ logfields !! 2 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
-  return iterationLine
+  if (logfields !! 1) == "not set"
+    then do
+      let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td>" ++ logfields !! 1 ++ "</td><td>" ++ logfields !! 2 ++ "</td><td>-</td><td>-</td><td>" ++ status ++ "</td></tr>"
+      return iterationLine
+    else do
+      if (logfields !! 2) =="0"
+        then do
+          let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ logfields !! 2 ++ "</td><td>-</td><td>-</td><td>" ++ status ++ "</td></tr>"
+          return iterationLine
+        else do
+          let iterationLine = "<tr><td>" ++ logfields !! 0 ++ "</td><td><a href=\"http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=" ++ logfields !! 1  ++ "\">" ++ logfields !! 1 ++ "</a></td><td>" ++ logfields !! 2 ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ status ++ "</td></tr>"
+          return iterationLine
 
 fileStatusMessage :: Bool -> String -> String
 fileStatusMessage filePresent message 
