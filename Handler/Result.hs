@@ -33,7 +33,7 @@ getResultR = do
     let tempDirectoryURLjs = DT.pack ("../rnalien_tmp/rnalien/" ++ sessionId ++ "/")
     --tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)         
     started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "log/0.log"))
-    done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "done"))  
+    done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "taxonomy.json"))  
     let unfinished = not done
     existentIterationLogs <- liftIO (filterM (\x -> doesDirectoryExist (temporaryDirectoryPath ++ (show x))) [0..35])
     iterationLogs <- liftIO (mapM (retrieveIterationLog temporaryDirectoryPath tempDirectoryURL) existentIterationLogs)
