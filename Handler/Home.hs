@@ -26,6 +26,8 @@ import Data.Maybe
 import qualified Data.Map as HM
 import Data.Tuple
 import Control.Applicative ((<*>),(<$>))
+import System.Exit
+import Control.Monad
 
 getHomeR :: Handler Html
 getHomeR = do
@@ -84,7 +86,7 @@ postHomeR = do
        liftIO (writeFile geErrorDir "")
        liftIO (writeFile alienLogPath "")
        liftIO (writeFile bashscriptpath bashcontent)
-       _ <- liftIO (runCommand (qsubcommand))
+       _ <- liftIO (system (qsubcommand))
        --Render page
        defaultLayout $ do
          aDomId <- newIdent
