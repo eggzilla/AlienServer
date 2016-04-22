@@ -22,7 +22,8 @@ import Data.List
 import Yesod.Form.Jquery
 import Yesod.Core (Route)
 import Data.Maybe
-import qualified Data.HashMap as HM
+--import qualified Data.HashMap as HM
+import qualified Data.Map as HM
 import Data.Tuple
 import Control.Applicative ((<*>),(<$>))
 
@@ -110,8 +111,8 @@ inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
 
 sampleForm :: Form (Text, Maybe Text)
 sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
-    <$> areq hiddenField (withSmallInput "") (Just ">AARQ02000011.1/391-585\nAAUUGAAUAGAAGCGCCAGAACUGAUUGGGACGAAAAUGCUUGAAGGUGAAAUCCCUGAAAAGUAUCGAUCAGUUGACGAGGAGGAGAUUAAUCGAAGUUUCGGCGGGAGUCUCCCGGCUGUGCAUGCAGUCGUUAAGUCUUACUUACAAAUCAUUUGGGUGACCAAGUGGACAGAGUAGUAAUGAAACAUGCUU\n") 
-    <*> aopt hiddenField (withSmallInput "") (Just (Just (DT.pack "393124")))
+    <$> areq hiddenField (withSmallInput "") (Just ">AJ243001.2/347-509\nAUACUUACCUGGCACAGGGGAUACCACGAUCACCAAGGUGGUUCCCCCAAGACGAGGCUCACCAUUGCACUCCGGUGGCGCUGACCCUUGCAAUGACCCCAAAUGUGGGUUACUCGGGUGUGUAAUUUCUGUUAGCUGGGGACUGCGUUCGCGCUUUCCCCUU\n") 
+    <*> aopt hiddenField (withSmallInput "") (Just (Just (DT.pack "92525")))
 
 -- Auxiliary functions:
 -- | Adds cm prefix to pseudo random number
@@ -137,18 +138,18 @@ extractTaxonomyInfo (FormSuccess (_,taxonomyInfo)) _ = taxonomyInfo
 extractTaxonomyInfo _ (FormSuccess (_,taxonomyInfo)) = taxonomyInfo
 extractTaxonomyInfo _ _ = Nothing
 
-validateInput :: B.ByteString -> Maybe Text -> HM.HashMap B.ByteString Int -> Either String (Maybe Text)
+validateInput :: B.ByteString -> Maybe Text -> HM.Map B.ByteString Int -> Either String (Maybe Text)
 validateInput fastaFileContent taxonomyInfo taxIdsOrganismsHash
   | (isRight checkedForm) && (isRight checkedTaxonomyInfo) = checkedTaxonomyInfo
   | otherwise = Left (convertErrorMessagetoHTML((unwrapEither checkedForm) ++ (unwrapEither checkedTaxonomyInfo)))
   where checkedForm =  either (\a -> Left (show a)) (\_ -> Right ("Input ok" :: String)) (parseFasta fastaFileContent)
         checkedTaxonomyInfo = checkTaxonomyInfo taxonomyInfo taxIdsOrganismsHash
 
-checkTaxonomyInfo :: Maybe Text -> HM.HashMap B.ByteString Int -> Either String (Maybe Text)
+checkTaxonomyInfo :: Maybe Text -> HM.Map B.ByteString Int -> Either String (Maybe Text)
 checkTaxonomyInfo (Just taxonomyInfo) taxIdsOrganismsHash = parseTaxonomyInfo taxonomyInfo taxIdsOrganismsHash
 checkTaxonomyInfo Nothing taxIdsOrganismsHash = Right Nothing
 
-parseTaxonomyInfo :: Text -> HM.HashMap B.ByteString Int -> Either String (Maybe Text)
+parseTaxonomyInfo :: Text -> HM.Map B.ByteString Int -> Either String (Maybe Text)
 parseTaxonomyInfo taxonomyInfo taxIdsOrganismsHash
   | isRight parsedAsInteger = Right (Just taxonomyInfo)
   | isRight parsedAsOrganismName = Right (Just (DT.pack (show (fromRight parsedAsOrganismName))))
