@@ -53,6 +53,7 @@ getResultR = do
              let iterationInsert = DT.pack (concat iterationLogs)
              defaultLayout $ do
                aDomId <- newIdent
+               let returnLink = DT.pack ((DT.unpack currentApproot) ++ "/result?sessionId=" ++ sessionId)
                setTitle "RNAlien Server - Results"
                $(widgetFile "progress")
        else do
