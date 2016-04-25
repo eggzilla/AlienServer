@@ -9,6 +9,7 @@ if(#{toJSON unfinished}){
 $(function() {
     $( "#accordion" ).accordion({
       heightStyle: "content",
+      active: false,
       collapsible: true
     });
   });

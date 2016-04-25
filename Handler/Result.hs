@@ -127,11 +127,11 @@ retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL approot
        let rnazlink = fileStatusMessage rnazPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnaz\">RNAz Output</a>")
        let rnacodelink = fileStatusMessage rnacodePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnacode\">RNAcode Output</a>")
        let cmstatlink = fileStatusMessage cmstatPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cmstat\">cmstat Output</a>")
-       let rnacentrallink = fileStatusMessage rnacentralPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnacentral\">rnacentral Output</a>")
+       let rnacentrallink = fileStatusMessage rnacentralPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnacentral\">RNAcentral Output</a>")
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
-       let resultFilesTable = "<table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ rnacodelink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ rnacentrallink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
-       evaluationResults <- constructEvaluationResults (length decodedCsvOutput) temporaryDirectoryPath
-       let taxonomyOverview = "<h3>Taxonomy overview</h3><brv>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div>"
+       let resultFilesTable = "<h3>Summary</h3><br><table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ rnacodelink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ rnacentrallink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
+       evaluationResults <- constructEvaluationResults (length decodedCsvOutput) temporaryDirectoryPath tempDirectoryURL
+       let taxonomyOverview = "<h3>Taxonomy overview</h3><brv>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div><br>"
        --let cmcwsSendToField = "<a href=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi\"><img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\"></a>"
        let cmcwsSendToField = "<form id=\"submit-form\" enctype=\"multipart/form-data\" method=\"post\" action=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi/cmcws.cgi\">" ++
                               "<input id=\"select_slice\" type=\"hidden\" name=\"page\" value=\"All\">" ++
@@ -208,12 +208,13 @@ truncateThresholdField thresholdField
   | thresholdField == "not set" = "not set"
   | otherwise = (take 5 thresholdField)
 
-constructEvaluationResults :: Int -> String -> IO String
-constructEvaluationResults entryNumber temporaryDirectoryPath = do
+constructEvaluationResults :: Int -> String -> String -> IO String
+constructEvaluationResults entryNumber temporaryDirectoryPath tempDirectoryURL = do
   let rnazPath = temporaryDirectoryPath ++ "result.rnaz"
   let rnaCodePath = temporaryDirectoryPath ++ "result.rnacode"
   let cmStatPath = temporaryDirectoryPath ++ "result.cmstat"
   let rnaCentralPath = temporaryDirectoryPath ++ "result.rnacentral"
+  let aliRNAjpeg = tempDirectoryURL ++ "alirna.jpg"
   inputcmStat <- readCMstat cmStatPath
   let cmStatString = cmstatHtml inputcmStat
   inputRNAcentralCSV <- L.readFile rnaCentralPath
@@ -228,9 +229,9 @@ constructEvaluationResults entryNumber temporaryDirectoryPath = do
       inputRNAcode <- RC.readRNAcodeTabular rnaCodePath
       let rnaZString = rnaZHtml inputRNAz
       let rnaCodeString = rnaCodeHtml inputRNAcode
-      return ("<h3>Evaluation Results</h3><table><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table><br><table><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmStatString ++ "</table><br><table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcode statistics for result alignment:</td></tr>" ++ rnaCodeString ++ "</table><br><table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcentral entries for found sequences</td></tr>" ++ rnaCentralString ++ "</table>")
+      return ("<h3>Evaluation Results</h3><br><table><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table><br><table><tr><td colspan=\"2\">RNAalifold consensus structure</td></tr><tr><td><img src=\"" ++ aliRNAjpeg ++ "\" alt=\"RNAalifold consensus structure\" style=\"width: 500px; height: 500px\"></td></tr></table><br><table><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmStatString ++ "</table><br><table><tr><td colspan=\"2\">RNAcode statistics for result alignment:</td></tr>" ++ rnaCodeString ++ "</table><br><table><tr><td colspan=\"2\">RNAcentral entries for found sequences</td></tr>" ++ rnaCentralString ++ "</table>")
     else do 
-      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmStatString ++ "</table><br><table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>")
+      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmStatString ++ "</table><br><table><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>")
 
 rnaCentralHtml :: Either String (V.Vector (String,String,String)) -> L.ByteString -> String
 rnaCentralHtml inputRNAcentral inputRNAcentralCSV

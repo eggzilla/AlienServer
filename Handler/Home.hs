@@ -65,10 +65,14 @@ postHomeR = do
        let alienResultCsvFilePath = temporaryDirectoryPath ++ "result.csv"
        --Write input fasta file
        let taxonomySwitch = setTaxonomyId (fromRight validatedInput)
+       let evaluationDirectoryPath = temporaryDirectoryPath ++ "evaluation/"
        --Submit RNAlien Job to SGE
        let aliencommand = "RNAlien -i "++ inputPath ++ " -c 5 " ++ taxonomySwitch ++" -d "++ sessionId ++ " -o " ++ (DT.unpack outputPath) ++  " > " ++ alienLogPath ++ "\n"
-       let ids2treecommand = "Ids2Tree -l 3 -f json -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ temporaryDirectoryPath ++ " -r " ++ alienResultCsvFilePath  ++ "\n"
+       let ids2treecommand = "Ids2Tree -l 6 -f json -i " ++ (DT.unpack taxDumpDirectoryPath) ++ " -o " ++ temporaryDirectoryPath ++ " -r " ++ alienResultCsvFilePath  ++ "\n"
        let cmccommand = "cp " ++  temporaryDirectoryPath ++ "result.cm " ++ " /mnt/storage/tmp/cmcws/upload/" ++ sessionId ++ " \n"
+       --using a subshell to create the alifold ps directly in evaluation folder
+       let alirnapscommand = "if [ -e " ++ (evaluationDirectoryPath ++ "result.clustal.selected") ++ " ]; then\n(cd " ++ evaluationDirectoryPath ++ " && RNAalifold --color result.clustal.selected )\nfi\n"
+       let alirnajpgcommand = "gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=" ++ temporaryDirectoryPath ++ "alirna.jpg "++  evaluationDirectoryPath  ++ "alirna.ps\n"
        let archivecommand = "zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath ++ "\n"
         --sun grid engine settings
        let qsubLocation = "/usr/bin/qsub"
@@ -81,7 +85,7 @@ postHomeR = do
        let bashmemrequest = "#$ -l mem_free=4G\n"
        let parallelenv = "#$ -pe para 5\n"
        let bashPath = "#$ -v PATH=" ++ home ++ "/Tools/bin:" ++ home ++  "/Tools/clustalo/bin:" ++ home ++ "/Tools/ViennaRNA/bin:" ++ home ++ "/Tools/locarna/bin:" ++ home ++ "/Tools/infernal/bin:" ++ home ++ "/.cabal/bin:/usr/bin/:/bin/:$PATH\n"
-       let bashcontent = bashheader ++ bashLDLibrary ++ bashmemrequest ++ parallelenv ++ bashPath ++ aliencommand ++ ids2treecommand ++ cmccommand ++ archivecommand 
+       let bashcontent = bashheader ++ bashLDLibrary ++ bashmemrequest ++ parallelenv ++ bashPath ++ aliencommand ++ ids2treecommand ++ cmccommand ++ alirnapscommand ++ alirnajpgcommand ++ archivecommand 
        let qsubcommand = qsubLocation ++ " -N " ++ sessionId ++ " -l h_vmem=12G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
        liftIO (writeFile geErrorDir "")
        liftIO (writeFile alienLogPath "")

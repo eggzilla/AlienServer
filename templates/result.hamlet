@@ -12,9 +12,10 @@
   <h2><span class="label label-default">Webservice:</span><br>
 <div class="spacer">
 <div id="accordion">
-  <h3>Progress:
+  <h2>Progress: </h2>
     <div>
-      <table><tr><th> Iteration <th> Upper taxonomic treshold id <th> Aligned Sequences <th> Alignment Link <th> Covariance Model Link <th> Status#{preEscapedToMarkup iterationInsert} 
+      <table><tr><th> Iteration <th> Upper taxonomic treshold id <th> Aligned Sequences <th> Alignment Link <th> Covariance Model Link <th> Status
+        #{preEscapedToMarkup iterationInsert} 
 <br>
 #{preEscapedToMarkup resultInsert}
 
