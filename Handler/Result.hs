@@ -228,9 +228,9 @@ constructEvaluationResults entryNumber temporaryDirectoryPath = do
       inputRNAcode <- RC.readRNAcodeTabular rnaCodePath
       let rnaZString = rnaZHtml inputRNAz
       let rnaCodeString = rnaCodeHtml inputRNAcode
-      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmStatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcode statistics for result alignment:</td></tr>" ++ rnaCodeString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcentral entries for found sequences</td></tr>" ++ rnaCentralString ++ "</table>")
+      return ("<h3>Evaluation Results</h3><table><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table><br><table><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmStatString ++ "</table><br><table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcode statistics for result alignment:</td></tr>" ++ rnaCodeString ++ "</table><br><table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAcentral entries for found sequences</td></tr>" ++ rnaCentralString ++ "</table>")
     else do 
-      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmStatString ++ "</table>&nbsp;<table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>")
+      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmStatString ++ "</table><br><table style=\"display: inline-block\"><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>")
 
 rnaCentralHtml :: Either String (V.Vector (String,String,String)) -> L.ByteString -> String
 rnaCentralHtml inputRNAcentral inputRNAcentralCSV

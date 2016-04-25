@@ -1,7 +1,9 @@
 <script src="http://code.jquery.com/jquery-1.10.2.min.js">
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="http://d3js.org/d3.v3.min.js">
 <script>taxonomyJsonLocation = "#{tempDirectoryURLjs}" + "taxonomy.json";
-<script src="http://www.tbi.univie.ac.at/~egg/dndTree.js">
+<script src="http://rna.tbi.univie.ac.at/rnalien_static/dndTree.js">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <span ##{aDomId} style="color:red;float:left;">
   <div class="alert alert-danger" role="alert">
     Please enable javascript.
@@ -9,8 +11,10 @@
 <div class="page-header">
   <h2><span class="label label-default">Webservice:</span><br>
 <div class="spacer">
-<h2>Progress:
-<table><tr><th> Iteration <th> Upper taxonomic treshold id <th> Aligned Sequences <th> Alignment Link <th> Covariance Model Link <th> Status#{preEscapedToMarkup iterationInsert} 
+<div id="accordion">
+  <h3>Progress:
+    <div>
+      <table><tr><th> Iteration <th> Upper taxonomic treshold id <th> Aligned Sequences <th> Alignment Link <th> Covariance Model Link <th> Status#{preEscapedToMarkup iterationInsert} 
 <br>
-  #{preEscapedToMarkup resultInsert}
+#{preEscapedToMarkup resultInsert}
 

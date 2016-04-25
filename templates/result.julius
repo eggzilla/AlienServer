@@ -4,5 +4,11 @@ sessionId = #{toJSON sessionIdjs};
 windowLocation = approot + "/result?sessionId=" + sessionId;
 taxonomyJsonLocation = #{toJSON tempDirectoryURLjs} + "taxonomy.json";
 if(#{toJSON unfinished}){
-            setTimeout(function(){location.href=windowLocation} , 30000);   
+            setTimeout(function(){location.href=windowLocation} , 10000);   
 }
+$(function() {
+    $( "#accordion" ).accordion({
+      heightStyle: "content",
+      collapsible: true
+    });
+  });
