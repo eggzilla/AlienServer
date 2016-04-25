@@ -120,6 +120,8 @@ retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL approot
        cmstatPresent <- doesFileExist cmstatPath
        rnacentralPresent <- doesFileExist rnacentralPath
        archivePresent <- doesFileExist (temporaryDirectoryPath ++ "result.zip")
+       started <- readFile (temporaryDirectoryPath ++  "starttime")
+       ended <- readFile (temporaryDirectoryPath ++  "endtime")
        let loglink = fileStatusMessage logPresent ("<a href=\"" ++ tempDirectoryURL ++ "Log\">Log</a>")
        let falink = fileStatusMessage fastaPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.fa\">Fasta</a>")
        let alnlink = fileStatusMessage stockholmPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.stockholm\">Stockholm Alignment</a>")
@@ -129,7 +131,7 @@ retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL approot
        let cmstatlink = fileStatusMessage cmstatPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.cmstat\">cmstat Output</a>")
        let rnacentrallink = fileStatusMessage rnacentralPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnacentral\">RNAcentral Output</a>")
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
-       let resultFilesTable = "<h3>Summary</h3><br><table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ rnacodelink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ rnacentrallink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
+       let resultFilesTable = "<h3>Summary</h3><br><table><tr><td>Job started:</td><td>" ++ started ++ "</td></tr><tr><td>Job ended:</td><td>" ++ ended ++ "</td></tr></table><br><table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ rnacodelink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ rnacentrallink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
        evaluationResults <- constructEvaluationResults (length decodedCsvOutput) temporaryDirectoryPath tempDirectoryURL
        let taxonomyOverview = "<h3>Taxonomy overview</h3><brv>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div><br>"
        --let cmcwsSendToField = "<a href=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi\"><img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\"></a>"

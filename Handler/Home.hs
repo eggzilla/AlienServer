@@ -74,6 +74,8 @@ postHomeR = do
        let alirnapscommand = "if [ -e " ++ (evaluationDirectoryPath ++ "result.clustal.selected") ++ " ]; then\n(cd " ++ evaluationDirectoryPath ++ " && RNAalifold --color result.clustal.selected )\nfi\n"
        let alirnajpgcommand = "gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=" ++ temporaryDirectoryPath ++ "alirna.jpg "++  evaluationDirectoryPath  ++ "alirna.ps\n"
        let archivecommand = "zip -9 -r " ++  temporaryDirectoryPath ++ "result.zip " ++ temporaryDirectoryPath ++ "\n"
+       let starttime = "date -r " ++ temporaryDirectoryPath ++ "0" ++ " > " ++ temporaryDirectoryPath ++  "starttime \n"
+       let endtime = "date -r " ++ temporaryDirectoryPath ++ "result.zip" ++ " > " ++ temporaryDirectoryPath ++  "endtime \n"
         --sun grid engine settings
        let qsubLocation = "/usr/bin/qsub"
        let geErrorDir = temporaryDirectoryPath ++ "gelog"
@@ -85,7 +87,7 @@ postHomeR = do
        let bashmemrequest = "#$ -l mem_free=4G\n"
        let parallelenv = "#$ -pe para 5\n"
        let bashPath = "#$ -v PATH=" ++ home ++ "/Tools/bin:" ++ home ++  "/Tools/clustalo/bin:" ++ home ++ "/Tools/ViennaRNA/bin:" ++ home ++ "/Tools/locarna/bin:" ++ home ++ "/Tools/infernal/bin:" ++ home ++ "/.cabal/bin:/usr/bin/:/bin/:$PATH\n"
-       let bashcontent = bashheader ++ bashLDLibrary ++ bashmemrequest ++ parallelenv ++ bashPath ++ aliencommand ++ ids2treecommand ++ cmccommand ++ alirnapscommand ++ alirnajpgcommand ++ archivecommand 
+       let bashcontent = bashheader ++ bashLDLibrary ++ bashmemrequest ++ parallelenv ++ bashPath ++ aliencommand ++ ids2treecommand ++ cmccommand ++ alirnapscommand ++ alirnajpgcommand ++ archivecommand ++ starttime ++ endtime
        let qsubcommand = qsubLocation ++ " -N " ++ sessionId ++ " -l h_vmem=12G " ++ " -q " ++ (DT.unpack geQueueName) ++ " -e " ++ geErrorDir ++ " -o " ++  geLogOutputDir ++ " " ++ bashscriptpath ++ " > " ++ temporaryDirectoryPath ++ "GEJobid"
        liftIO (writeFile geErrorDir "")
        liftIO (writeFile alienLogPath "")
