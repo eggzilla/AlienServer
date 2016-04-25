@@ -12,12 +12,10 @@
          Send it! <span class="glyphicon glyphicon-upload"></span>
    <br>
       #{preEscapedToMarkup errorMsg}
-    <form method=post action=@{HomeR}#form enctype=#{sampleEnctype}>
-      ^{sampleWidget}
-      <button .btn .btn-info class="btn-xs" type="submit">
-         Example Job - U1 snRNA - Asellus aquaticus
-         
-    <button .btn .btn-info class="btn-xs" onclick="window.location.href='http://rna.tbi.univie.ac.at/rnalien_static/cm26140/'">
-       Precomputed Result - U1 snRNA - Asellus aquaticus
-    
+             
+   <button .btn .btn-info class="btn-xs" onclick="window.location.href='http://rna.tbi.univie.ac.at/rnalien_static/cm26140/'">
+      Precomputed Result - U1 snRNA - Asellus aquaticus
+   <br>
+   <button .btn .btn-info class="btn-xs" onclick="window.location.href='http://rna.tbi.univie.ac.at/rnalien_static/cm878/'">
+      Precomputed Result - FMN riboswitch - Bacillus cereus
  

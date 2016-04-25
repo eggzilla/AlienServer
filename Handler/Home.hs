@@ -32,7 +32,7 @@ import Control.Monad
 getHomeR :: Handler Html
 getHomeR = do
     (formWidget, formEnctype) <- generateFormPost inputForm
-    (sampleWidget, sampleEnctype) <- generateFormPost sampleForm
+    --(sampleWidget, sampleEnctype) <- generateFormPost sampleForm
     defaultLayout $ do
         aDomId <- newIdent
         let errorMsg = DT.pack ""
@@ -42,7 +42,7 @@ getHomeR = do
 postHomeR :: Handler Html
 postHomeR = do
     ((formResult, _), _) <- runFormPost inputForm
-    ((sampleResult, _), _) <- runFormPost sampleForm
+    --((sampleResult, _), _) <- runFormPost sampleForm
     --Create tempdir and session-Id
     sessionId <- liftIO createSessionId
     revprox  <- fmap extraRevprox getExtra
@@ -51,12 +51,12 @@ postHomeR = do
     let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"
     liftIO (createDirectory temporaryDirectoryPath) 
     let inputPath = temporaryDirectoryPath ++ "input.fa"
-    liftIO (writesubmissionData formResult sampleResult temporaryDirectoryPath)
+    --liftIO (writesubmissionData formResult sampleResult temporaryDirectoryPath)
     uploadedFile <- liftIO (B.readFile inputPath)
     taxIdsOrganismsFile <- liftIO (B.readFile "/mnt/storage/data/rnalien/taxidsorganisms")
     --cut -f 1,3  names.dmp > taxidsorganisms
     let taxIdsOrganismsHash = HM.fromList $ catMaybes $ map pairs (map (B.split '\t') (B.lines taxIdsOrganismsFile))
-    let taxonomyInfo = extractTaxonomyInfo formResult sampleResult
+    let taxonomyInfo = extractTaxonomyInfo formResult --sampleResult
     let validatedInput = validateInput uploadedFile taxonomyInfo taxIdsOrganismsHash
     if (isRight validatedInput)
       then do  
@@ -103,7 +103,7 @@ postHomeR = do
          $(widgetFile "calc")
       else do
         (formWidget, formEnctype) <- generateFormPost inputForm
-        (sampleWidget, sampleEnctype) <- generateFormPost sampleForm
+        --(sampleWidget, sampleEnctype) <- generateFormPost sampleForm
         defaultLayout $ do
           aDomId <- newIdent
           setTitle "Welcome To RNAlien!"
@@ -117,10 +117,10 @@ inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
     <$> fileAFormReq "Upload a fasta sequence file"
     <*> aopt ((jqueryAutocompleteField' 2) TaxonomyR) (withLargeInput "Enter Taxonomy Id or Name:") Nothing
 
-sampleForm :: Form (Text, Maybe Text)
-sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
-    <$> areq hiddenField (withSmallInput "") (Just ">AJ243001.2/347-509\nAUACUUACCUGGCACAGGGGAUACCACGAUCACCAAGGUGGUUCCCCCAAGACGAGGCUCACCAUUGCACUCCGGUGGCGCUGACCCUUGCAAUGACCCCAAAUGUGGGUUACUCGGGUGUGUAAUUUCUGUUAGCUGGGGACUGCGUUCGCGCUUUCCCCUU\n") 
-    <*> aopt hiddenField (withSmallInput "") (Just (Just (DT.pack "92525")))
+--sampleForm :: Form (Text, Maybe Text)
+--sampleForm = renderBootstrap3 BootstrapBasicForm $ (,)
+--    <$> areq hiddenField (withSmallInput "") (Just ">AJ243001.2/347-509\nAUACUUACCUGGCACAGGGGAUACCACGAUCACCAAGGUGGUUCCCCCAAGACGAGGCUCACCAUUGCACUCCGGUGGCGCUGACCCUUGCAAUGACCCCAAAUGUGGGUUACUCGGGUGUGUAAUUUCUGUUAGCUGGGGACUGCGUUCGCGCUUUCCCCUU\n") 
+--    <*> aopt hiddenField (withSmallInput "") (Just (Just (DT.pack "92525")))
 
 -- Auxiliary functions:
 -- | Adds cm prefix to pseudo random number
@@ -141,10 +141,14 @@ createSessionId = do
   let sessionId = randomid (abs randomNumber)
   return sessionId
 
-extractTaxonomyInfo :: FormResult (FileInfo,Maybe Text) -> FormResult (Text,Maybe Text) -> Maybe Text
-extractTaxonomyInfo (FormSuccess (_,taxonomyInfo)) _ = taxonomyInfo
-extractTaxonomyInfo _ (FormSuccess (_,taxonomyInfo)) = taxonomyInfo
-extractTaxonomyInfo _ _ = Nothing
+extractTaxonomyInfo :: FormResult (FileInfo,Maybe Text) ->  Maybe Text
+extractTaxonomyInfo (FormSuccess (_,taxonomyInfo)) = taxonomyInfo
+extractTaxonomyInfo _  = Nothing
+
+--extractTaxonomyInfo :: FormResult (FileInfo,Maybe Text) -> FormResult (Text,Maybe Text) -> Maybe Text
+--extractTaxonomyInfo (FormSuccess (_,taxonomyInfo)) _ = taxonomyInfo
+--extractTaxonomyInfo _ (FormSuccess (_,taxonomyInfo)) = taxonomyInfo
+--extractTaxonomyInfo _ _ = Nothing
 
 validateInput :: B.ByteString -> Maybe Text -> HM.Map B.ByteString Int -> Either String (Maybe Text)
 validateInput fastaFileContent taxonomyInfo taxIdsOrganismsHash
