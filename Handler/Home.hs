@@ -52,6 +52,7 @@ postHomeR = do
     liftIO (createDirectory temporaryDirectoryPath) 
     let inputPath = temporaryDirectoryPath ++ "input.fa"
     --liftIO (writesubmissionData formResult sampleResult temporaryDirectoryPath)
+    liftIO (writesubmissionData formResult temporaryDirectoryPath)
     uploadedFile <- liftIO (B.readFile inputPath)
     taxIdsOrganismsFile <- liftIO (B.readFile "/mnt/storage/data/rnalien/taxidsorganisms")
     --cut -f 1,3  names.dmp > taxidsorganisms
@@ -127,13 +128,11 @@ inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
 randomid :: Int16 -> String
 randomid number = "cm" ++ (show number)
 
-writesubmissionData :: FormResult (FileInfo,Maybe Text) -> FormResult (Text,Maybe Text) -> String -> IO()
-writesubmissionData inputsubmission samplesubmission temporaryDirectoryPath = do
+writesubmissionData :: FormResult (FileInfo,Maybe Text) -> String -> IO()
+writesubmissionData inputsubmission temporaryDirectoryPath = do
     case inputsubmission of
       FormSuccess (fasta,_) -> liftIO (fileMove fasta (temporaryDirectoryPath ++ "input.fa"))
-      _ -> case samplesubmission of
-        FormSuccess (fasta,_) -> (writeFile (temporaryDirectoryPath ++ "input.fa") (DT.unpack fasta))
-        _ -> return ()
+      _ -> return ()
 
 createSessionId :: IO String                  
 createSessionId = do
