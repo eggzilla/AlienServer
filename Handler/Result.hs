@@ -31,6 +31,7 @@ getResultR = do
     let tempDirectoryRootURL = "http://nibiru.tbi.univie.ac.at/rnalien_tmp/rnalien/"
     let tempDirectoryURL = tempDirectoryRootURL ++ sessionId ++ "/"
     let tempDirectoryURLjs = DT.pack ("../rnalien_tmp/rnalien/" ++ sessionId ++ "/")
+    let returnLink = DT.pack ((DT.unpack currentApproot) ++ "/result?sessionId=" ++ sessionId)
     --tempDirPresent <- liftIO (doesDirectoryExist temporaryDirectoryPath)         
     started <- liftIO (doesFileExist (temporaryDirectoryPath ++ "log/0.log"))
     done <- liftIO (doesFileExist (temporaryDirectoryPath ++ "taxonomy.json"))  
@@ -53,7 +54,6 @@ getResultR = do
              let iterationInsert = DT.pack (concat iterationLogs)
              defaultLayout $ do
                aDomId <- newIdent
-               let returnLink = DT.pack ((DT.unpack currentApproot) ++ "/result?sessionId=" ++ sessionId)
                setTitle "RNAlien Server - Results"
                $(widgetFile "progress")
        else do
@@ -61,7 +61,7 @@ getResultR = do
          defaultLayout $ do
                aDomId <- newIdent
                setTitle "RNAlien Server - Results"
-               $(widgetFile "result")
+               $(widgetFile "progress")
 
 --makeArchive :: Bool -> String -> IO ()
 --makeArchive done temporaryDirectoryPath = do

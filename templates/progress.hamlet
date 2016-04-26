@@ -6,7 +6,15 @@
 <div class="page-header">
   <h2><span class="label label-default">Webservice:</span><br>
 <div class="spacer">
-<h2>Progress:
+<h2>Progress:</h2>
+<br>
+<table>
+  <tr>
+    <td> This can take up to 24 hours.<br>
+         Wait for calculation to finish or<br>
+         bookmark following <a id="returnlink" href="##{returnLink}">link</a> and return later.
+         
+<br>
 <table><tr><th> Iteration <th> Upper taxonomic treshold id <th> Aligned Sequences <th> Alignment Link <th> Covariance Model Link <th> Status#{preEscapedToMarkup iterationInsert} 
 <br>
   #{preEscapedToMarkup resultInsert}
