@@ -50,15 +50,15 @@ postHomeR = do
     geQueueName <- fmap extraGEqueuename getExtra
     let temporaryDirectoryPath = (DT.unpack outputPath) ++ sessionId ++ "/"
     liftIO (createDirectory temporaryDirectoryPath) 
-    let inputPath = temporaryDirectoryPath ++ "input.fa"
-    --liftIO (writesubmissionData formResult sampleResult temporaryDirectoryPath)
     liftIO (writesubmissionData formResult temporaryDirectoryPath)
+    let inputPath = temporaryDirectoryPath ++ "input.fa"
     uploadedFile <- liftIO (B.readFile inputPath)
     taxIdsOrganismsFile <- liftIO (B.readFile "/mnt/storage/data/rnalien/taxidsorganisms")
     --cut -f 1,3  names.dmp > taxidsorganisms
     let taxIdsOrganismsHash = HM.fromList $ catMaybes $ map pairs (map (B.split '\t') (B.lines taxIdsOrganismsFile))
     let taxonomyInfo = extractTaxonomyInfo formResult --sampleResult
-    let validatedInput = validateInput uploadedFile taxonomyInfo taxIdsOrganismsHash
+    --let validatedInput = validateInput uploadedFile taxonomyInfo taxIdsOrganismsHash
+    let validatedInput = validateInput formResult uploadedFile taxonomyInfo taxIdsOrganismsHash
     if (isRight validatedInput)
       then do  
        let alienLogPath = temporaryDirectoryPath ++ "Log"             
@@ -113,9 +113,10 @@ postHomeR = do
           $(widgetFile "homepage")
 
          
-inputForm :: Form (FileInfo, Maybe Text)
-inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
-    <$> fileAFormReq "Upload a fasta sequence file"
+inputForm :: Form (Maybe FileInfo, Maybe Textarea, Maybe Text)
+inputForm = renderBootstrap3 BootstrapBasicForm $ (,,)
+    <$> fileAFormOpt "Upload a fasta sequence file"
+    <*> aopt textareaField (withSmallInput "or paste sequences in fasta format: \n") Nothing
     <*> aopt ((jqueryAutocompleteField' 2) TaxonomyR) (withLargeInput "Enter Taxonomy Id or Name:") Nothing
 
 --sampleForm :: Form (Text, Maybe Text)
@@ -128,11 +129,17 @@ inputForm = renderBootstrap3 BootstrapBasicForm $ (,)
 randomid :: Int16 -> String
 randomid number = "cm" ++ (show number)
 
-writesubmissionData :: FormResult (FileInfo,Maybe Text) -> String -> IO()
-writesubmissionData inputsubmission temporaryDirectoryPath = do
-    case inputsubmission of
-      FormSuccess (fasta,_) -> liftIO (fileMove fasta (temporaryDirectoryPath ++ "input.fa"))
-      _ -> return ()
+--writesubmissionData :: FormResult (FileInfo,Maybe Text) -> String -> IO()
+--writesubmissionData inputsubmission temporaryDirectoryPath = do
+--    case inputsubmission of
+--      FormSuccess (fasta,_) -> liftIO (fileMove fasta (temporaryDirectoryPath ++ "input.fa"))
+--      _ -> return ()
+
+writesubmissionData :: FormResult (Maybe FileInfo,Maybe Textarea,Maybe Text) -> String -> IO()
+writesubmissionData (FormSuccess (filepath,pastestring,_)) temporaryDirectoryPath = do
+  if (isJust filepath) then do liftIO (fileMove (fromJust filepath) (temporaryDirectoryPath ++ "input.fa"))
+                       else do liftIO (B.writeFile (temporaryDirectoryPath ++ "input.fa") (DTE.encodeUtf8 $ unTextarea (fromJust  pastestring)))
+writesubmissionData _ _ = return ()
 
 createSessionId :: IO String                  
 createSessionId = do
@@ -140,8 +147,8 @@ createSessionId = do
   let sessionId = randomid (abs randomNumber)
   return sessionId
 
-extractTaxonomyInfo :: FormResult (FileInfo,Maybe Text) ->  Maybe Text
-extractTaxonomyInfo (FormSuccess (_,taxonomyInfo)) = taxonomyInfo
+extractTaxonomyInfo :: FormResult (Maybe FileInfo,Maybe Textarea,Maybe Text) ->  Maybe Text
+extractTaxonomyInfo (FormSuccess (_,_,taxonomyInfo)) = taxonomyInfo
 extractTaxonomyInfo _  = Nothing
 
 --extractTaxonomyInfo :: FormResult (FileInfo,Maybe Text) -> FormResult (Text,Maybe Text) -> Maybe Text
@@ -149,8 +156,15 @@ extractTaxonomyInfo _  = Nothing
 --extractTaxonomyInfo _ (FormSuccess (_,taxonomyInfo)) = taxonomyInfo
 --extractTaxonomyInfo _ _ = Nothing
 
-validateInput :: B.ByteString -> Maybe Text -> HM.Map B.ByteString Int -> Either String (Maybe Text)
-validateInput fastaFileContent taxonomyInfo taxIdsOrganismsHash
+--validateInput :: B.ByteString -> Maybe Text -> HM.Map B.ByteString Int -> Either String (Maybe Text)
+--validateInput fastaFileContent taxonomyInfo taxIdsOrganismsHash
+--  | (isRight checkedForm) && (isRight checkedTaxonomyInfo) = checkedTaxonomyInfo
+--  | otherwise = Left (convertErrorMessagetoHTML((unwrapEither checkedForm) ++ (unwrapEither checkedTaxonomyInfo)))
+--  where checkedForm =  either (\a -> Left (show a)) (\_ -> Right ("Input ok" :: String)) (parseFasta fastaFileContent)
+--        checkedTaxonomyInfo = checkTaxonomyInfo taxonomyInfo taxIdsOrganismsHash
+
+validateInput :: FormResult (Maybe FileInfo,Maybe Textarea,Maybe Text) -> B.ByteString -> Maybe Text -> HM.Map B.ByteString Int -> Either String (Maybe Text)
+validateInput formInput fastaFileContent taxonomyInfo taxIdsOrganismsHash
   | (isRight checkedForm) && (isRight checkedTaxonomyInfo) = checkedTaxonomyInfo
   | otherwise = Left (convertErrorMessagetoHTML((unwrapEither checkedForm) ++ (unwrapEither checkedTaxonomyInfo)))
   where checkedForm =  either (\a -> Left (show a)) (\_ -> Right ("Input ok" :: String)) (parseFasta fastaFileContent)
