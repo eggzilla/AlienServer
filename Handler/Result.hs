@@ -133,16 +133,16 @@ retrieveResultCsv done sessionId temporaryDirectoryPath tempDirectoryURL approot
        let rnacentrallink = fileStatusMessage rnacentralPresent ("<a href=\"" ++ tempDirectoryURL ++ "result.rnacentral\">RNAcentral Output</a>")
        let archivelink = fileStatusMessage archivePresent ("<a href=\"" ++ tempDirectoryURL ++ "result.zip\">Zip Archive</a>")
        let resultFilesTable = "<h3>Summary</h3><br><table><tr><td>Job started:</td><td>" ++ started ++ "</td></tr><tr><td>Job ended:</td><td>" ++ ended ++ "</td></tr></table><br><table><tr><td>" ++ loglink ++ "</td><td>" ++ falink ++ "</td><td>" ++ alnlink ++ "</td><td>" ++ cmlink ++ "</td><td>" ++ rnazlink ++ "</td><td>" ++ rnacodelink ++ "</td><td>" ++ cmstatlink ++ "</td><td>" ++ rnacentrallink ++ "</td><td>" ++ archivelink ++ "</td></tr></table><br>"
-       evaluationResults <- constructEvaluationResults (length decodedCsvOutput) temporaryDirectoryPath tempDirectoryURL
-       let taxonomyOverview = "<h3>Taxonomy overview</h3><brv>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div><br>"
+       evaluationResults <- constructEvaluationResults (length decodedCsvOutput) temporaryDirectoryPath tempDirectoryURL sessionId approotURL 
+       --let taxonomyOverview = "<h3>Taxonomy overview</h3><br>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div><br>"
        --let cmcwsSendToField = "<a href=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi\"><img src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\"></a>"
-       let cmcwsSendToField = "<form id=\"submit-form\" enctype=\"multipart/form-data\" method=\"post\" action=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi/cmcws.cgi\">" ++
-                              "<input id=\"select_slice\" type=\"hidden\" name=\"page\" value=\"All\">" ++
-                              "<input id=\"page\" type=\"hidden\" name=\"page\" value=\"1\">" ++
-                              "<input id=\"mode\" type=\"hidden\" name=\"mode\" value=\"1\">" ++
-                              "<input id=\"uploaded_file\" type=\"hidden\" name=\"uploaded_file\" value=\"" ++ sessionId ++ "\">" ++
-                              "<input type=\"image\" src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\" value=\"Compare\">"
-       return (resultHeadline ++ resultFilesTable ++ evaluationResults  ++ taxonomyOverview  ++ cmcwsSendToField ++ resultFamilyMemberTable)
+       --let cmcwsSendToField = "<form id=\"submit-form\" enctype=\"multipart/form-data\" method=\"post\" action=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi/cmcws.cgi\">" ++
+       --                       "<input id=\"select_slice\" type=\"hidden\" name=\"page\" value=\"All\">" ++
+       --                       "<input id=\"page\" type=\"hidden\" name=\"page\" value=\"1\">" ++
+       --                       "<input id=\"mode\" type=\"hidden\" name=\"mode\" value=\"1\">" ++
+       --                       "<input id=\"uploaded_file\" type=\"hidden\" name=\"uploaded_file\" value=\"" ++ sessionId ++ "\">" ++
+       --                       "<input type=\"image\" src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\" value=\"Compare\">"
+       return (resultHeadline ++ resultFilesTable ++ evaluationResults ++ resultFamilyMemberTable)
      else do
        return ""
 
@@ -211,8 +211,8 @@ truncateThresholdField thresholdField
   | thresholdField == "not set" = "not set"
   | otherwise = (take 5 thresholdField)
 
-constructEvaluationResults :: Int -> String -> String -> IO String
-constructEvaluationResults entryNumber temporaryDirectoryPath tempDirectoryURL = do
+constructEvaluationResults :: Int -> String -> String -> String -> Text -> IO String
+constructEvaluationResults entryNumber temporaryDirectoryPath tempDirectoryURL sessionId approotURL= do
   let rnazPath = temporaryDirectoryPath ++ "result.rnaz"
   let rnaCodePath = temporaryDirectoryPath ++ "result.rnacode"
   let cmStatPath = temporaryDirectoryPath ++ "result.cmstat"
@@ -225,16 +225,24 @@ constructEvaluationResults entryNumber temporaryDirectoryPath tempDirectoryURL =
          decDelimiter = fromIntegral (ord '\t')
          }
   let decodedRNAcentralCSV = decodeWith myOptions HasHeader (inputRNAcentralCSV) :: Either String (V.Vector (String,String,String))
-  let rnaCentralString = rnaCentralHtml decodedRNAcentralCSV inputRNAcentralCSV
+  let rnaCentralString = rnaCentralHtml decodedRNAcentralCSV inputRNAcentralCSV 
   if (entryNumber > 1)
     then do 
       inputRNAz <- readRNAz rnazPath
       inputRNAcode <- RC.readRNAcodeTabular rnaCodePath
       let rnaZString = rnaZHtml inputRNAz
       let rnaCodeString = rnaCodeHtml inputRNAcode
-      return ("<h3>Evaluation Results</h3><br><table><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table><br><table><tr><td colspan=\"2\">RNAalifold consensus structure</td></tr><tr><td><img src=\"" ++ aliRNAjpeg ++ "\" alt=\"RNAalifold consensus structure\" style=\"width: 500px; height: 500px\"></td></tr></table><br><table><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmStatString ++ "</table><br><table><tr><td colspan=\"2\">RNAcode statistics for result alignment:</td></tr>" ++ rnaCodeString ++ "</table><br><table><tr><td colspan=\"2\">RNAcentral entries for found sequences</td></tr>" ++ rnaCentralString ++ "</table>")
-    else do 
-      return ("<h3>Evaluation Results</h3><table style=\"float:left;\"><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmStatString ++ "</table><br><table><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences. Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>")
+      let taxonomyOverview = "<br><h3>Taxonomy overview</h3><br>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div><br>"
+      let cmcwsSendToField = "<br><form id=\"submit-form\" enctype=\"multipart/form-data\" method=\"post\" action=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi/cmcws.cgi\">" ++
+                             "<input id=\"select_slice\" type=\"hidden\" name=\"page\" value=\"All\">" ++
+                             "<input id=\"page\" type=\"hidden\" name=\"page\" value=\"1\">" ++
+                             "<input id=\"mode\" type=\"hidden\" name=\"mode\" value=\"1\">" ++
+                             "<input id=\"uploaded_file\" type=\"hidden\" name=\"uploaded_file\" value=\"" ++ sessionId ++ "\">" ++
+                             "<input type=\"image\" src=\"" ++ (DT.unpack approotURL) ++ "/static/images/cmcws_button.png\" value=\"Compare\"><br>"
+      return ("<h3>Evaluation Results</h3><br><table><tr><td colspan=\"2\">RNAz statistics for result alignment:</td></tr>" ++ rnaZString ++ "</table><br><table><tr><td colspan=\"2\">RNAalifold consensus structure</td></tr><tr><td><img src=\"" ++ aliRNAjpeg ++ "\" alt=\"RNAalifold consensus structure\" style=\"width: 500px; height: 500px\"></td></tr></table><br><table><tr><td colspan=\"2\">CMstat statistics for result.cm</td></tr>" ++ cmStatString ++ "</table><br><table><tr><td colspan=\"2\">RNAcode statistics for result alignment:</td></tr>" ++ rnaCodeString ++ "</table><br><table><tr><td colspan=\"2\">RNAcentral entries for found sequences</td></tr>" ++ rnaCentralString ++ "</table>" ++ taxonomyOverview ++ cmcwsSendToField)
+    else do
+      let taxonomyOverview = "<br><h3>Taxonomy overview</h3><br>RNAlien could not find additional covariant sequences.<br>"
+      return ("<h3>Evaluation Results</h3><br><table><tr><td colspan=\"2\">CMstat statistics for result covariance model</td></tr>" ++ cmStatString ++ "</table><br><table><tr><td colspan=\"2\">RNAlien could not find additional covariant sequences.<br> Could not run RNAz and RNAcode statistics with a single sequence.</td></tr></table>" ++  taxonomyOverview)
 
 rnaCentralHtml :: Either String (V.Vector (String,String,String)) -> L.ByteString -> String
 rnaCentralHtml inputRNAcentral inputRNAcentralCSV
