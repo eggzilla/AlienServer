@@ -12,7 +12,10 @@
          Send it! <span class="glyphicon glyphicon-upload"></span>
    <br>
       #{preEscapedToMarkup errorMsg}
-             
+      
+   <button .btn .btn-primary class="btn-xs" onclick="pasteSample();">
+      Paste sampe input - U1 snRNA - Asellus aquaticus
+   <br>
    <button .btn .btn-info class="btn-xs" onclick="window.location.href='http://rna.tbi.univie.ac.at/rnalien_static/cm26140/'">
       Precomputed Result - U1 snRNA - Asellus aquaticus
    <br>

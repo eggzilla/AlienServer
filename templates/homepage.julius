@@ -1,1 +1,8 @@
 document.getElementById(#{toJSON aDomId}).innerHTML = "";
+function pasteSample()
+{
+    fasta=">AAEK01000025.1/41573-41430\nAGCATCCTTCGGGGTCGGGTGAAATTCCCAACCGGCGGTGATGAAGTGCAAACTTCTAAG\nTCCGTGACCCGTTTTCAAATCGAAAACGGTGGATCTAGTGAAATTCTAGGGCCGACAGTA\n";
+    taxid="1396";
+    document.getElementById("hident3").value = fasta;
+    document.getElementById("hident4").value = taxid;
+}
