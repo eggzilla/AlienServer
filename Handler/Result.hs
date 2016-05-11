@@ -232,7 +232,8 @@ constructEvaluationResults entryNumber temporaryDirectoryPath tempDirectoryURL s
       inputRNAcode <- RC.readRNAcodeTabular rnaCodePath
       let rnaZString = rnaZHtml inputRNAz
       let rnaCodeString = rnaCodeHtml inputRNAcode
-      let taxonomyOverview = "<br><h3>Taxonomy overview</h3><br>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div><br>"
+      let svgdownloadbutton = "<br><a href=\"\" id=\"taxtreelink\"><button class=\"btn btn-success btn-lg\">Download taxonomy SVG</button></a><br>"
+      let taxonomyOverview = "<br><h3>Taxonomy overview</h3><br>" ++ "<div id=\"tree-container\" style=\"width: 500px; height: 500px\" ></div><br>" ++ svgdownloadbutton
       let cmcwsSendToField = "<br><form id=\"submit-form\" enctype=\"multipart/form-data\" method=\"post\" action=\"http://nibiru.tbi.univie.ac.at/cgi-bin/cmcws/cmcws.cgi/cmcws.cgi\">" ++
                              "<input id=\"select_slice\" type=\"hidden\" name=\"page\" value=\"All\">" ++
                              "<input id=\"page\" type=\"hidden\" name=\"page\" value=\"1\">" ++
