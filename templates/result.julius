@@ -31,7 +31,10 @@ $( window ).load(function() {
         source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
     }
     //add external style sheet    
-    //source = '<?xml-stylesheet href="style.css" type="text/css"?>\r\n' + source;
+    //source = '<?xml-stylesheet href="http://rna.tbi.univie.ac.at/rnalien_static/style.css" type="text/css"?>\r\n' + source;
+    //source = '<?xml-stylesheet type="text/css"?>\r\n'+ taxxml + source;
+    var taxxml="id=\"taxtree\">\r\n<defs>\r\n    <style type=\"text/css\">\r\n      <![CDATA[\n\ri.red {\n\r    color: red;\n\r}\n\ri.blue {\n\r    color: blue;\n\r}\n\ri.green {\n\r    color: green;\n\r}\n\ri.orange {\n\r    color: orange;\n\r}\n\ri.yellow {\n\r    color: yellow;\n\r}\n\r.node {\n\r    cursor: pointer;\n\r}\n\r.overlay {\n\r    background-color: #eee;\n\r}\n\r.node circle {\n\r    fill: #fff;\n\r    stroke: steelblue;\n\r    stroke-width: 1.5px;\n\r}\n\r.node text {\n\r    font-family: sans-serif;\n\r    font-size: 10px;\n\r}\n\r.link {\n\r    fill: none;\n\r    stroke: #ccc;\n\r    stroke-width: 1.5px;\n\r}\n\r.templink {\n\r    fill: none;\n\r    stroke: red;\n\r    stroke-width: 3px;\n\r}\n\r.ghostCircle.show {\n\r    display: block;\n\r}\n\r.ghostCircle, .activeDrag .ghostCircle {\n\r    display: none;\n\r}\n\r      ]]>\n\r  </style>\n\r  </defs>\n\r";
+    source = source.replace(/id="taxtree">/, taxxml);
     //add xml declaration
     source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
     //convert svg source to URI data scheme.
