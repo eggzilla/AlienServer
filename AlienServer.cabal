@@ -40,10 +40,13 @@ library
                 GADTs
                 GeneralizedNewtypeDeriving
                 FlexibleContexts
+                FlexibleInstances
                 EmptyDataDecls
                 NoMonomorphismRestriction
                 DeriveDataTypeable
                 ViewPatterns
+                TupleSections
+                RecordWildCards
 
     build-depends: base                          >= 4          && < 5
                  , yesod                         >= 1.4.1      && < 1.5
@@ -67,15 +70,14 @@ library
                  , yaml                          >= 0.8        && < 0.9
                  , http-conduit                  >= 2.1        && < 2.2
                  , directory                     >= 1.1        && < 1.3
-                 , warp                          == 3.2.2
-                 --, warp                          == 3.1.3.1    
+                 , warp                          >= 3.0        && < 3.2
                  , data-default
                  , aeson                         >= 0.6        && < 0.10
                  , conduit                       >= 1.0        && < 2.0
                  , monad-logger                  >= 0.3        && < 0.4
                  , fast-logger                   >= 2.2        && < 2.5
                  , wai-logger                    >= 2.2        && < 2.3
-                 , transformers == 0.3.0.0
+                 , transformers
                  , file-embed
                  , safe
                  , split
@@ -84,7 +86,7 @@ library
                  , cassava
                  , vector
                  , either-unwrap
-                 , ViennaRNAParser>=1.2.8 
+                 , ViennaRNAParser>=1.2.9 
                  , parsec
                  , containers
 
