@@ -281,7 +281,7 @@ rnaCodeHtml inputRNAcode
           rnaCodeString = rnaCodeHeader ++ rnaCodeBody
 
 rnaCodeHitHtml :: RC.RNAcodeHit -> String
-rnaCodeHitHtml rnaCode = "<tr><td>" ++ show (RC.hss rnaCode) ++ "</td><td>" ++ show (RC.frame rnaCode) ++  "</td><td>" ++ show (RC.length rnaCode) ++ "</td><td>" ++ show (RC.from rnaCode) ++ "</td><td>" ++ show (RC.to rnaCode) ++ "</td><td>" ++ RC.name rnaCode ++ "</td><td>" ++ show (RC.start rnaCode) ++ "</td><td>" ++ show (RC.end rnaCode) ++ "</td><td>" ++ show (RC.score rnaCode) ++ "</td><td>" ++ show (RC.pvalue rnaCode) ++ "</td></tr>"
+rnaCodeHitHtml rnaCode = "<tr><td>" ++ show (RC.hss rnaCode) ++ "</td><td>" ++ show (RC.frame rnaCode) ++  "</td><td>" ++ show (RC.hitLength rnaCode) ++ "</td><td>" ++ show (RC.from rnaCode) ++ "</td><td>" ++ show (RC.to rnaCode) ++ "</td><td>" ++ RC.name rnaCode ++ "</td><td>" ++ show (RC.start rnaCode) ++ "</td><td>" ++ show (RC.end rnaCode) ++ "</td><td>" ++ show (RC.score rnaCode) ++ "</td><td>" ++ show (RC.pvalue rnaCode) ++ "</td></tr>"
 
 
 -- | CMstat datastructure
