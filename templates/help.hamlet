@@ -48,12 +48,15 @@
         states (loading, sequence search, sequence retrieval, candidate alignment, candidate filtering, query selection, model calibration, done).<br>
         <img src="@{StaticR images_progress_png}" style="width:850px;"><br>
         Once the construction is finished all result files are available in the result table.
-        The organisms of found sequences are visualized in the taxonomic overview.<br>
+        The output contains only the sequences (and corresponding organisms) that actually were used to construct
+        the final RNA family model. If you want to find all sequences covered by the result model scan
+        your database of choice with cmsearch.<br>
+        The organisms of found non-redundant sequences used in the model are visualized in the taxonomic overview.<br>
         <img src="@{StaticR images_alienresults_png}"><br>
         The evaluation results for the constructed covariance model and the stockholm alignment used to build it
         are summarized in the evaluation table.<br>
         <img src="@{StaticR images_evaluation_png}"><br>
-        The taxonomnic tree of the organsims the included sequences originated from can be found in the zoom and
+        The taxonomic tree of the organsims the included sequences originated from can be found in the zoom and
         collapsable taxonomy tree<br>
         <img src="@{StaticR images_taxonomy_png}"><br>
         Finally all included sequences are listed in the included sequences table.<br>
@@ -172,10 +175,13 @@
   <div class="panel-heading">
      <h3 class="panel-title">Output:</h3>
   <div class="panel-body">
-    RNAlien creates a output folder which contains all files used in the construction and log files. The most relevant output files and the logfile are directly deposited in the main folder. Each step of model expansion has an own subfolder. 
+    RNAlien creates a output folder which contains all files used in the construction and log files.
+    The most relevant output files and the logfile are directly deposited in the main folder. Each step of model expansion has an own subfolder. 
     Following is a description of the output folder contents, of the different iteration directories that are created during model construction
     (empty,initial model construction, model expansion), the blast log directory that is contained in each iteration directory
     and the Log file content.<br>
+    The output contains only the non-redundant sequences (and corresponding organisms) that were actually were used to construct
+    the final RNA family model. If you want to find all sequences covered by the result model scan your database of choice with cmsearch.
     <br>
     +<strong>RNAlien output folder</strong><br>
     |<br>

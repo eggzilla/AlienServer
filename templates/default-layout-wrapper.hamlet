@@ -37,7 +37,7 @@ $newline never
              <div id="main" role="main" class="jumbotron" style="background-color:#fff;border-style:solid;border-width:1px;border-color:#eee;">
                ^{pageBody pc}
             <footer>
-                #{extraCopyright $ appExtra $ settings master}
+                #{extraCopyright $ appExtra $ settings master} <a href="https://doi.org/10.1093/nar/gkw558">Publication</a>
 
         $maybe analytics <- extraAnalytics $ appExtra $ settings master
             <script>
