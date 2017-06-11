@@ -6,7 +6,7 @@ Default: &defaults
   tempdir: "/home/egg/temp/"
   gequeuename: "c_highmem.q"
   taxDumpPath: "~egg/current/Data/Taxonomy/taxdump/"
-  copyright: TBI - 2015
+  copyright: TBI - 2015-2017
   analytics: UA-69119480-1
 
 Development:
@@ -20,7 +20,7 @@ Testing:
   tempdir: "/scr/kronos/egg/temp/"
   gequeuename: "c_highmem.q"
   taxDumpPath: "~egg/current/Data/Taxonomy/taxdump/"
-  copyright: TBI - 2015
+  copyright: TBI - 2015-2017
   analytics: UA-69119480-1
 
 Staging:
@@ -31,7 +31,7 @@ Staging:
   tempdir: "/mnt/storage/tmp/rnalien/"
   gequeuename: "web_long_q"
   taxDumpPath: "/mnt/storage/data/rnalien/"
-  copyright: TBI - 2015
+  copyright: TBI - 2015-2017
   analytics: UA-69119480-1
 
 Production:
@@ -42,5 +42,5 @@ Production:
   tempdir: "/mnt/storage/tmp/rnalien/"
   gequeuename: "web_long_q"
   taxDumpPath: "/mnt/storage/data/rnalien/"
-  copyright: TBI - 2015
+  copyright: TBI - 2015-2017
   analytics: UA-69119480-1
