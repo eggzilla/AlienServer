@@ -25,6 +25,12 @@
  <li><a href="http://www.tbi.univie.ac.at/RNA/index.html#download">ViennaRNApackage</a>
 <br>
 
+<h3><u>Installation via bioconda (recommended)</u></h3><br>
+<p>RNAlien can be installed with all dependencies via <a href="https://conda.io/docs/install/quick.html">conda</a>. Once you have cabal installed simply type:
+<div class="panel panel-default">
+  <div class="panel-body">
+    conda install -c bioconda -c conda-forge rnalien
+
 <h3><u>Installation via cabal-install</u></h3><br>
 <p>RNAlien is implemented in Haskell and can be installed via the Haskell package distribution sytem <a href="https://www.haskell.org/cabal/">cabal</a>. Once you have cabal installed simply type:
 <div class="panel panel-default">
@@ -37,10 +43,4 @@
   <div class="panel-body">
     stack install RNAlien 
 
-<br>
-<h3><u>Precompiled Executables</u></h3><br>
-<ul>
- <li>Fedora (ghc-7.8.4) <a href="http://www.tbi.univie.ac.at/~egg/RNAlien/fedora22-ghc7.8.4/RNAlien-1.1.1"> RNAlien 1.1.1 x86_64</a></li>
- <li>Archlinux (ghc-7.10.3) <a href="http://www.tbi.univie.ac.at/~egg/RNAlien/archlinux-ghc7.10.3/RNAlien-1.1.1"> RNAlien 1.1.1 x86_64</a></li>
-<ul> 
 <br>
